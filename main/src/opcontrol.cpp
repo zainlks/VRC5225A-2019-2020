@@ -60,16 +60,19 @@ void opcontrol() {
 	       tracking.move_to_target(-13.0, 0.0, 0.0);
 	       delay(500);
 	       tracking.move_to_target(-13.0, 60.0, 0.0);
+				 delay(10000);
 	       tracking.move_to_target(-13.0, 80.0, M_PI/2);
 	       delay(500);
-	       tracking.move_to_target(6.0, 80.0, M_PI/2);
+				 printf("%d Movement A Done\n",pros::millis());
+	       tracking.move_to_target(100.0, 80.0, M_PI/2);
 	       delay(500);
-	       tracking.move_to_target(6.0, 80.0, M_PI);
-	       delay(500);
-	       tracking.move_to_target(-13.0, 80.0, M_PI);
-	       delay(500);
-	       tracking.move_to_target(0.0, 0.0, M_PI);
-	       delay(1000);
+				 printf("%d Movement B Done\n",pros::millis());
+	       // tracking.move_to_target(6.0, 80.0, M_PI);s
+	       // delay(500);
+	       // tracking.move_to_target(-13.0, 80.0, M_PI);
+	       // delay(500);
+	       // tracking.move_to_target(0.0, 0.0, M_PI);
+	       // delay(1000);
 	     }
 
 	  }

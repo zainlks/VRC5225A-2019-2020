@@ -16,7 +16,7 @@ class Tracking {
 public:
   double xcoord, ycoord, global_angle, power_a, power_x, power_y, x2 , y2 , a2  = 0;
   bool toggle_target, toggle_cube, target, cube = false;
-  void move_to_target(double target_x, double target_y, double target_a);
+  void move_to_target(double target_x, double target_y, double target_a, bool debug = false);
 };
 
 extern Tracking tracking;

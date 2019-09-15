@@ -95,18 +95,19 @@ void update (void* param){
      tracking.global_angle += theta;
 
 
-		 if ((millis() - last_time) > 100){
-			 printf("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-			 // printf("%d | Y: %f\n", millis(), ycoord);
-			 // printf("%d | A: %f\n", millis(), rad_to_deg(global_angle));
-       // printf("%d | A2: %f\n", millis(), rad_to_deg((newleft - newright)/distance_LR));
-       // printf("%d | rightE: %d\n", millis(), rightencoder.get_value());
-       // printf("%d | leftE: %d\n", millis(), leftencoder.get_value());
-       // printf("%d | backE: %d\n", millis(), backencoder.get_value());
-		 last_time = millis();
-		 }
-		 delay(10);
- }
+	// 	 if ((millis() - last_time) > 100){
+	// 		 printf("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+	// 		 // printf("%d | Y: %f\n", millis(), ycoord);
+	// 		 // printf("%d | A: %f\n", millis(), rad_to_deg(global_angle));
+ //       // printf("%d | A2: %f\n", millis(), rad_to_deg((newleft - newright)/distance_LR));
+ //       // printf("%d | rightE: %d\n", millis(), rightencoder.get_value());
+ //       // printf("%d | leftE: %d\n", millis(), leftencoder.get_value());
+ //       // printf("%d | backE: %d\n", millis(), backencoder.get_value());
+	// 	 last_time = millis();
+	// 	 }
+	// 	 delay(10);
+ // }
+}
 }
 
 void move_drive(int x, int y, int a){
@@ -126,7 +127,7 @@ void brake(){
   delay(300);
 }
 
-void Tracking::move_to_target(double target_x, double target_y, double target_a){
+void Tracking::move_to_target(double target_x, double target_y, double target_a, bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = 90.0;
   double min_power_a = 12, min_power_xy = 10;
@@ -149,9 +150,11 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a)
 
     difference_a = global_angle + atan(error_y/error_x);
 
+    if(debug) {
     printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
     printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
     printf("%d| difference_a: %f\n", millis(), rad_to_deg(difference_a));
+    }
 
     if (fabs(last_power_a) < max_power_a){
       integral_a += error_a * (millis() - last_time);
@@ -229,7 +232,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a)
       power_y = 0;
     }
 
-    printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), power_x, power_y, power_a);
+    if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), power_x, power_y, power_a);
     move_drive(power_x, power_y, power_a);
 
     last_power_x = power_x;
