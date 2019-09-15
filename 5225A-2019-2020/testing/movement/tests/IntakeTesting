@@ -1,0 +1,23 @@
+#include "main.h"
+#include <iostream>
+using namespace pros;
+
+
+void opcontrol() {
+Controller master(pros::E_CONTROLLER_MASTER);
+	Motor left_arm(5);
+	Motor right_arm(4);
+	bool buttonpress;
+	while (true){
+		buttonpress = master.get_digital(E_CONTROLLER_DIGITAL_B);
+		if (buttonpress) {
+			left_arm.move(127);
+			right_arm.move(-127);
+			}
+		else{
+			left_arm.move(0);
+			right_arm.move(0);
+		}
+	}
+
+}
