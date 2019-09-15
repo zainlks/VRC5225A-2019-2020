@@ -148,7 +148,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     error_y = target_y - ycoord;
     error_d = sqrtf(powf(error_x, 2) + powf(error_y, 2));
 
-    difference_a = global_angle + atan(error_y/error_x);
+    difference_a = global_angle + atan(error_x/error_y);
 
     if(debug) {
     printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
