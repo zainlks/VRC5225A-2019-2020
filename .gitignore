@@ -1,0 +1,6 @@
+**/.vscode/cquery_cached_index/
+**/*.o
+**/*.bin
+**/*.elf
+main/compile_commands.json
+main/temp.log
