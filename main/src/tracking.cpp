@@ -262,3 +262,68 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     delay(3);
   }
 }
+void Tracking::trackingInput() {
+  tracking.power_a = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
+  tracking.power_x = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
+  tracking.power_y = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
+
+  if (fabs(tracking.power_a) < 5){
+    tracking.power_a = 0;
+  }
+  if (fabs(tracking.power_x) < 5){
+    tracking.power_x = 0;
+  }
+  if (fabs(tracking.power_y) < 5){
+    tracking.power_y = 0;
+  }
+
+  move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
+
+  if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
+    tracking.x2 = tracking.xcoord;
+    tracking.y2 = tracking.ycoord;
+    tracking.a2 = tracking.global_angle;
+  }
+  if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
+    tracking.xcoord = 0;
+    tracking.ycoord = 0;
+    tracking.global_angle = 0;
+  }
+
+  if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
+    tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2);
+  }
+
+  if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
+    tracking.move_to_target(-13.0, 0.0, 0.0);
+    delay(500);
+    tracking.move_to_target(-13.0, 60.0, 0.0);
+    delay(10000);
+    tracking.move_to_target(-13.0, 80.0, M_PI/2);
+    delay(500);
+    printf("%d Movement A Done\n",pros::millis());
+    tracking.move_to_target(100.0, 80.0, M_PI/2);
+    delay(500);
+    printf("%d Movement B Done\n",pros::millis());
+    // tracking.move_to_target(6.0, 80.0, M_PI);s
+    // delay(500);
+    // tracking.move_to_target(-13.0, 80.0, M_PI);
+    // delay(500);
+    // tracking.move_to_target(0.0, 0.0, M_PI);
+    // delay(1000);
+  }
+}
+void Tracking::setAngleHold(double angle) {
+  holdAngle = angle;
+}
+void pointToAngle(void *param) {
+    double angle_hold = deg_to_rad(tracking.holdAngle);
+    while(true){
+      double angle_error = tracking.global_angle-angle_hold;
+      if(fabs(angle_error)>(deg_to_rad(0.5)))
+      {
+        tracking.power_a = -30*sgn(angle_error);
+      }
+      else tracking.power_a = 0;
+    }
+}

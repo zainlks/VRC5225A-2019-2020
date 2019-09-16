@@ -1,5 +1,6 @@
 #include "main.h"
 #include "tracking.hpp"
+#include "vision.hpp"
 using namespace pros;
 
 /**
@@ -20,60 +21,20 @@ void opcontrol() {
 	  front_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	  back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	  delay(6000);
+		double power = 0;
+		double kP = 1.2;
+	  //delay(6000);
+		green.sig_num = 1;
+		purple.sig_num = 2;
 	  Task tracking_task(update);
+		tracking.setAngleHold(0);
+		Task angleTracking(pointToAngle);
 
 	  while (true){
-
-	     tracking.power_a = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
-	     tracking.power_x = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
-	     tracking.power_y = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
-
-	     if (fabs(tracking.power_a) < 5){
-	       tracking.power_a = 0;
-	     }
-	     if (fabs(tracking.power_x) < 5){
-	       tracking.power_x = 0;
-	     }
-	     if (fabs(tracking.power_y) < 5){
-	       tracking.power_y = 0;
-	     }
-
-	     move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
-
-	     if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
-	       tracking.x2 = tracking.xcoord;
-	       tracking.y2 = tracking.ycoord;
-	       tracking.a2 = tracking.global_angle;
-	     }
-	     if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-	       tracking.xcoord = 0;
-	       tracking.ycoord = 0;
-	       tracking.global_angle = 0;
-	     }
-
-			 if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-	       tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2);
-			 }
-
-	     if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
-	       tracking.move_to_target(-13.0, 0.0, 0.0);
-	       delay(500);
-	       tracking.move_to_target(-13.0, 60.0, 0.0);
-				 delay(10000);
-	       tracking.move_to_target(-13.0, 80.0, M_PI/2);
-	       delay(500);
-				 printf("%d Movement A Done\n",pros::millis());
-	       tracking.move_to_target(100.0, 80.0, M_PI/2);
-	       delay(500);
-				 printf("%d Movement B Done\n",pros::millis());
-	       // tracking.move_to_target(6.0, 80.0, M_PI);s
-	       // delay(500);
-	       // tracking.move_to_target(-13.0, 80.0, M_PI);
-	       // delay(500);
-	       // tracking.move_to_target(0.0, 0.0, M_PI);
-	       // delay(1000);
-	     }
-
-	  }
+	     //tracking.trackingInput();
+			 green.update();
+			 printf("center: %d\n",green.obj.x_middle_coord);
+			 printf("global angle: %f\n", tracking.global_angle);
+	     green.lineMiddle(1.2);
+	   }
 	}
