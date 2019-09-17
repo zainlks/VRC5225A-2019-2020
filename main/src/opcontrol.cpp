@@ -31,11 +31,12 @@ void opcontrol() {
 		Task angleTracking(pointToAngle);
 
 	  while (true){
-	     // tracking.trackingInput();
-			 green.update();
-			 printf("center: %d\n",green.obj.x_middle_coord);
-			 printf("global angle: %f\n", tracking.global_angle);
-	     green.lineMiddle(1.2);
+	     tracking.trackingInput();
+			 // tracking.move_to_target(0, 10, 0);
+			 // green.update();
+			 // printf("center: %d\n",green.obj.x_middle_coord);
+			 // printf("global angle: %f\n", tracking.global_angle);
+	     // green.lineMiddle(1.2);
 			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
 	   }
 	}

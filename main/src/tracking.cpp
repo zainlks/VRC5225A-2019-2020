@@ -127,7 +127,7 @@ void brake(){
   delay(300);
 }
 
-void Tracking::move_to_target(double target_x, double target_y, double target_a, bool debug){
+void Tracking::move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = 90.0;
   double min_power_a = 12, min_power_xy = 10;
@@ -148,7 +148,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     error_y = target_y - ycoord;
     error_d = sqrtf(powf(error_x, 2) + powf(error_y, 2));
 
-    difference_a = global_angle + atan(error_x/error_y);
+    difference_a = global_angle + atan(error_y/error_x);
 
     if(debug) {
     printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
@@ -215,8 +215,8 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     }
 
     if (fabs(error_x) > 0.5){
-      if (fabs(power_x) < min_power_xy){
-      power_x = sgn(power_x)*min_power_xy;
+        if (fabs(power_x) < min_power_xy){
+        power_x = sgn(power_x)*min_power_xy;
       }
     }
     else{
@@ -240,6 +240,22 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     last_power_a = power_a;
     last_time = millis();
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 0.5){
+      printf("Here 1\n");
+      if(cubeLineUp){
+      green.linedUp = false;
+      while(!green.linedUp) {
+        green.update();
+        green.lineMiddle(1.2);
+        move_drive(power_x, power_y, power_a);
+      }
+      move_drive(0, 0, 0);
+      difference_a = 0;
+      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      printf("X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      break;
+    }
       difference_a = 0;
       brake();
       delay(300);
@@ -295,16 +311,19 @@ void Tracking::trackingInput() {
   }
 
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
-    tracking.move_to_target(-13.0, 0.0, 0.0);
+    tracking.move_to_target(-15, 12.0, 0.0, true);
+    printf("done Movement\n");
     delay(500);
-    tracking.move_to_target(-13.0, 60.0, 0.0);
-    delay(10000);
-    tracking.move_to_target(-13.0, 80.0, M_PI/2);
-    delay(500);
-    printf("%d Movement A Done\n",pros::millis());
-    tracking.move_to_target(100.0, 80.0, M_PI/2);
-    delay(500);
-    printf("%d Movement B Done\n",pros::millis());
+    tracking.move_to_target(0.0, 0, 0,false);
+    // delay(500);
+    // tracking.move_to_target(-13.0, 60.0, 0.0);
+    // delay(10000);
+    // tracking.move_to_target(-13.0, 80.0, M_PI/2);
+    // delay(500);
+    // printf("%d Movement A Done\n",pros::millis());
+    // tracking.move_to_target(100.0, 80.0, M_PI/2);
+    // delay(500);
+    // printf("%d Movement B Done\n",pros::millis());
     // tracking.move_to_target(6.0, 80.0, M_PI);s
     // delay(500);
     // tracking.move_to_target(-13.0, 80.0, M_PI);
@@ -323,7 +342,6 @@ void pointToAngle(void *param) {
       if(fabs(angle_error)>(deg_to_rad(0.5)))
       {
         tracking.power_a = -30*sgn(angle_error);
-        printf("setting a power\n");
       }
       else tracking.power_a = 0;
     }
