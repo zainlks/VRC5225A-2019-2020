@@ -323,6 +323,7 @@ void pointToAngle(void *param) {
       if(fabs(angle_error)>(deg_to_rad(0.5)))
       {
         tracking.power_a = -30*sgn(angle_error);
+        printf("setting a power\n");
       }
       else tracking.power_a = 0;
     }

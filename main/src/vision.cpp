@@ -58,8 +58,8 @@ void visionClass::update()
 
 void visionClass::lineMiddle(float kP) {
   double power = 0;
+  this->update();
   if(abs(this->line_dif)>3) {
-    this->update();
     if(fabs(kP*this->line_dif)>50) power = 50 * sgn(this->line_dif);
     else power = kP*this->line_dif;
     move_drive(power, 0, 0);

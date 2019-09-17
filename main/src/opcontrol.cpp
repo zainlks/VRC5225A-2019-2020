@@ -23,7 +23,7 @@ void opcontrol() {
 	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		double power = 0;
 		double kP = 1.2;
-	  //delay(6000);
+	  delay(6000);
 		green.sig_num = 1;
 		purple.sig_num = 2;
 	  Task tracking_task(update);
@@ -31,10 +31,11 @@ void opcontrol() {
 		Task angleTracking(pointToAngle);
 
 	  while (true){
-	     //tracking.trackingInput();
+	     // tracking.trackingInput();
 			 green.update();
 			 printf("center: %d\n",green.obj.x_middle_coord);
 			 printf("global angle: %f\n", tracking.global_angle);
 	     green.lineMiddle(1.2);
+			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
 	   }
 	}
