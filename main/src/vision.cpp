@@ -56,14 +56,17 @@ void visionClass::update()
   this->line_dif = this->obj.x_middle_coord-H_MID;
 }
 
-void visionClass::lineMiddle(float kP) {
+void visionClass::lineMiddle(float kP, double yHold, double angle) {
   double power = 0;
+  double kP_a = 200;
   this->linedUp = false;
+  double error_a = angle - tracking.global_angle;
   this->update();
-  if(abs(this->line_dif)>3) {
+  if(abs(this->line_dif)>2) {
     if(fabs(kP*this->line_dif)>50) power = 50 * sgn(this->line_dif);
     else power = kP*this->line_dif;
     tracking.power_x = power;
+    tracking.power_a = error_a*kP_a;
   }
  else{
    this->linedUp = true;

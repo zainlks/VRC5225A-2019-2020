@@ -9,6 +9,7 @@
 using namespace std;
 using namespace pros;
 int sgn(double num);
+double deg_to_rad(double degrees);
 void move_drive(int x, int y, int a);
 void brake();
 void update(void *param);

@@ -20,7 +20,7 @@ public:
   void update ();
   void reset();
   vector<double> position();
-  void lineMiddle(float kP);
+  void lineMiddle(float kP, double yHold, double angle = 0);
 };
 extern visionClass green;
 extern visionClass purple;

@@ -239,13 +239,13 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     last_power_y = power_y;
     last_power_a = power_a;
     last_time = millis();
-    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 0.5){
+    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2){
       printf("Here 1\n");
       if(cubeLineUp){
       green.linedUp = false;
-      while(!green.linedUp) {
+      while(!green.linedUp && (fabs(error_a) <= deg_to_rad(0.5))) {
         green.update();
-        green.lineMiddle(1.2);
+        green.lineMiddle(0.8, target_a);
         move_drive(power_x, power_y, power_a);
       }
       move_drive(0, 0, 0);
@@ -313,8 +313,8 @@ void Tracking::trackingInput() {
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
     tracking.move_to_target(-15, 12.0, 0.0, true);
     printf("done Movement\n");
-    delay(500);
-    tracking.move_to_target(0.0, 0, 0,false);
+    // delay(500);
+    // tracking.move_to_target(0.0, 0, 0,false);
     // delay(500);
     // tracking.move_to_target(-13.0, 60.0, 0.0);
     // delay(10000);
