@@ -248,6 +248,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
         green.lineMiddle(0.8, target_a);
         move_drive(power_x, power_y, power_a);
       }
+      tracking.xcoord = target_x;
       move_drive(0, 0, 0);
       difference_a = 0;
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
@@ -313,8 +314,8 @@ void Tracking::trackingInput() {
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
     tracking.move_to_target(-15, 12.0, 0.0, true);
     printf("done Movement\n");
-    // delay(500);
-    // tracking.move_to_target(0.0, 0, 0,false);
+    delay(1000);
+    tracking.move_to_target(0.0, 0, 0,false);
     // delay(500);
     // tracking.move_to_target(-13.0, 60.0, 0.0);
     // delay(10000);
