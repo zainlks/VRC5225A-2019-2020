@@ -243,11 +243,14 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       printf("Here 1\n");
       if(cubeLineUp){
       green.linedUp = false;
-      while(!green.linedUp && (fabs(error_a) <= deg_to_rad(0.5))) {
+      while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
+        error_y = target_y - ycoord;
+        error_a = target_a - global_angle;
         green.update();
-        green.lineMiddle(0.8, target_a);
+        green.lineMiddle(0.8, target_y, target_a);
         move_drive(power_x, power_y, power_a);
       }
+      tracking.xcoord = target_x;
       move_drive(0, 0, 0);
       difference_a = 0;
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
