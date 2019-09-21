@@ -316,8 +316,8 @@ void Tracking::trackingInput() {
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
     tracking.move_to_target(-15, 12.0, 0.0, true);
     printf("done Movement\n");
-    // delay(500);
-    // tracking.move_to_target(0.0, 0, 0,false);
+    delay(1000);
+    tracking.move_to_target(0.0, 0, 0,false);
     // delay(500);
     // tracking.move_to_target(-13.0, 60.0, 0.0);
     // delay(10000);
