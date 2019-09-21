@@ -314,25 +314,14 @@ void Tracking::trackingInput() {
   }
 
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
-    tracking.move_to_target(-15, 12.0, 0.0, true);
-    printf("done Movement\n");
-    delay(1000);
-    tracking.move_to_target(0.0, 0, 0,false);
-    // delay(500);
-    // tracking.move_to_target(-13.0, 60.0, 0.0);
-    // delay(10000);
-    // tracking.move_to_target(-13.0, 80.0, M_PI/2);
-    // delay(500);
-    // printf("%d Movement A Done\n",pros::millis());
-    // tracking.move_to_target(100.0, 80.0, M_PI/2);
-    // delay(500);
-    // printf("%d Movement B Done\n",pros::millis());
-    // tracking.move_to_target(6.0, 80.0, M_PI);s
-    // delay(500);
-    // tracking.move_to_target(-13.0, 80.0, M_PI);
-    // delay(500);
-    // tracking.move_to_target(0.0, 0.0, M_PI);
-    // delay(1000);
+    tracking.move_to_target(-25, 0.0, 0.0, false);
+    delay(500);
+    tracking.move_to_target(-25, 16, 0.0, true);
+    delay(500);
+    tracking.move_to_target(0.0, 16, 0.0, true);
+    delay(500);
+    tracking.move_to_target(0.0, 0.0, 0.0, false);
+
   }
 }
 void Tracking::setAngleHold(double angle) {
