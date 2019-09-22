@@ -75,8 +75,12 @@ this->good_count = 0;
   this->line_dif = this->obj.x_middle_coord-H_MID;
 
   cube_ratio = average_width / average_hight;
+  xcord x_middle_cord;
+  ycord x y_middle_cord;
 
-  
+
+
+
 }
 
 
