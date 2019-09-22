@@ -56,25 +56,44 @@ void visionClass::update()
   this->line_dif = this->obj.x_middle_coord-H_MID;
 }
 
-void visionClass::lineMiddle(float kP, double yHold, double angle) {
+void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle) {
   double power = 0;
   double kP_a = 200;
   double kP_y = 15;
+  double kP_x = 15;
   this->linedUp = false;
   double error_a = angle - tracking.global_angle;
   double error_y = yHold - tracking.ycoord;
+  double error_x = xHold - tracking.xcoord;
   this->update();
+  if(fabs(angle) == deg_to_rad(90)){
+      if(abs(this->line_dif)>4 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_x) >= 0.5) {
+        if(fabs(kP*this->line_dif)>35) power = 35 * sgn(this->line_dif);
+        else if(fabs(kP*this->line_dif)<13) power = 13 * sgn(this->line_dif);
+        else power = kP*this->line_dif;
+        tracking.power_x = power;
+        tracking.power_a = error_a*kP_a;
+        tracking.power_y = (angle == deg_to_rad(-90) ? -error_x*kP_x : error_x*kP_x);
+      }
+      else{
+       this->linedUp = true;
+        brake();
+
+     }
+    }
+  else {
   if(abs(this->line_dif)>4 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_y) >= 0.5) {
     if(fabs(kP*this->line_dif)>35) power = 35 * sgn(this->line_dif);
     else if(fabs(kP*this->line_dif)<13) power = 13 * sgn(this->line_dif);
     else power = kP*this->line_dif;
     tracking.power_x = power;
     tracking.power_a = error_a*kP_a;
-    tracking.power_y = error_y*kP_y;
+    tracking.power_y = (angle == deg_to_rad(180) ? -error_y*kP_y : error_y*kP_y);;
   }
   else{
    this->linedUp = true;
     brake();
 
  }
+}
 }
