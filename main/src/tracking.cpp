@@ -10,7 +10,8 @@ Tracking tracking;
 //decrease angle threshold
 //tune PID after adding intake stuff
 //classes and cleaning code
-
+//defines variables
+//conversion of degrees to radius
 double deg_to_rad(double degrees){
   return degrees/180 *M_PI;
 }
@@ -18,7 +19,7 @@ double deg_to_rad(double degrees){
 double rad_to_deg(double radians){
   return radians/M_PI *180;
 }
-
+//sets numbers as - or +
 int sgn(double num){
   if (num < 0){
     return -1;
@@ -30,13 +31,14 @@ int sgn(double num){
     return 0;
   }
 }
-
+//clears the screen
 void clear_line(int line) {
   master.print(0, line, "                                                                                       ");
 
 }
 
 void update (void* param){
+  //defines variables
  double distance_LR = 14.5; double distance_B = 7.25;
  double radiusR = 0;
  double radiusB = 0;
@@ -44,7 +46,6 @@ void update (void* param){
  double h2 = 0;
  double theta = 0; double beta = 0; double alpha = 0;
  double Xx = 0; double Xy = 0; double Yx = 0; double Yy = 0;
-
  leftencoder.reset(); rightencoder.reset(); backencoder.reset();
  double newleft = 0; double newright = 0; double newback = 0;
  double Right = 0; double Left = 0; double Back = 0;
@@ -57,6 +58,7 @@ void update (void* param){
 
  while (true) {
 //amount encoders moved (radians)
+   //calculations for tracking
 	 newleft = leftencoder.get_value() / 360.0* (2.75*M_PI);
 	 newright = rightencoder.get_value() / 360.0* (2.75*M_PI);
 	 newback = backencoder.get_value() / 360.0* (2.77*M_PI);
@@ -109,7 +111,7 @@ void update (void* param){
  // }
 }
 }
-
+//move code
 void move_drive(int x, int y, int a){
 
   front_L.move(x + y + a);
@@ -126,9 +128,10 @@ void brake(){
   back_R.move_velocity(0);
   delay(300);
 }
-
+//starting to move to target
 void Tracking::move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
+//sets varibles inside the function
   double max_power_a = 55.0, max_power_xy = 90.0;
   double min_power_a = 12, min_power_xy = 10;
   double scale;
@@ -142,7 +145,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   double kI_a = 0.0, kI_d = 0.0;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
   while (true){
-
+    //calculate error for a,x,y, and d
     error_a = target_a - global_angle;
     error_x = target_x - xcoord;
     error_y = target_y - ycoord;
@@ -155,16 +158,16 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
     printf("%d| difference_a: %f\n", millis(), rad_to_deg(difference_a));
     }
-
+    //fiqures out intergal
     if (fabs(last_power_a) < max_power_a){
       integral_a += error_a * (millis() - last_time);
     }
-
+    //if there is no error on the angle stop turning
     if (fabs(error_a) < deg_to_rad(0.5)){
       integral_a = 0;
       power_a  = 0;
     }
-
+    //if x power and y power is less than xy max power than interal_d is error of d * time
     if (fabs(last_power_x) < max_power_xy && fabs(last_power_y) < max_power_xy){ // what triggers integral to start adding?
       integral_d += error_d * (millis() - last_time);
     }
@@ -176,12 +179,15 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     // }
 
 //DOES MOD OF A NEGATIVE# RETURN POSTITIVE OR NEGATIVE VALUE? -- Negative!
+    //angle power is error times kP plus integral*kI
     power_a = error_a*kP_a + integral_a*kI_a;
+    //if error x is greater than 0 then set x and y power
     if (error_x >= 0){
       power_x = error_d*cos(difference_a)*kP_d; // + integral_d*kI_d;
       power_y = error_d*sin(difference_a)*kP_d; // + integral_d*kI_d;
     }
     else{
+      //If error is in the negatives (gone over target) head backwards
       power_x = -error_d*cos(difference_a)*kP_d; // + integral_d*kI_d;
       power_y = -error_d*sin(difference_a)*kP_d; // + integral_d*kI_d;
     }
@@ -235,22 +241,22 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), power_x, power_y, power_a);
     move_drive(power_x, power_y, power_a);
 
+    //last power is equal to current power
     last_power_x = power_x;
     last_power_y = power_y;
     last_power_a = power_a;
     last_time = millis();
+    //if angle is off and not lined up on cube than line up
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2){
       printf("Here 1\n");
       if(cubeLineUp){
       green.linedUp = false;
-      while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
-        error_y = target_y - ycoord;
-        error_a = target_a - global_angle;
+      while(!green.linedUp && (fabs(error_a) <= deg_to_rad(0.5))) {
         green.update();
-        green.lineMiddle(0.8, target_y, target_a);
+        green.lineMiddle(0.8, target_a);
         move_drive(power_x, power_y, power_a);
       }
-      tracking.xcoord = target_x;
+      //movement ends
       move_drive(0, 0, 0);
       difference_a = 0;
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
@@ -281,6 +287,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     delay(3);
   }
 }
+//tracking setup
 void Tracking::trackingInput() {
   tracking.power_a = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
   tracking.power_x = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
@@ -314,14 +321,25 @@ void Tracking::trackingInput() {
   }
 
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
-    tracking.move_to_target(-25, 0.0, 0.0, false);
-    delay(500);
-    tracking.move_to_target(-25, 16, 0.0, true);
-    delay(500);
-    tracking.move_to_target(0.0, 16, 0.0, true);
-    delay(500);
-    tracking.move_to_target(0.0, 0.0, 0.0, false);
-
+    tracking.move_to_target(-15, 12.0, 0.0, true);
+    printf("done Movement\n");
+    // delay(500);
+    // tracking.move_to_target(0.0, 0, 0,false);
+    // delay(500);
+    // tracking.move_to_target(-13.0, 60.0, 0.0);
+    // delay(10000);
+    // tracking.move_to_target(-13.0, 80.0, M_PI/2);
+    // delay(500);
+    // printf("%d Movement A Done\n",pros::millis());
+    // tracking.move_to_target(100.0, 80.0, M_PI/2);
+    // delay(500);
+    // printf("%d Movement B Done\n",pros::millis());
+    // tracking.move_to_target(6.0, 80.0, M_PI);s
+    // delay(500);
+    // tracking.move_to_target(-13.0, 80.0, M_PI);
+    // delay(500);
+    // tracking.move_to_target(0.0, 0.0, M_PI);
+    // delay(1000);
   }
 }
 void Tracking::setAngleHold(double angle) {
