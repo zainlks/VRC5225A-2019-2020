@@ -11,9 +11,13 @@ const double H_MID = 158;
 // y/212 *47
 void visionClass::reset()
 {
+  float cube_ratio = 0:0 ;
   this->x = 0;
   this->y = 0;
   this->average_distance = 0;
+  this->average_width = 0;
+  this->cur_width = 0;
+  this->last_width = 0;
   this->average_height = 0;
   this->cur_height = 0;
   this->last_height = 0;
@@ -42,6 +46,21 @@ void visionClass::update()
     else this->good_count++;
   }
   else this->good_count = 0;
+// ressets good counts
+this->good_count = 0;
+
+  //Calculating the average witdh
+  if(this->cur_lengh==this->last_length)
+  {
+    if(this->good_count==15)
+    {
+      if(this->average_width==0) this->average_width=this->obj.width;
+      else this->average_width = (this->average_width + this->obj.width)/2;
+      this->good_count=0;
+    }
+    else this->good_count++;
+  }
+  else this->good_count = 0;
 
   //Calculate Distance using average height
   if(this->average_height!=0) this->distance = (CUBE_HEIGHT*FOCAL_LENGTH)/this->average_height;
@@ -54,48 +73,32 @@ void visionClass::update()
   this->last_height = this->cur_height;
   // 39_in 38px 5.7in
   this->line_dif = this->obj.x_middle_coord-H_MID;
+
+  cube_ratio = average_width / average_hight;
+
+  
 }
 
-void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle) {
+
+void visionClass::lineMiddle(float kP, double yHold, double angle) {
   double power = 0;
-  double kP_a = 20;
+  double kP_a = 200;
   double kP_y = 15;
-  double kP_x = 15;
   this->linedUp = false;
   double error_a = angle - tracking.global_angle;
   double error_y = yHold - tracking.ycoord;
-  double error_x = xHold - tracking.xcoord;
   this->update();
-  if(fabs(angle) == deg_to_rad(90)){
-      if(abs(this->line_dif)>2 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_x) >= 0.5) {
-        if(fabs(kP*this->line_dif)>50) power = 50 * sgn(this->line_dif);
-        else if(fabs(kP*this->line_dif)<17) power = 17 * sgn(this->line_dif);
-        else power = kP*this->line_dif;
-        tracking.power_x = power;
-        tracking.power_a = rad_to_deg(error_a)*kP_a;
-        printf("power:%f, global angle:%f\n", tracking.power_a, tracking.global_angle);
-        tracking.power_y = (angle == deg_to_rad(-90) ? -error_x*kP_x : error_x*kP_x);
-        delay(2);
-      }
-      else{
-       this->linedUp = true;
-        brake();
-
-     }
-    }
-  else {
-  if(abs(this->line_dif)>2 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_y) >= 0.5) {
-    if(fabs(kP*this->line_dif)>50) power = 50 * sgn(this->line_dif);
-    else if(fabs(kP*this->line_dif)<17) power = 17 * sgn(this->line_dif);
+  if(abs(this->line_dif)>4 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_y) >= 0.5) {
+    if(fabs(kP*this->line_dif)>35) power = 35 * sgn(this->line_dif);
+    else if(fabs(kP*this->line_dif)<13) power = 13 * sgn(this->line_dif);
     else power = kP*this->line_dif;
     tracking.power_x = power;
-    tracking.power_a = rad_to_deg(error_a)*kP_a;
-    tracking.power_y = (angle == deg_to_rad(180) ? -error_y*kP_y : error_y*kP_y);;
+    tracking.power_a = error_a*kP_a;
+    tracking.power_y = error_y*kP_y;
   }
   else{
    this->linedUp = true;
     brake();
 
  }
-}
 }
