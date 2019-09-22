@@ -58,7 +58,7 @@ void visionClass::update()
 
 void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle) {
   double power = 0;
-  double kP_a = 200;
+  double kP_a = 20;
   double kP_y = 15;
   double kP_x = 15;
   this->linedUp = false;
@@ -67,13 +67,15 @@ void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle)
   double error_x = xHold - tracking.xcoord;
   this->update();
   if(fabs(angle) == deg_to_rad(90)){
-      if(abs(this->line_dif)>4 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_x) >= 0.5) {
-        if(fabs(kP*this->line_dif)>35) power = 35 * sgn(this->line_dif);
-        else if(fabs(kP*this->line_dif)<13) power = 13 * sgn(this->line_dif);
+      if(abs(this->line_dif)>2 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_x) >= 0.5) {
+        if(fabs(kP*this->line_dif)>50) power = 50 * sgn(this->line_dif);
+        else if(fabs(kP*this->line_dif)<17) power = 17 * sgn(this->line_dif);
         else power = kP*this->line_dif;
         tracking.power_x = power;
-        tracking.power_a = error_a*kP_a;
+        tracking.power_a = rad_to_deg(error_a)*kP_a;
+        printf("power:%f, global angle:%f\n", tracking.power_a, tracking.global_angle);
         tracking.power_y = (angle == deg_to_rad(-90) ? -error_x*kP_x : error_x*kP_x);
+        delay(2);
       }
       else{
        this->linedUp = true;
@@ -82,12 +84,12 @@ void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle)
      }
     }
   else {
-  if(abs(this->line_dif)>4 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_y) >= 0.5) {
-    if(fabs(kP*this->line_dif)>35) power = 35 * sgn(this->line_dif);
-    else if(fabs(kP*this->line_dif)<13) power = 13 * sgn(this->line_dif);
+  if(abs(this->line_dif)>2 || fabs(error_a) >= deg_to_rad(0.5) || fabs(error_y) >= 0.5) {
+    if(fabs(kP*this->line_dif)>50) power = 50 * sgn(this->line_dif);
+    else if(fabs(kP*this->line_dif)<17) power = 17 * sgn(this->line_dif);
     else power = kP*this->line_dif;
     tracking.power_x = power;
-    tracking.power_a = error_a*kP_a;
+    tracking.power_a = rad_to_deg(error_a)*kP_a;
     tracking.power_y = (angle == deg_to_rad(180) ? -error_y*kP_y : error_y*kP_y);;
   }
   else{
