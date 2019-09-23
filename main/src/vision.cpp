@@ -78,7 +78,14 @@ this->good_count = 0;
   xcord x_middle_cord;
   ycord x y_middle_cord;
 
+if(cube_ratio = 1:4 ){
+  this->LeftCube_ymiddle = (obj.y_middle_cord - obj.left_cord) / 2;
+  this->LeftCube_xmiddle = obj.x_middle_cord;
+  this->RightCube_ymiddle = (obj.y_middle_cord - this->LeftCube_ymiddle ) + obj.Y_middle_cord;
+  this->RightCube_xmiddle = obj.x_middle_cord;
 
+
+}
 
 
 }
