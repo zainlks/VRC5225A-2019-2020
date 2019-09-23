@@ -15,9 +15,9 @@ void visionClass::reset()
   this->x = 0;
   this->y = 0;
   this->average_distance = 0;
-  this->average_width = 0;
-  this->cur_width = 0;
-  this->last_width = 0;
+  int average_width = 0;
+  int cur_width = 0;
+  int last_width = 0;
   this->average_height = 0;
   this->cur_height = 0;
   this->last_height = 0;
@@ -79,10 +79,10 @@ this->good_count = 0;
   ycord x y_middle_cord;
 
 if(cube_ratio = 1:4 ){
-  this->LeftCube_ymiddle = (obj.y_middle_cord - obj.left_cord) / 2 + obj.left_cord;
-  this->LeftCube_xmiddle = obj.x_middle_cord;
-  this->RightCube_ymiddle = (obj.y_middle_cord - this->LeftCube_ymiddle ) + obj.left_cord * 3;
-  this->RightCube_xmiddle = obj.x_middle_cord;
+  int LeftCube_ymiddle = (obj.y_middle_cord - obj.left_cord) / 2 + obj.left_cord;
+  int LeftCube_xmiddle = obj.x_middle_cord;
+  int RightCube_ymiddle = (obj.y_middle_cord - this->LeftCube_ymiddle ) + obj.left_cord * 3;
+  int RightCube_xmiddle = obj.x_middle_cord;
 
 
 }
