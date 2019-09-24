@@ -11,19 +11,23 @@ const double H_MID = 158;
 // y/212 *47
 void visionClass::reset()
 {
-  float cube_ratio = 0:0 ;
   this->x = 0;
   this->y = 0;
   this->average_distance = 0;
-  int average_width = 0;
-  int cur_width = 0;
-  int last_width = 0;
+  this->average_width = 0;
+  this->cur_width = 0;
+  this->last_width = 0;
   this->average_height = 0;
   this->cur_height = 0;
   this->last_height = 0;
   this->distance = 0;
   this->good_count = 0;
   this->sig_num = 1;
+  this->cube_ratio = 0;
+  this->LeftCubex = 0;
+  this->LeftCubey = 0;
+  this->RightCubex = 0;
+  this->RightCubey =0;
 }
 vector<double> visionClass::position(){
   return {this->x,this->y};
@@ -50,7 +54,7 @@ void visionClass::update()
 this->good_count = 0;
 
   //Calculating the average witdh
-  if(this->cur_lengh==this->last_length)
+  if(this->cur_width==this->last_width)
   {
     if(this->good_count==15)
     {
@@ -69,24 +73,26 @@ this->good_count = 0;
   if(this->average_distance==0 and this->distance!=0) this->average_distance=this->distance;
   else if(this->distance!=0) this->average_distance = (this->average_distance + this->distance)/2;
 
-  //Update last height to current height
+  //Update last height and width to current height
   this->last_height = this->cur_height;
+  this->last_width = this->cur_width;
   // 39_in 38px 5.7in
   this->line_dif = this->obj.x_middle_coord-H_MID;
 
-  cube_ratio = average_width / average_hight;
-  xcord x_middle_cord;
-  ycord x y_middle_cord;
+  cube_ratio = average_width / cur_height ;
+  //xcord x_middle_cord;
+  //ycord x y_middle_cord;
 
-if(cube_ratio = 1:4 ){
-  int LeftCube_ymiddle = (obj.y_middle_cord - obj.left_cord) / 2 + obj.left_cord;
-  int LeftCube_xmiddle = obj.x_middle_cord;
-  int RightCube_ymiddle = (obj.y_middle_cord - this->LeftCube_ymiddle ) + obj.left_cord * 3;
-  int RightCube_xmiddle = obj.x_middle_cord;
-
-
+if(cube_ratio = 4)
+{
+  this->LeftCubey = (this->obj.y_middle_coord - this->obj.left_coord) / 2 + this->obj.left_coord;
+  this->LeftCubex = this->obj.x_middle_coord;
+  this->RightCubey = (this->obj.y_middle_coord - this->LeftCubey ) + this->obj.left_coord * 3;
+  this->RightCubex = this->obj.x_middle_coord;
 }
-
+else{
+  printf("i no see two cube");
+}
 
 }
 
