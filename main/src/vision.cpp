@@ -83,7 +83,7 @@ this->good_count = 0;
   //xcord x_middle_cord;
   //ycord x y_middle_cord;
 
-if(cube_ratio = 4)
+if(cube_ratio == 4)
 {
   this->LeftCubey = (this->obj.y_middle_coord - this->obj.left_coord) / 2 + this->obj.left_coord;
   this->LeftCubex = this->obj.x_middle_coord;
@@ -97,7 +97,7 @@ else{
 }
 
 
-void visionClass::lineMiddle(float kP, double yHold, double angle) {
+void visionClass::lineMiddle(float kP, double yHold, double angle){
   double power = 0;
   double kP_a = 200;
   double kP_y = 15;
