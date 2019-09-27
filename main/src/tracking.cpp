@@ -323,7 +323,7 @@ void Tracking::trackingInput() {
     // delay(500);
     // tracking.move_to_target(0.0, 0.0, deg_to_rad(180), true);
     tracking.move_to_target(-22.0, 12.0, deg_to_rad(-90), true);
-    tracking.move_to_target(-9.0, 16.0, deg_to_rad(45), false);
+    //tracking.move_to_target(-9.0, 16.0, deg_to_rad(45), false);
 
   }
 }
