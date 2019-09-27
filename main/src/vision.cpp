@@ -86,10 +86,12 @@ this->good_count = 0;
 printf("before loop");
 if(cube_ratio >= 2.7)
 {
-  this->LeftCubey = (this->obj.y_middle_coord - this->obj.left_coord) / 2 + this->obj.left_coord;
-  this->LeftCubex = this->obj.x_middle_coord;
-  this->RightCubey = (this->obj.y_middle_coord - this->LeftCubey ) + this->obj.left_coord * 3;
-  this->RightCubex = this->obj.x_middle_coord;
+
+  this->LeftCubex = (this->obj.y_middle_coord - this->obj.left_coord) / 2 + this->obj.left_coord;
+  this->LeftCubey = this->obj.x_middle_coord;
+  this->RightCubex = (this->obj.y_middle_coord - this->LeftCubey ) + this->obj.left_coord * 3;
+  this->RightCubey = this->obj.x_middle_coord;
+  hight_ratio = this->cur_height / 2 ;
   printf("cube cords: %d \n", LeftCubey);
 }
 else{
