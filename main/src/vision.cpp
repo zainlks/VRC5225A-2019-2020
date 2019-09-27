@@ -34,6 +34,7 @@ vector<double> visionClass::position(){
 }
 void visionClass::update()
 {
+  printf("in vision class");
   //Update Values - updating all properties of an object
   this->obj = vision.get_by_sig(0, this->sig_num);
   this->cur_height = this->obj.height;
@@ -82,22 +83,23 @@ this->good_count = 0;
   cube_ratio = average_width / cur_height ;
   //xcord x_middle_cord;
   //ycord x y_middle_cord;
-
-if(cube_ratio == 4)
+printf("before loop");
+if(cube_ratio >= 2.7)
 {
   this->LeftCubey = (this->obj.y_middle_coord - this->obj.left_coord) / 2 + this->obj.left_coord;
   this->LeftCubex = this->obj.x_middle_coord;
   this->RightCubey = (this->obj.y_middle_coord - this->LeftCubey ) + this->obj.left_coord * 3;
   this->RightCubex = this->obj.x_middle_coord;
+  printf("cube cords: %d \n", LeftCubey);
 }
 else{
-  printf("i no see two cube");
+  printf("cube ratio: %d" , cube_ratio);
 }
 
 }
 
 
-void visionClass::lineMiddle(float kP, double yHold, double angle){
+void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle){
   double power = 0;
   double kP_a = 200;
   double kP_y = 15;
