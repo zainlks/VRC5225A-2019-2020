@@ -248,7 +248,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
         error_x = target_x - xcoord;
         error_a = target_a - global_angle;
         green.update();
-        green.lineMiddle(0.8, target_y, target_x,target_a);
+        green.lineMiddle(0.8, target_y, target_x, target_a);
         move_drive(power_x, power_y, power_a);
       }
       fabs(target_a)==90 ? tracking.ycoord = target_y : tracking.xcoord = target_x;
@@ -315,16 +315,8 @@ void Tracking::trackingInput() {
   }
 
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
-    // tracking.move_to_target(-25, 0.0, deg_to_rad(-90), true);
-    // delay(500);
-    // tracking.move_to_target(-25, 16, 0, true);
-    // delay(500);
-    // tracking.move_to_target(0.0, 16, deg_to_rad(90), true);
-    // delay(500);
-    // tracking.move_to_target(0.0, 0.0, deg_to_rad(180), true);
-    tracking.move_to_target(-22.0, 12.0, deg_to_rad(-90), true);
-    tracking.move_to_target(-9.0, 16.0, deg_to_rad(45), false);
-
+    tracking.move_to_target(-6.0, 0.0, 0.0, true);
+    tracking.move_to_target(-6.0, 20.0, 0.0, false);
   }
 }
 void Tracking::setAngleHold(double angle) {

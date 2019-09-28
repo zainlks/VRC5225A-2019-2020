@@ -13,8 +13,8 @@ extern pros::Motor drive_br;
 
 class visionClass {
 public:
-  double x, y, distance, average_distance, average_height, total_average = 0;
-  int cube_ratio, cur_height, last_height, sig_num, good_count, line_dif, aver, cur_width, last_width, LeftCubey, LeftCubex, RightCubey, RightCubex, average_width  = 0;
+  double x, y, distance, average_distance, average_width, average_height, cur_width, cur_height, total_average = 0; double cube_ratio;
+  int last_height, sig_num, good_count, line_dif, last_width, LeftCubey, LeftCubex, RightCubey, RightCubex = 0;
   bool linedUp = true;
   pros::vision_object_s_t obj = vision.get_by_sig(0, this->sig_num);
   void update ();

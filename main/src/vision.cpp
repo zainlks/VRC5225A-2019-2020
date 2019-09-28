@@ -38,7 +38,7 @@ void visionClass::update()
   //Update Values - updating all properties of an object
   this->obj = vision.get_by_sig(0, this->sig_num);
   this->cur_height = this->obj.height;
-
+  this->cur_width = this->obj.width;
   //Calculating the average height by using the value from the last cycle and filtering out bad values
   if(this->cur_height==this->last_height)
   {
@@ -80,26 +80,17 @@ this->good_count = 0;
   // 39_in 38px 5.7in
   this->line_dif = this->obj.x_middle_coord-H_MID;
 
-  cube_ratio = average_width / cur_height ;
+  this->cube_ratio = this->obj.width / this->obj.height;
+  printf("Cube ratio:%f, Width:%f, ObjWidth:%d, Height:%f, ObjHeight:%d\n", this->cube_ratio, this->average_width, this->obj.width, this->average_height, this->obj.height);
+  if (cube_ratio >= 1.2){
+    printf("Entered second cube\n");
+    this->line_dif = this->obj.left_coord + this->cur_height/2 - H_MID;
+  }
+  else printf("Didn't work\n");
   //xcord x_middle_cord;
   //ycord x y_middle_cord;
-printf("before loop");
-if(cube_ratio >= 2.7)
-{
-
-  this->LeftCubex = (this->obj.y_middle_coord - this->obj.left_coord) / 2 + this->obj.left_coord;
-  this->LeftCubey = this->obj.x_middle_coord;
-  this->RightCubex = (this->obj.y_middle_coord - this->LeftCubey ) + this->obj.left_coord * 3;
-  this->RightCubey = this->obj.x_middle_coord;
-  hight_ratio = this->cur_height / 2 ;
-  printf("cube cords: %d \n", LeftCubey);
-}
-else{
-  printf("cube ratio: %d" , cube_ratio);
-}
 
 }
-
 
 void visionClass::lineMiddle(float kP, double yHold, double xHold, double angle){
   double power = 0;
