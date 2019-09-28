@@ -8,6 +8,8 @@
 #include <vector>
 using namespace std;
 using namespace pros;
+extern double kP_a;
+extern double test_angle;
 int sgn(double num);
 double deg_to_rad(double degrees);
 double rad_to_deg(double radians);

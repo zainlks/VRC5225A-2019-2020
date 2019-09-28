@@ -32,7 +32,7 @@ void opcontrol() {
 
 	  while (true){
 	     tracking.trackingInput();
-			 // tracking.move_to_target(0, 10, 0);
+			
 			 // green.update();
 			 // printf("center: %d\n",green.obj.x_middle_coord);
 			 // printf("global angle: %f\n", tracking.global_angle);

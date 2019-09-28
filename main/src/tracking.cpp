@@ -2,8 +2,8 @@
 
 
 Tracking tracking;
-
-
+double test_angle = 90;
+double kP_a = 132;
 //test without extra angle thing
 //test which way negative mode turns
 //print values every hundred millis after exit
@@ -129,6 +129,7 @@ void brake(){
 
 void Tracking::move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
+  printf("kp : %f \n", kP_a );
   double max_power_a = 55.0, max_power_xy = 90.0;
   double min_power_a = 12, min_power_xy = 10;
   double scale;
@@ -138,7 +139,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
   double error_a, error_x, error_y, error_d;
   double difference_a;
-  double kP_a = 134.4, kP_d = 11.4;
+  double  kP_d = 11.4;
   double kI_a = 0.0, kI_d = 0.0;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
   while (true){
@@ -255,11 +256,13 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       move_drive(0, 0, 0);
       difference_a = 0;
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      printf("X : %f, Y : %f, A : %f, kp : %f", xcoord, ycoord, rad_to_deg(global_angle), kP_a);
       master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       break;
     }
+    printf("Error A: %f \n", error_a);
+    kP_a += error_a * 100;
       difference_a = 0;
       brake();
       delay(300);
@@ -270,6 +273,8 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       break;
     }
     else if (master.get_digital(E_CONTROLLER_DIGITAL_X)){
+      printf("Error A: %f \n", error_a);
+      kP_a += error_a * 100;
       difference_a = 0;
       brake();
       delay(300);
@@ -322,8 +327,11 @@ void Tracking::trackingInput() {
     // tracking.move_to_target(0.0, 16, deg_to_rad(90), true);
     // delay(500);
     // tracking.move_to_target(0.0, 0.0, deg_to_rad(180), true);
-    tracking.move_to_target(-22.0, 12.0, deg_to_rad(-90), true);
-    tracking.move_to_target(-9.0, 16.0, deg_to_rad(45), false);
+    while(true){
+    tracking.move_to_target(0, 0, deg_to_rad(test_angle), false);
+    test_angle +=90;
+    delay(500);
+  }
 
   }
 }
