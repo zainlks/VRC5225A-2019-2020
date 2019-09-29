@@ -1,6 +1,7 @@
 #include "main.h"
 #include "tracking.hpp"
 #include "vision.hpp"
+#include "intake.cpp"
 using namespace pros;
 
 /**
@@ -29,6 +30,8 @@ void opcontrol() {
 	  Task tracking_task(update);
 		tracking.setAngleHold(0);
 		Task angleTracking(pointToAngle);
+		Task intk_task(intk);
+		//add task of intake
 
 	  while (true){
 	     tracking.trackingInput();
