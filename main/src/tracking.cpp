@@ -138,7 +138,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
   double error_a, error_x, error_y, error_d;
   double difference_a;
-  double kP_a = 134.4, kP_d = 11.4;
+  double kP_a = 137, kP_d = 16.8;
   double kI_a = 0.0, kI_d = 0.0;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
   while (true){
@@ -239,7 +239,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     last_power_y = power_y;
     last_power_a = power_a;
     last_time = millis();
-    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2){
+    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
       printf("Here 1\n");
       if(cubeLineUp){
       green.linedUp = false;
@@ -259,6 +259,9 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       break;
     }
+
+    }
+    else if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 0.5 && !cubeLineUp){
       difference_a = 0;
       brake();
       delay(300);
@@ -314,13 +317,7 @@ void Tracking::trackingInput() {
   }
 
   if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
-    tracking.move_to_target(-25, 0.0, 0.0, false);
-    delay(500);
-    tracking.move_to_target(-25, 16, 0.0, true);
-    delay(500);
-    tracking.move_to_target(0.0, 16, 0.0, true);
-    delay(500);
-    tracking.move_to_target(0.0, 0.0, 0.0, false);
+    tracking.move_to_target(5, 12.0, 0.0, false, true);
 
   }
 }
