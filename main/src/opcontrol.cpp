@@ -29,6 +29,7 @@ void opcontrol() {
 	  Task tracking_task(update);
 		tracking.setAngleHold(0);
 		Task angleTracking(pointToAngle);
+		int lastTime = 0;
 
 	  while (true){
 	     tracking.trackingInput();
@@ -38,5 +39,13 @@ void opcontrol() {
 			 // printf("global angle: %f\n", tracking.global_angle);
 	     // green.lineMiddle(1.2);
 			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
+			 if (millis()-lastTime > 100){
+				 printf("X:%f, Y:%f, A:%f\n", tracking.xcoord, tracking.ycoord, tracking.global_angle/M_PI *180);
+				 printf("leftencoder:%d, inches:%f\n", leftencoder.get_value(), leftencoder.get_value() / 360.0* (2.75*M_PI));
+				 printf("rightencoder:%d, inches:%f\n", rightencoder.get_value(), leftencoder.get_value() / 360.0* (2.75*M_PI));
+				 //printf("backencoder:%d, inches:%f\n", backencoder.get_value(),backencoder.get_value() / 360.0* (2.77*M_PI));
+				 lastTime = millis();
+			 }
+
 	   }
 	}
