@@ -37,7 +37,7 @@ void clear_line(int line) {
 }
 
 void update (void* param){
- double distance_LR = 14.5; double distance_B = 7.25;
+ double distance_LR = 14.7135; double distance_B = 7.25;
  double radiusR = 0;
  double radiusB = 0;
  double h = 0;
@@ -138,7 +138,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
   double error_a, error_x, error_y, error_d;
   double difference_a;
-  double kP_a = 150, kP_d = 13;
+  double kP_a = 137, kP_d = 13;
   double kI_a = 0.0, kI_d = 0.0;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
   while (true){
