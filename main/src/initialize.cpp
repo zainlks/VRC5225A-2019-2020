@@ -1,4 +1,6 @@
 #include "main.h"
+#include "fBar.hpp"
+#include "angler.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -11,6 +13,8 @@
 void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
+	fBarCal();
+	anglerCal();
 }
 
 /**

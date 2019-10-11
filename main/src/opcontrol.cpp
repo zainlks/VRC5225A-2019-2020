@@ -1,6 +1,8 @@
 #include "main.h"
 #include "tracking.hpp"
 #include "vision.hpp"
+#include "fBar.hpp"
+#include "angler.hpp"
 using namespace pros;
 
 /**
@@ -23,7 +25,7 @@ void opcontrol() {
 	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		double power = 0;
 		double kP = 1.2;
-	  delay(6000);
+	  //delay(6000);
 		green.sig_num = 1;
 		purple.sig_num = 2;
 	  Task tracking_task(update);
@@ -33,6 +35,31 @@ void opcontrol() {
 
 	  while (true){
 	     tracking.trackingInput();
+			 fBarHandle();
+			 anglerHandle();
+			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_R1)) {
+				 if(fabs(intakeL.get_actual_velocity())>2)
+				 {
+					 intakeL.move(0);
+					 intakeR.move(0);
+				 }
+				 else {
+					 intakeL.move(-127);
+					 intakeR.move(127);
+				 }
+			 }
+			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_R2)) {
+				 if(fabs(intakeL.get_actual_velocity())>2)
+				 {
+					 intakeL.move(0);
+					 intakeR.move(0);
+				 }
+				 else
+				 {
+					 intakeL.move(127);
+					 intakeR.move(-127);
+			 	 }
+			 }
 			 // tracking.move_to_target(0, 10, 0);
 			 // green.update();
 			 // printf("center: %d\n",green.obj.x_middle_coord);
