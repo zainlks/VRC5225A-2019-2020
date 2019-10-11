@@ -16,7 +16,7 @@ void anglerCal()
 {
   uint32_t timeout_time = millis() + 100;
   bool success = true;
-  angler.move(-15);
+  angler.move(-25);
   delay(100);
   while (fabs(angler.get_actual_velocity()) < 12 && (success = (millis() < timeout_time)))
   {
