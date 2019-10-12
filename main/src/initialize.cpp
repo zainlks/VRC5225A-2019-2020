@@ -13,8 +13,8 @@
 void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
-	fBarCal();
-	anglerCal();
+	// fBarCal();
+	// anglerCal();
 }
 
 /**

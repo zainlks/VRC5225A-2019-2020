@@ -120,10 +120,10 @@ void move_drive(int x, int y, int a){
 }
 
 void brake(){
-  front_L.move_velocity(0);
-  front_R.move_velocity(0);
-  back_L.move_velocity(0);
-  back_R.move_velocity(0);
+  front_L.move_relative(0,200);
+  front_R.move_relative(0,200);
+  back_L.move_relative(0,200);
+  back_R.move_relative(0,200);
   delay(300);
 }
 
@@ -139,8 +139,9 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   double error_a, error_x, error_y, error_d;
   double difference_a;
   double kP_a = 137, kP_d = 13;
-  double kI_a = 0.0, kI_d = 0.0;   // kI_a = 0.01, kI_d = 0.0022;
+  double kI_a = 0.0, kI_d = 0.0022;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
+
   while (true){
 
 
@@ -151,11 +152,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
     difference_a = global_angle + atan(error_y/error_x);
 
-    if(debug) {
-    printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
-    printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
-    printf("%d| difference_a: %f\n", millis(), rad_to_deg(difference_a));
-    }
+
 
     if (fabs(last_power_a) < max_power_a){
       integral_a += error_a * (millis() - last_time);
@@ -166,8 +163,14 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       power_a  = 0;
     }
 
-    if (fabs(last_power_x) < max_power_xy && fabs(last_power_y) < max_power_xy){ // what triggers integral to start adding?
-      integral_d += error_d * (millis() - last_time);
+    if (error_d < 1){ // what triggers integral to start adding?
+      // integral_d += error_d * (millis() - last_time);
+    }
+    if(debug) {
+    printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
+    printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
+    printf("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
+    printf("%d | I value %f \n", millis(), integral_d*kI_d);
     }
 
     // if (fabs(error_d) < 0.5){
@@ -179,12 +182,12 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 //DOES MOD OF A NEGATIVE# RETURN POSTITIVE OR NEGATIVE VALUE? -- Negative!
     power_a = error_a*kP_a + integral_a*kI_a;
     if (error_x >= 0){
-      power_x = error_d*cos(difference_a)*kP_d; // + integral_d*kI_d;
-      power_y = error_d*sin(difference_a)*kP_d; // + integral_d*kI_d;
+      power_x = error_d*cos(difference_a)*kP_d + integral_d*kI_d;
+      power_y = error_d*sin(difference_a)*kP_d + integral_d*kI_d;
     }
     else{
-      power_x = -error_d*cos(difference_a)*kP_d; // + integral_d*kI_d;
-      power_y = -error_d*sin(difference_a)*kP_d; // + integral_d*kI_d;
+      power_x = -error_d*cos(difference_a)*kP_d + integral_d*kI_d;
+      power_y = -error_d*sin(difference_a)*kP_d + integral_d*kI_d;
     }
 
 //controlling max power for a, x, and y
@@ -235,10 +238,9 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
     if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), power_x, power_y, power_a);
     move_drive(power_x, power_y, power_a);
-
-    last_power_x = power_x;
-    last_power_y = power_y;
-    last_power_a = power_a;
+    if(power_x != 0) last_power_x = power_x;
+    if(power_y != 0) last_power_y = power_y;
+    if(power_a != 0) last_power_a = power_a;
     last_time = millis();
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
       printf("Here 1\n");
@@ -254,24 +256,26 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
         tracking.xcoord = target_x;
         move_drive(0, 0, 0);
         difference_a = 0;
-        printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+        printf("Movement to (%f, %f, %f) en ded\n", target_x, target_y, rad_to_deg(target_a));
         printf("X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
         master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
         master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
         break;
         }
     }
-    else if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 0.5 && !cubeLineUp){
+    else if (fabs(error_a) <= deg_to_rad(0.5) && error_d < 0.5 && !cubeLineUp){
       difference_a = 0;
       brake();
       delay(300);
+      move_drive(0, 0, 0);
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      delay(1000);
+      printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       break;
     }
-    else if (master.get_digital(E_CONTROLLER_DIGITAL_X)){
+    else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
       difference_a = 0;
       brake();
       delay(300);
@@ -301,22 +305,17 @@ void Tracking::trackingInput() {
 
   move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
 
-  if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
+  if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){
     tracking.x2 = tracking.xcoord;
     tracking.y2 = tracking.ycoord;
     tracking.a2 = tracking.global_angle;
   }
-  if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-    tracking.xcoord = 0;
-    tracking.ycoord = 0;
-    tracking.global_angle = 0;
+
+  if (master.get_digital(E_CONTROLLER_DIGITAL_L2)){
+    tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2, false, true);
   }
 
-  if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-    tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2);
-  }
-
-  if (master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
+  if (master.get_digital(E_CONTROLLER_DIGITAL_LEFT)){
     //tracking.move_to_target(5, 12.0, 0.0, false, true);
     tracking.move_to_target(0, 0, 0, false, true);
 

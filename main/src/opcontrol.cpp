@@ -25,7 +25,7 @@ void opcontrol() {
 	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		double power = 0;
 		double kP = 1.2;
-	  //delay(6000);
+	  delay(6000);
 		green.sig_num = 1;
 		purple.sig_num = 2;
 	  Task tracking_task(update);
@@ -66,13 +66,7 @@ void opcontrol() {
 			 // printf("global angle: %f\n", tracking.global_angle);
 	     // green.lineMiddle(1.2);
 			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
-			 if (millis()-lastTime > 100){
-				 printf("X:%f, Y:%f, A:%f\n", tracking.xcoord, tracking.ycoord, tracking.global_angle/M_PI *180);
-				 printf("leftencoder:%d, inches:%f\n", leftencoder.get_value(), leftencoder.get_value() / 360.0* (2.75*M_PI));
-				 printf("rightencoder:%d, inches:%f\n", rightencoder.get_value(), leftencoder.get_value() / 360.0* (2.75*M_PI));
-				 //printf("backencoder:%d, inches:%f\n", backencoder.get_value(),backencoder.get_value() / 360.0* (2.77*M_PI));
-				 lastTime = millis();
-			 }
+
 
 	   }
 	}
