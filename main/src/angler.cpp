@@ -16,7 +16,7 @@ void anglerCal()
 {
   uint32_t timeout_time = millis() + 100;
   bool success = true;
-  angler.move(-25);
+  angler.move(-10);
   delay(100);
   while (fabs(angler.get_actual_velocity()) < 12 && (success = (millis() < timeout_time)))
   {
@@ -32,7 +32,7 @@ void anglerCal()
   angler.move(0);
   setAnglerState(anglerStates::Idle);
 }
-
+double kP = 0.001;
 void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
@@ -46,11 +46,40 @@ void anglerHandle() {
         angler.move_absolute(ANGLER_MID, 200);
         setAnglerState(anglerStates::Mid);
       }
+      if(master.get_digital(E_CONTROLLER_DIGITAL_LEFT)){
+        angler.move_absolute(ANGLER_FIRST, 200);
+        setAnglerState(anglerStates::First);
+      }
     break;
+    case anglerStates::First:
+      if(master.get_digital(E_CONTROLLER_DIGITAL_DOWN)){
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
+      }
+      if(master.get_digital(E_CONTROLLER_DIGITAL_UP)){
+        intakeL.tare_position();
+        intakeL.move(70);
+        intakeR.move(-70);
+        setAnglerState(anglerStates::CubeOut);
+      }
+      if(master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
+        angler.move_absolute(ANGLER_MID, 200);
+        setAnglerState(anglerStates::Mid);
+      }
+      if(master.get_digital(E_CONTROLLER_DIGITAL_LEFT)){
+        angler.move_absolute(ANGLER_FIRST, 200);
+        setAnglerState(anglerStates::Mid);
+      }
     case anglerStates::Top:
-      if((angler.get_target_position()-angler.get_position())<300){
-        intakeL.move(0);
-        intakeR.move(0);
+      if((ANGLER_TOP-angler.get_position())<1300 && (ANGLER_TOP-angler.get_position())<600)
+      {
+        intakeL.move(-30);
+        intakeR.move(30);
+      }
+      if((ANGLER_TOP-angler.get_position())<599)
+      {
+        intakeL.move(-60);
+        intakeR.move(60);
       }
       if(master.get_digital(E_CONTROLLER_DIGITAL_DOWN)){
         angler.move_absolute(1, 200);
@@ -58,6 +87,10 @@ void anglerHandle() {
       }
       if(master.get_digital(E_CONTROLLER_DIGITAL_RIGHT)){
         angler.move_absolute(ANGLER_MID, 200);
+        setAnglerState(anglerStates::Mid);
+      }
+      if(master.get_digital(E_CONTROLLER_DIGITAL_LEFT)){
+        angler.move_absolute(ANGLER_FIRST, 200);
         setAnglerState(anglerStates::Mid);
       }
     break;
@@ -72,13 +105,17 @@ void anglerHandle() {
         intakeR.move(-70);
         setAnglerState(anglerStates::CubeOut);
       }
+      if(master.get_digital(E_CONTROLLER_DIGITAL_LEFT)){
+        angler.move_absolute(ANGLER_FIRST, 200);
+        setAnglerState(anglerStates::Mid);
+      }
     break;
     case anglerStates::CubeOut:
-        if(fabs(intakeL.get_position())>1000)
+        if(fabs(intakeL.get_position())>800)
         {
           intakeL.move(0);
           intakeR.move(0);
-          angler.move_absolute(ANGLER_TOP, 100);
+          angler.move_absolute(ANGLER_TOP, 75);
           setAnglerState(anglerStates::Top);
         }
     break;

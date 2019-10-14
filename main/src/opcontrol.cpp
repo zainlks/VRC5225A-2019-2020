@@ -25,14 +25,12 @@ void opcontrol() {
 	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		double power = 0;
 		double kP = 1.2;
-	  delay(6000);
+	  // delay(6000);
 		green.sig_num = 1;
 		purple.sig_num = 2;
 	  Task tracking_task(update);
 		tracking.setAngleHold(0);
-		Task angleTracking(pointToAngle);
 		int lastTime = 0;
-
 	  while (true){
 	     tracking.trackingInput();
 			 fBarHandle();

@@ -2,6 +2,7 @@
 #include "main.h"
 #include "config.hpp"
 #include "vision.hpp"
+#include "fBar.hpp"
 #include <iostream>
 #include <cmath>
 #include <memory>
@@ -9,10 +10,12 @@
 using namespace std;
 using namespace pros;
 constexpr double ANGLER_TOP = 2600;
-constexpr double ANGLER_MID = 1350;
+constexpr double ANGLER_MID = 530;
+constexpr double ANGLER_FIRST = 1600;
 enum class anglerStates {
   Idle,
   Mid,
+  First,
   CubeOut,
   Top
 };

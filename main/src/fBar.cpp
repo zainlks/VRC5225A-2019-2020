@@ -29,36 +29,39 @@ void fBarCal()
 	}
   delay(100);
   fBar.tare_position();
-  fBar.move(-12);
+  fBar.move(-5);
   setfBarState(fBarStates::Idle);
 }
 
 void fBarHandle() {
   switch(fBarState) {
     case fBarStates::Idle:
-      if(master.get_digital(E_CONTROLLER_DIGITAL_X)) {
+      if(fBar.get_position()<100) fBar.move(-6);
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)) {
         fBar.move_absolute(FBAR_TOP, 200);
         setfBarState(fBarStates::Top);
       }
-      else if(master.get_digital(E_CONTROLLER_DIGITAL_A)){
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
         fBar.move_absolute(FBAR_MID, 200);
         setfBarState(fBarStates::Mid);
       }
     case fBarStates::Top:
-      if(master.get_digital(E_CONTROLLER_DIGITAL_B)){
+      if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(6);
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
       }
-      else if(master.get_digital(E_CONTROLLER_DIGITAL_A)){
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
         fBar.move_absolute(FBAR_MID, 200);
         setfBarState(fBarStates::Mid);
       }
     case fBarStates::Mid:
-      if(master.get_digital(E_CONTROLLER_DIGITAL_B)){
+      if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(6);
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
       }
-      else if(master.get_digital(E_CONTROLLER_DIGITAL_X)){
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
         fBar.move_absolute(FBAR_TOP, 200);
         setfBarState(fBarStates::Top);
       }

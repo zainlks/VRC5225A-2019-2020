@@ -315,7 +315,7 @@ void Tracking::trackingInput() {
     tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2, false, true);
   }
 
-  if (master.get_digital(E_CONTROLLER_DIGITAL_LEFT)){
+  if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
     //tracking.move_to_target(5, 12.0, 0.0, false, true);
     tracking.move_to_target(0, 0, 0, false, true);
 
