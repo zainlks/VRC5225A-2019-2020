@@ -36,6 +36,7 @@ void clear_line(int line) {
 
 }
 
+
 void update (void* param){
  double distance_LR = 14.7135; double distance_B = 7.25;
  double radiusR = 0;
@@ -126,7 +127,12 @@ void brake(){
   back_R.move_relative(0,200);
   delay(300);
 }
-
+void Tracking::reset() {
+  this->xcoord = 0;
+  this->ycoord = 0;
+  leftencoder.reset();
+  rightencoder.reset(); 
+}
 void Tracking::move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = 90.0;

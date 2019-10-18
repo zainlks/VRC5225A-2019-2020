@@ -3,6 +3,7 @@
 #include "vision.hpp"
 #include "fBar.hpp"
 #include "angler.hpp"
+#include "drive.hpp"
 using namespace pros;
 
 /**
@@ -25,16 +26,16 @@ void opcontrol() {
 	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		double power = 0;
 		double kP = 1.2;
-	  // delay(6000);
+	  delay(6000);
 		green.sig_num = 1;
 		purple.sig_num = 2;
 	  Task tracking_task(update);
 		tracking.setAngleHold(0);
 		int lastTime = 0;
 	  while (true){
-	     tracking.trackingInput();
 			 fBarHandle();
 			 anglerHandle();
+			 driveHandle();
 			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_R1)) {
 				 if(fabs(intakeL.get_actual_velocity())>2)
 				 {
