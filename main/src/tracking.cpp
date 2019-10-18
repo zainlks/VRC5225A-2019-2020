@@ -131,7 +131,7 @@ void Tracking::reset() {
   this->xcoord = 0;
   this->ycoord = 0;
   leftencoder.reset();
-  rightencoder.reset(); 
+  rightencoder.reset();
 }
 void Tracking::move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
@@ -224,7 +224,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       }
     }
 
-    if (fabs(error_x) > 0.5){
+    if (fabs(error_x) > 0.35){
         if (fabs(power_x) < min_power_xy){
         power_x = sgn(power_x)*min_power_xy;
       }
@@ -233,7 +233,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       power_x = 0;
     }
 
-    if (fabs(error_y) > 0.5){
+    if (fabs(error_y) > 0.35){
       if(fabs(power_y) < min_power_xy){
       power_y = sgn(power_y)*min_power_xy;
       }
