@@ -130,13 +130,15 @@ void brake(){
 void Tracking::reset() {
   this->xcoord = 0;
   this->ycoord = 0;
+  this->global_angle = 0;
   leftencoder.reset();
   rightencoder.reset();
+  backencoder.reset();
 }
-void Tracking::move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp,  bool debug){
+void Tracking::move_to_target(double target_x, double target_y, double target_a, double max_xy, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
-  double max_power_a = 55.0, max_power_xy = 90.0;
-  double min_power_a = 12, min_power_xy = 10;
+  double max_power_a = 55.0, max_power_xy = max_xy;
+  double min_power_a = 12, min_power_xy = 20;
   double scale;
 
   double last_power_a = max_power_a, last_power_x = max_power_xy, last_power_y = max_power_xy;
@@ -144,7 +146,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
   double error_a, error_x, error_y, error_d;
   double difference_a;
-  double kP_a = 137, kP_d = 13;
+  double kP_a = 137, kP_d = 14;
   double kI_a = 0.0, kI_d = 0.0022;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
 
@@ -224,7 +226,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       }
     }
 
-    if (fabs(error_x) > 0.35){
+    if (fabs(error_x) > 0.5){
         if (fabs(power_x) < min_power_xy){
         power_x = sgn(power_x)*min_power_xy;
       }
@@ -233,7 +235,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       power_x = 0;
     }
 
-    if (fabs(error_y) > 0.35){
+    if (fabs(error_y) > 0.5){
       if(fabs(power_y) < min_power_xy){
       power_y = sgn(power_y)*min_power_xy;
       }
@@ -321,11 +323,11 @@ void Tracking::trackingInput() {
     tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2, false, true);
   }
 
-  if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-    //tracking.move_to_target(5, 12.0, 0.0, false, true);
-    tracking.move_to_target(0, 0, 0, false, true);
-
-  }
+  // if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
+  //   //tracking.move_to_target(5, 12.0, 0.0, false, true);
+  //   tracking.move_to_target(0, 0, 0, false, true);
+  //
+  // }
 }
 void Tracking::setAngleHold(double angle) {
   holdAngle = angle;

@@ -37,20 +37,11 @@ void anglerCal()
 double kP = 0.001;
 bool taskComplete = false;
 
-void startDropOff() {
-  dropOffTask = new Task(dropOff);
-}
-void stopDropOff() {
-  dropOffTask->remove();
-  delete dropOffTask;
-  dropOffTask = nullptr;
-}
 void dropOff(void *param) {
   tracking.reset();
   printf("x is: %f, y is: %f\n", tracking.xcoord, tracking.ycoord);
-  tracking.move_to_target(0, 3.0, 0);
+  tracking.move_to_target(0, -10.0, 0, 40, false, true);
   setDriveState(driveStates::Driver);
-  stopDropOff();
 }
 
 void anglerHandle() {
@@ -103,8 +94,10 @@ void anglerHandle() {
       }
       if((ANGLER_TOP-angler.get_position())<25 && stateCheck == 0)
       {
-        startDropOff();
         setDriveState(driveStates::Auto);
+        tracking.reset();
+        tracking.move_to_target(0, -10.0, 0, 50, false, true);
+        setDriveState(driveStates::Driver);
         stateCheck++;
       }
       if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
