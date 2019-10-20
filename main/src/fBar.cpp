@@ -45,6 +45,7 @@ void fBarHandle() {
         fBar.move_absolute(FBAR_MID, 200);
         setfBarState(fBarStates::Mid);
       }
+      break;
     case fBarStates::Top:
       if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(6);
       if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
@@ -55,6 +56,7 @@ void fBarHandle() {
         fBar.move_absolute(FBAR_MID, 200);
         setfBarState(fBarStates::Mid);
       }
+      break;
     case fBarStates::Mid:
       if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(6);
       if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
