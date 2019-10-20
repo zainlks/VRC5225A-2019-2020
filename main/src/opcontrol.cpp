@@ -36,7 +36,7 @@ void opcontrol() {
 			 fBarHandle();
 			 anglerHandle();
 			 driveHandle();
-			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_R1)) {
+			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>2)
 				 {
 					 intakeL.move(0);
@@ -47,7 +47,7 @@ void opcontrol() {
 					 intakeR.move(127);
 				 }
 			 }
-			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_R2)) {
+			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>2)
 				 {
 					 intakeL.move(0);

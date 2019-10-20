@@ -297,9 +297,9 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   }
 }
 void Tracking::trackingInput() {
-  tracking.power_a = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
-  tracking.power_x = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
-  tracking.power_y = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
+  tracking.power_a = master.get_analog(JOY_TURN);
+  tracking.power_x = master.get_analog(JOY_STRAFE);
+  tracking.power_y = master.get_analog(JOY_FORWARD);
 
   if (fabs(tracking.power_a) < 5){
     tracking.power_a = 0;
@@ -313,15 +313,15 @@ void Tracking::trackingInput() {
 
   move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
 
-  if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){
-    tracking.x2 = tracking.xcoord;
-    tracking.y2 = tracking.ycoord;
-    tracking.a2 = tracking.global_angle;
-  }
-
-  if (master.get_digital(E_CONTROLLER_DIGITAL_L2)){
-    tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2, false, true);
-  }
+  // if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){
+  //   tracking.x2 = tracking.xcoord;
+  //   tracking.y2 = tracking.ycoord;
+  //   tracking.a2 = tracking.global_angle;
+  // }
+  //
+  // if (master.get_digital(E_CONTROLLER_DIGITAL_L2)){
+  //   tracking.move_to_target(tracking.x2, tracking.y2, tracking.a2, false, true);
+  // }
 
   // if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
   //   //tracking.move_to_target(5, 12.0, 0.0, false, true);
