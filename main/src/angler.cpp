@@ -5,7 +5,7 @@ anglerStates anglerState = anglerStates::Idle;
 anglerStates anglerStateLast = anglerState;
 int anglerStateChangeTime = 0;
 int stateCheck = 0;
-
+bool dropOffHold = false;
 void setAnglerState(anglerStates state) {
   printf("Going from %d", anglerState);
 	anglerStateLast = anglerState;
@@ -47,69 +47,40 @@ void dropOff(void *param) {
 void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
-        intakeL.tare_position();
-        intakeL.move(70);
-        intakeR.move(-70);
-        setAnglerState(anglerStates::CubeOut);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
+      if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID, 200);
         setAnglerState(anglerStates::Mid);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-        angler.move_absolute(ANGLER_FIRST, 200);
-        setAnglerState(anglerStates::First);
       }
     break;
-    case anglerStates::First:
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
-        angler.move_absolute(1, 200);
-        setAnglerState(anglerStates::Idle);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
-        intakeL.tare_position();
-        intakeL.move(70);
-        intakeR.move(-70);
-        setAnglerState(anglerStates::CubeOut);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
-        angler.move_absolute(ANGLER_MID, 200);
-        setAnglerState(anglerStates::Mid);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-        angler.move_absolute(ANGLER_FIRST, 200);
-        setAnglerState(anglerStates::Mid);
-      }
     case anglerStates::Top:
-      if((ANGLER_TOP-angler.get_position())<1300 && (ANGLER_TOP-angler.get_position())<600)
+      if(master.get_digital(DROPOFF_BUTTON)) dropOffHold = true;
+      if(dropOffHold)
       {
-        intakeL.move(-30);
-        intakeR.move(30);
+        if((ANGLER_TOP-angler.get_position())<1300 && (ANGLER_TOP-angler.get_position())<600)
+        {
+          intakeL.move(-30);
+          intakeR.move(30);
+        }
+        if((ANGLER_TOP-angler.get_position())<599)
+        {
+          intakeL.move(-60);
+          intakeR.move(60);
+        }
       }
-      if((ANGLER_TOP-angler.get_position())<599)
-      {
-        intakeL.move(-60);
-        intakeR.move(60);
-      }
-      if((ANGLER_TOP-angler.get_position())<25 && stateCheck == 0)
-      {
-        setDriveState(driveStates::Auto);
-        tracking.reset();
-        tracking.move_to_target(0, -10.0, 0, 50, false, true);
-        setDriveState(driveStates::Driver);
-        stateCheck++;
-      }
+        if((ANGLER_TOP-angler.get_position())<25 && stateCheck == 0)
+        {
+          setDriveState(driveStates::Auto);
+          tracking.reset();
+          tracking.move_to_target(0, -10.0, 0, 50, false, true);
+          setDriveState(driveStates::Driver);
+          stateCheck++;
+        }
       if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
         angler.move_absolute(1, 200);
         setAnglerState(anglerStates::Idle);
       }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
+      if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID, 200);
-        setAnglerState(anglerStates::Mid);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-        angler.move_absolute(ANGLER_FIRST, 200);
         setAnglerState(anglerStates::Mid);
       }
     break;
@@ -118,15 +89,11 @@ void anglerHandle() {
         angler.move_absolute(1, 200);
         setAnglerState(anglerStates::Idle);
       }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+      if(master.get_digital_new_press(DROPOFF_BUTTON)) {
         intakeL.tare_position();
         intakeL.move(70);
         intakeR.move(-70);
         setAnglerState(anglerStates::CubeOut);
-      }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-        angler.move_absolute(ANGLER_FIRST, 200);
-        setAnglerState(anglerStates::Mid);
       }
     break;
     case anglerStates::CubeOut:

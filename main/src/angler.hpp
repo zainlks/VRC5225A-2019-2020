@@ -4,6 +4,7 @@
 #include "vision.hpp"
 #include "fBar.hpp"
 #include "drive.hpp"
+#include "controller.hpp"
 #include <iostream>
 #include <cmath>
 #include <memory>
@@ -16,7 +17,6 @@ constexpr double ANGLER_FIRST = 1600;
 enum class anglerStates {
   Idle,
   Mid,
-  First,
   CubeOut,
   Top
 };

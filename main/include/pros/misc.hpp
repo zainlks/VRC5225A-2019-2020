@@ -135,6 +135,7 @@ class Controller {
 	 */
 	std::int32_t get_digital_new_press(controller_digital_e_t button);
 
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 	template <typename T>
