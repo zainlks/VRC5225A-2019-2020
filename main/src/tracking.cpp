@@ -343,8 +343,8 @@ void pointToAngle(void *param) {
       else tracking.power_a = 0;
     }
 }
-void turn_to_target(double target_x, double target_y, bool debug){
-  double target_a = atan((target_x - tracking.xcoord) / (target_y - tracking.ycoord));
+void Tracking::turn_to_target(double target_x, double target_y, bool debug){
+  double target_a = atan2((target_x - tracking.xcoord), (target_y - tracking.ycoord));
   double error_a;
   double kP_a = 137;
   double power_a;
@@ -371,6 +371,7 @@ void turn_to_target(double target_x, double target_y, bool debug){
       brake();
       delay(300);
       move_drive(0, 0, 0);
+      delay(500);
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));

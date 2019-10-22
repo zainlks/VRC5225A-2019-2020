@@ -59,6 +59,9 @@ void opcontrol() {
 					 intakeR.move(-127);
 			 	 }
 			 }
+			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
+			 	tracking.turn_to_target(-10, 10, false);
+			}
 			 // tracking.move_to_target(0, 10, 0);
 			 // green.update();
 			 // printf("center: %d\n",green.obj.x_middle_coord);
