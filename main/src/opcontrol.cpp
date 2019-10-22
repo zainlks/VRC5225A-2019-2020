@@ -20,20 +20,13 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	  front_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	  front_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	  back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	  back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 		double power = 0;
 		double kP = 1.2;
-	  delay(6000);
 		green.sig_num = 1;
 		purple.sig_num = 2;
-	  Task tracking_task(update);
 		tracking.setAngleHold(0);
 		int lastTime = 0;
 	  while (true){
-			// printf("L %d, R:%d, B:%d\n",leftencoder.get_value(),rightencoder.get_value(),backencoder.get_value());
 			 fBarHandle();
 			 anglerHandle();
 			 driveHandle();
@@ -60,9 +53,6 @@ void opcontrol() {
 					 intakeR.move(-127);
 			 	 }
 			 }
-			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
-			 	tracking.turn_to_target(-10, 10, false);
-			}
 			 // tracking.move_to_target(0, 10, 0);
 			 // green.update();
 			 // printf("center: %d\n",green.obj.x_middle_coord);

@@ -1,4 +1,10 @@
 #include "main.h"
+#include "tracking.hpp"
+#include "vision.hpp"
+#include "fBar.hpp"
+#include "angler.hpp"
+#include "drive.hpp"
+using namespace pros;
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -11,4 +17,9 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+  tracking.reset();
+  // printf("global angle:%f",tracking.global_angle);
+  tracking.turn_to_target(10, -10, false);
+  delay(1000);
+}

@@ -92,7 +92,6 @@ void update (void* param){
 		 Yy = h * cos(alpha);
 		 tracking.xcoord += Yx + Xx;
 		 tracking.ycoord += Yy + Xy;
-
      tracking.global_angle += theta;
 
 
@@ -128,9 +127,9 @@ void brake(){
   delay(300);
 }
 void Tracking::reset() {
-  this->xcoord = 0;
-  this->ycoord = 0;
-  this->global_angle = 0;
+  tracking.xcoord = 0;
+  tracking.ycoord = 0;
+  tracking.global_angle = 0;
 }
 void Tracking::move_to_target(double target_x, double target_y, double target_a, double max_xy, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
@@ -384,5 +383,6 @@ void Tracking::turn_to_target(double target_x, double target_y, bool debug){
       master.print(0, 2, "Movement to (%f, %f, %f) ended", target_x, target_y, rad_to_deg(target_a));
       break;
     }
+    delay(1);
   }
 }
