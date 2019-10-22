@@ -56,7 +56,7 @@ void anglerHandle() {
       if(master.get_digital(DROPOFF_BUTTON)) dropOffHold = true;
       if(dropOffHold)
       {
-        if((ANGLER_TOP-angler.get_position())<1300 && (ANGLER_TOP-angler.get_position())<600)
+        if((ANGLER_TOP-angler.get_position())<1300 && (ANGLER_TOP-angler.get_position())>600)
         {
           intakeL.move(-30);
           intakeR.move(30);
@@ -71,7 +71,7 @@ void anglerHandle() {
         {
           setDriveState(driveStates::Auto);
           tracking.reset();
-          tracking.move_to_target(0, -10.0, 0, 50, false, true);
+          tracking.move_to_target(0, -10.0, 0, 50, false, false);
           setDriveState(driveStates::Driver);
           stateCheck++;
         }
@@ -97,6 +97,7 @@ void anglerHandle() {
       }
     break;
     case anglerStates::CubeOut:
+    // printf("here\n");
         if(fabs(intakeL.get_position())>800)
         {
           intakeL.move(0);

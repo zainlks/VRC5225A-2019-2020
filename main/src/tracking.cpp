@@ -131,9 +131,6 @@ void Tracking::reset() {
   this->xcoord = 0;
   this->ycoord = 0;
   this->global_angle = 0;
-  leftencoder.reset();
-  rightencoder.reset();
-  backencoder.reset();
 }
 void Tracking::move_to_target(double target_x, double target_y, double target_a, double max_xy, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));

@@ -33,6 +33,7 @@ void opcontrol() {
 		tracking.setAngleHold(0);
 		int lastTime = 0;
 	  while (true){
+			// printf("L %d, R:%d, B:%d\n",leftencoder.get_value(),rightencoder.get_value(),backencoder.get_value());
 			 fBarHandle();
 			 anglerHandle();
 			 driveHandle();
