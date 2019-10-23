@@ -29,14 +29,14 @@ void fBarCal()
 	}
   delay(100);
   fBar.tare_position();
-  fBar.move(-5);
+  fBar.move(-7);
   setfBarState(fBarStates::Idle);
 }
 
 void fBarHandle() {
   switch(fBarState) {
     case fBarStates::Idle:
-      if(fBar.get_position()<100) fBar.move(-6);
+      if(fBar.get_position()<20) fBar.move(-7);
       if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)) {
         fBar.move_absolute(FBAR_TOP, 200);
         setfBarState(fBarStates::Top);

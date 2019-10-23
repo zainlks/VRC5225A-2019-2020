@@ -18,7 +18,7 @@ void anglerCal()
 {
   uint32_t timeout_time = millis() + 100;
   bool success = true;
-  angler.move(-10);
+  angler.move(-25);
   delay(100);
   while (fabs(angler.get_actual_velocity()) < 12 && (success = (millis() < timeout_time)))
   {
@@ -48,7 +48,7 @@ void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
-        angler.move_absolute(ANGLER_MID, 200);
+        angler.move_absolute(ANGLER_MID, 100);
         setAnglerState(anglerStates::Mid);
       }
     break;

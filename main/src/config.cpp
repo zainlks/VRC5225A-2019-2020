@@ -2,6 +2,7 @@
 ADIEncoder leftencoder (1, 2, true);
 ADIEncoder rightencoder (5, 6, false);
 ADIEncoder backencoder (3, 4, false);
+ADIUltrasonic ultrasonic (7,8);
 Motor intakeR(9,false), intakeL(2,false);
 Motor angler(4,true);
 Motor fBar(3, true);

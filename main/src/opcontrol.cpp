@@ -27,6 +27,7 @@ void opcontrol() {
 		tracking.setAngleHold(0);
 		int lastTime = 0;
 	  while (true){
+			printf("ultra: %d\n", ultrasonic.get_value());
 			 fBarHandle();
 			 anglerHandle();
 			 driveHandle();
