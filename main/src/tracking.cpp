@@ -325,6 +325,24 @@ void Tracking::trackingInput() {
   //
   // }
 }
+void Tracking::flattenAgainstWall(bool forward,bool hold) {
+  if(forward) {
+    move_drive(0, 30, 0);
+    delay(50);
+    while(back_L.get_actual_velocity() != 0 || back_R.get_actual_velocity()) {
+      delay(1);
+    }
+    if(hold) move_drive(0,25,0);
+  }
+  else {
+    move_drive(0, -50, 0);
+    delay(50);
+    while(front_L.get_actual_velocity() != 0 || front_R.get_actual_velocity()) {
+      delay(1);
+    }
+    if(hold) move_drive(0,-25,0);
+  }
+}
 void Tracking::setAngleHold(double angle) {
   holdAngle = angle;
 }
