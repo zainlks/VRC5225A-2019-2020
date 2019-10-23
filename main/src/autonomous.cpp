@@ -24,17 +24,21 @@ void autonomous() {
 
   tracking.move_to_target(16, 15, -M_PI/4);
   tracking.flattenAgainstWall(true, true);
-  move_drive(-25, 25, 0);
+  tracking.xcoord = 0;
+  tracking.ycoord = 0;
   double error;
   int target;
+  tracking.move_to_target(0, -2, -M_PI/4);
+  move_drive(sgn(347-ultrasonic.get_value()),  0, 0);
   while(true){
-    error = target - ultrasonic.get_value();
-    if(error > 335 && error < 355){
+    error = ultrasonic.get_value();
+    if(error > 340 && error < 355){
       brake();
       delay(300);
       move_drive(0, 0, 0);
       break;
     }
   }
+  tracking.flattenAgainstWall(true, true);
 
 }

@@ -98,7 +98,7 @@ void anglerHandle() {
     break;
     case anglerStates::CubeOut:
     // printf("here\n");
-        if(fabs(intakeL.get_position())>800)
+        if(fabs(intakeL.get_position())>1100)
         {
           intakeL.move(0);
           intakeR.move(0);
