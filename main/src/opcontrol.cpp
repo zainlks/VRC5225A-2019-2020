@@ -26,7 +26,6 @@ void opcontrol() {
 		purple.sig_num = 2;
 		tracking.setAngleHold(0);
 		int lastTime = 0;
-		tracking.flattenAgainstWall(true);
 		printf("done\n");
 	  while (true){
 		//	printf("ultra: %d\n", ultrasonic.get_value());

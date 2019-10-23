@@ -20,6 +20,21 @@ using namespace pros;
 void autonomous() {
   tracking.reset();
   // printf("global angle:%f",tracking.global_angle);
-  tracking.turn_to_target(10, -10, false);
   delay(1000);
+
+  tracking.move_to_target(16, 15, -M_PI/4);
+  tracking.flattenAgainstWall(true, true);
+  move_drive(-25, 25, 0);
+  double error;
+  int target;
+  while(true){
+    error = target - ultrasonic.get_value();
+    if(error > 335 && error < 355){
+      brake();
+      delay(300);
+      move_drive(0, 0, 0);
+      break;
+    }
+  }
+
 }
