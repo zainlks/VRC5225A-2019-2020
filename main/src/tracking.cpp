@@ -404,3 +404,50 @@ void Tracking::turn_to_target(double target_x, double target_y, bool debug){
     delay(1);
   }
 }
+
+void Tracking::turn_to_angle(double target_a, bool debug){
+  double error_a;
+  double kP_a = 137;
+  double power_a;
+  double min_power_a = 12, max_power_a = 55.0;
+
+  while(true){
+    error_a = fmod(target_a - tracking.global_angle, 2*M_PI);
+    power_a = error_a*kP_a;
+    if (fabs(power_a) > max_power_a){
+      power_a = sgn(power_a)*max_power_a;
+    }
+
+    if(fabs(power_a) < min_power_a){
+      if (fabs(error_a) > deg_to_rad(0.5)){
+        power_a = sgn(power_a)*min_power_a;
+      }
+      else{
+        power_a = 0;
+      }
+    }
+    if(debug) printf("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
+    move_drive(0, 0, power_a);
+    if (fabs(error_a) <= deg_to_rad(0.5)){
+      brake();
+      delay(300);
+      move_drive(0, 0, 0);
+      delay(500);
+      printf("Movement to (%f) ended\n", rad_to_deg(target_a));
+      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      master.print(0, 2,"Movement to (%f, %f, %f) ended\n", rad_to_deg(target_a));
+      break;
+    }
+    else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
+      brake();
+      delay(300);
+      printf("Movement to (%f) ended\n", rad_to_deg(target_a));
+      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      master.print(0, 2, "Movement to (%f) ended", rad_to_deg(target_a));
+      break;
+    }
+    delay(1);
+  }
+}

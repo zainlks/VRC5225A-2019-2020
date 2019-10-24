@@ -24,6 +24,7 @@ public:
   void trackingInput();
   void setAngleHold(double angle);
   void turn_to_target(double target_x, double target_y, bool debug = false);
+  void turn_to_angle(double target_a, bool debug = false);
   void flattenAgainstWall(bool forward, bool hold = true);
 };
 
