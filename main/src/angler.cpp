@@ -18,7 +18,7 @@ void anglerCal()
 {
   uint32_t timeout_time = millis() + 100;
   bool success = true;
-  angler.move(-25);
+  angler.move(-15);
   delay(100);
   while (fabs(angler.get_actual_velocity()) < 12 && (success = (millis() < timeout_time)))
   {
@@ -48,7 +48,7 @@ void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
-        angler.move_absolute(ANGLER_MID, 100);
+        angler.move_absolute(ANGLER_MID, 75);
         setAnglerState(anglerStates::Mid);
       }
     break;
@@ -63,8 +63,8 @@ void anglerHandle() {
         }
         if((ANGLER_TOP-angler.get_position())<599)
         {
-          intakeL.move(-60);
-          intakeR.move(60);
+          intakeL.move(-40);
+          intakeR.move(40);
         }
       }
         if((ANGLER_TOP-angler.get_position())<25 && stateCheck == 0)
@@ -91,8 +91,8 @@ void anglerHandle() {
       }
       if(master.get_digital_new_press(DROPOFF_BUTTON)) {
         intakeL.tare_position();
-        intakeL.move(70);
-        intakeR.move(-70);
+        intakeL.move(50);
+        intakeR.move(-50);
         setAnglerState(anglerStates::CubeOut);
       }
     break;
@@ -100,8 +100,8 @@ void anglerHandle() {
     // printf("here\n");
         if(fabs(intakeL.get_position())>1100)
         {
-          intakeL.move(0);
-          intakeR.move(0);
+          intakeL.move(-15);
+          intakeR.move(15);
           angler.move_absolute(ANGLER_TOP, 75);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
