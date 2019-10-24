@@ -11,11 +11,12 @@
 #include <vector>
 using namespace std;
 using namespace pros;
-constexpr double ANGLER_TOP = 2250;
-constexpr double ANGLER_MID = 1450;
+constexpr double ANGLER_TOP = 2350;
+constexpr double ANGLER_MID = 1550;
 enum class anglerStates {
   Idle,
   Mid,
+  Push,
   CubeOut,
   Top
 };

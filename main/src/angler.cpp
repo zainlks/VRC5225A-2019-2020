@@ -51,6 +51,16 @@ void anglerHandle() {
         angler.move_absolute(ANGLER_MID, 75);
         setAnglerState(anglerStates::Mid);
       }
+      // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
+      //   angler.move_absolute(750, 200);
+      //   setAnglerState(anglerStates::Push);
+      // }
+    break;
+    case anglerStates::Push:
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
+      }
     break;
     case anglerStates::Top:
       if(master.get_digital(DROPOFF_BUTTON)) dropOffHold = true;
@@ -71,7 +81,7 @@ void anglerHandle() {
         {
           setDriveState(driveStates::Auto);
           tracking.reset();
-          tracking.move_to_target(0, -10.0, 0, 50, false, false);
+          tracking.move_to_target(0, -10.0, 0, false, 50, false, false);
           setDriveState(driveStates::Driver);
           stateCheck++;
         }
@@ -98,11 +108,11 @@ void anglerHandle() {
     break;
     case anglerStates::CubeOut:
     // printf("here\n");
-        if(fabs(intakeL.get_position())>1100)
+        if(fabs(intakeL.get_position())>1200)
         {
           intakeL.move(-15);
           intakeR.move(15);
-          angler.move_absolute(ANGLER_TOP, 75);
+          angler.move_absolute(ANGLER_TOP, 50);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
         }

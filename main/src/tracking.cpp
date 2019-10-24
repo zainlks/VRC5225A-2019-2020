@@ -124,14 +124,13 @@ void brake(){
   front_R.move_relative(0,200);
   back_L.move_relative(0,200);
   back_R.move_relative(0,200);
-  delay(300);
 }
 void Tracking::reset() {
   tracking.xcoord = 0;
   tracking.ycoord = 0;
   tracking.global_angle = 0;
 }
-void Tracking::move_to_target(double target_x, double target_y, double target_a, double max_xy, bool cubeLineUp,  bool debug){
+void Tracking::move_to_target(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug){
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = max_xy;
   double min_power_a = 12, min_power_xy = 20;
@@ -267,13 +266,14 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
         break;
         }
     }
-    else if (fabs(error_a) <= deg_to_rad(0.5) && error_d < 0.5 && !cubeLineUp){
+    else if (fabs(error_a) <= deg_to_rad(0.5) && error_d < 0.7 && !cubeLineUp){
       difference_a = 0;
       brake();
-      delay(300);
+      if(brakeOn) {
+        delay(600);
+      }
       move_drive(0, 0, 0);
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      delay(1000);
       printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
@@ -282,7 +282,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
       difference_a = 0;
       brake();
-      delay(300);
+      delay(600);
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));

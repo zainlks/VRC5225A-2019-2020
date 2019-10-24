@@ -28,7 +28,7 @@ void opcontrol() {
 		int lastTime = 0;
 		printf("done\n");
 	  while (true){
-		//	printf("ultra: %d\n", ultrasonic.get_value());
+			 printf("fbar: %f\n", fBar.get_position());
 			 fBarHandle();
 			 anglerHandle();
 			 driveHandle();
