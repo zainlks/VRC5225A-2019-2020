@@ -49,6 +49,8 @@ void anglerHandle() {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID, 75);
+        intakeL.move(-30);
+        intakeR.move(30);
         setAnglerState(anglerStates::Mid);
       }
       // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
@@ -101,17 +103,17 @@ void anglerHandle() {
       }
       if(master.get_digital_new_press(DROPOFF_BUTTON)) {
         intakeL.tare_position();
-        intakeL.move(50);
-        intakeR.move(-50);
+        intakeL.move(30);
+        intakeR.move(-30);
         setAnglerState(anglerStates::CubeOut);
       }
     break;
     case anglerStates::CubeOut:
     // printf("here\n");
-        if(fabs(intakeL.get_position())>1200)
+        if(fabs(intakeL.get_position())>500)
         {
-          intakeL.move(-15);
-          intakeR.move(15);
+          intakeL.move(-25);
+          intakeR.move(25);
           angler.move_absolute(ANGLER_TOP, 50);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);

@@ -45,7 +45,7 @@ void fBarHandle() {
       }
       if(master.get_digital_new_press(UP_CUBE_HEIGHT)) {
         fBar.move_absolute(towerHeights[0], 100);
-        angler.move_absolute(500, 50);
+        angler.move_absolute(200, 50);
         setfBarState(fBarStates::Tower);
         cubeHeightCounter++;
       }
@@ -60,9 +60,9 @@ void fBarHandle() {
       cubeHeightCounter--;
     }
     if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)) {
-      fBar.move_absolute(1, 60);
-      tracking.reset();
+      fBar.move_absolute(1, 140);
       while(fBar.get_position()>towerHeights[1]) delay(1);
+      tracking.reset();
       tracking.move_to_target(0,3,0, false);
       tracking.reset();
       while(fBar.get_position()>50) delay(1);
