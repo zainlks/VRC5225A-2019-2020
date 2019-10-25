@@ -5,6 +5,7 @@ anglerStates anglerState = anglerStates::Idle;
 anglerStates anglerStateLast = anglerState;
 int anglerStateChangeTime = 0;
 int stateCheck = 0;
+uint32_t timer = 0;
 bool dropOffHold = false;
 void setAnglerState(anglerStates state) {
   printf("Going from %d", anglerState);
@@ -48,9 +49,9 @@ void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
-        angler.move_absolute(ANGLER_MID, 75);
-        intakeL.move(-30);
-        intakeR.move(30);
+        angler.move_absolute(ANGLER_MID, 50);
+        intakeL.move_relative(0,50);
+        intakeR.move_relative(0,50);
         setAnglerState(anglerStates::Mid);
       }
       // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
@@ -101,16 +102,53 @@ void anglerHandle() {
         angler.move_absolute(1, 200);
         setAnglerState(anglerStates::Idle);
       }
-      if(master.get_digital_new_press(DROPOFF_BUTTON)) {
-        intakeL.tare_position();
-        intakeL.move(30);
-        intakeR.move(-30);
-        setAnglerState(anglerStates::CubeOut);
+      if(master.get_digital_new_press(DROPOFF_BUTTON) || doublePressCheck) {
+        doublePressCheck = true;
+        printf("i am doing this \n");
+        if(timer == 0) timer = pros::millis();
+        if((pros::millis()-timer)>200)
+        {
+          if(master.get_digital(TOWER_HEIGHT))
+          {
+            intakeL.move(30);
+            intakeR.move(-30);
+            intakeL.tare_position();
+            timer = 0;
+            setAnglerState(anglerStates::CubeOutLast);
+          }
+          else
+          {
+            intakeL.tare_position();
+            intakeL.move(30);
+            intakeR.move(-30);
+            doublePressCheck = false;
+            timer = 0;
+            setAnglerState(anglerStates::CubeOutFirst);
+          }
+        }
       }
     break;
-    case anglerStates::CubeOut:
+    case anglerStates::CubeOutLast:
+      if(fabs(intakeL.get_position())>600)
+      {
+        intakeL.move_relative(0,50);
+        intakeR.move_relative(0,50);
+        doublePressCheck = false;
+        setAnglerState(anglerStates::Mid);
+      }
+    break;
+    case anglerStates::CubeOutFirst:
     // printf("here\n");
-        if(fabs(intakeL.get_position())>500)
+        delay(50);
+        if(fabs(intakeL.get_actual_velocity())<5 || fabs(intakeR.get_actual_velocity())<5)
+        {
+          intakeL.move(-25);
+          intakeR.move(25);
+          angler.move_absolute(ANGLER_TOP, 50);
+          stateCheck = 0;
+          setAnglerState(anglerStates::Top);
+        }
+        if(fabs(intakeL.get_position())>800)
         {
           intakeL.move(-25);
           intakeR.move(25);

@@ -37,7 +37,7 @@ void fBarHandle() {
   switch(fBarState) {
     case fBarStates::Idle:
       if(fBar.get_position()<20) fBar.move(-8);
-      if(master.get_digital_new_press(TOWER_HEIGHT)) {
+      if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
         fBar.move_absolute(FBAR_MID, 200);
         angler.move_absolute(ANGLER_MID-500, 40);
         setAnglerState(anglerStates::Mid);
@@ -72,7 +72,7 @@ void fBarHandle() {
     }
     case fBarStates::Top:
       if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(15);
-      if(master.get_digital_new_press(TOWER_HEIGHT)){
+      if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){
         fBar.move_absolute(1, 200);
         angler.move_absolute(1, 200);
         setAnglerState(anglerStates::Idle);
@@ -85,7 +85,7 @@ void fBarHandle() {
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
       }
-      if(master.get_digital_new_press(TOWER_HEIGHT)){
+      if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){
         fBar.move_absolute(FBAR_TOP, 150);
         setfBarState(fBarStates::Top);
       }

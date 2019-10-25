@@ -28,15 +28,15 @@ void opcontrol() {
 		int lastTime = 0;
 		printf("done\n");
 	  while (true){
-			 printf("fbar: %f\n", fBar.get_position());
-			 fBarHandle();
+			 // printf("fbar: %f\n", fBar.get_position());
 			 anglerHandle();
+			 fBarHandle();
 			 driveHandle();
 			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
-				 if(fabs(intakeL.get_actual_velocity())>2)
+				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
-					 intakeL.move(0);
-					 intakeR.move(0);
+					 intakeL.move_relative(0,50);
+           intakeR.move_relative(0,50);
 				 }
 				 else {
 					 intakeL.move(-127);
@@ -44,10 +44,10 @@ void opcontrol() {
 				 }
 			 }
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
-				 if(fabs(intakeL.get_actual_velocity())>2)
+				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
-					 intakeL.move(0);
-					 intakeR.move(0);
+					 intakeL.move_relative(0,50);
+           intakeR.move_relative(0,50);
 				 }
 				 else
 				 {

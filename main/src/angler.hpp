@@ -12,12 +12,13 @@
 using namespace std;
 using namespace pros;
 constexpr double ANGLER_TOP = 2350;
-constexpr double ANGLER_MID = 1550;
+constexpr double ANGLER_MID = 1450;
 enum class anglerStates {
   Idle,
   Mid,
   Push,
-  CubeOut,
+  CubeOutLast,
+  CubeOutFirst,
   Top
 };
 void startDropOff();
