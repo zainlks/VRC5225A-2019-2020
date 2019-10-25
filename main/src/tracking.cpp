@@ -333,3 +333,13 @@ void pointToAngle(void *param) {
       else tracking.power_a = 0;
     }
 }
+
+void Tracking::U_turn_to_target(double target_x, double target_y, double target_a, bool debug){
+  double middle_ground;
+  double high_ground;
+  if (target_x > xcoord) middle_ground = target_x - xcoord;
+  if (target_x < xcoord) middle_ground = -target_x + xcoord;
+  high_ground = middle_ground/2;
+  move_to_target(middle_ground, high_ground, target_a);
+  move_to_target(target_x, target_y, target_a);
+}

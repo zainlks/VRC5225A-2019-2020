@@ -22,6 +22,7 @@ public:
   void move_to_target(double target_x, double target_y, double target_a, bool cubeLineUp = false,  bool debug = false);
   void trackingInput();
   void setAngleHold(double angle);
+  void U_turn_to_target(double target_x, double target_y, double target_a, bool debug);
 };
 
 extern Tracking tracking;
