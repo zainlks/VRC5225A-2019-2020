@@ -451,3 +451,183 @@ void Tracking::turn_to_angle(double target_a, bool debug){
     delay(1);
   }
 }
+void Tracking::U_turn_to_target(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug){
+  double middle_ground;
+  double high_ground;
+  double last_point_y = target_y;
+  double last_point_x = target_x;
+  bool Time = false; //for if it goes for its second time (I know there is problay a better way to do this but i dont know how)
+  if (target_x > xcoord) middle_ground = target_x - xcoord;
+  if (target_x < xcoord) middle_ground = -target_x + xcoord;
+  high_ground = middle_ground/2;
+  printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
+  double max_power_a = 55.0, max_power_xy = max_xy;
+  double min_power_a = 12, min_power_xy = 20;
+  double scale;
+
+  double last_power_a = max_power_a, last_power_x = max_power_xy, last_power_y = max_power_xy;
+  double integral_a = 0.0, integral_d = 0.0;
+
+  double error_a, error_x, error_y, error_d;
+  double difference_a;
+  double kP_a = 137, kP_d = 14;
+  double kI_a = 0.0, kI_d = 0.0022;   // kI_a = 0.01, kI_d = 0.0022;
+  unsigned long last_time = millis();
+  target_x = middle_ground;
+  target_y = high_ground;
+  while (true){
+
+    error_a = fmod(target_a - global_angle, 2*M_PI);
+    error_x = target_x - xcoord;
+    error_y = target_y - ycoord;
+    error_d = sqrtf(powf(error_x, 2) + powf(error_y, 2));
+
+    difference_a = global_angle + atan(error_y/error_x);
+
+
+
+    if (fabs(last_power_a) < max_power_a){
+      integral_a += error_a * (millis() - last_time);
+    }
+
+    if (fabs(error_a) < deg_to_rad(0.5)){
+      integral_a = 0;
+      power_a  = 0;
+    }
+
+    if (error_d < 1){ // what triggers integral to start adding?
+      // integral_d += error_d * (millis() - last_time);
+    }
+    if(debug) {
+    printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
+    printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
+    printf("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
+    printf("%d | I value %f \n", millis(), integral_d*kI_d);
+    }
+
+    // if (fabs(error_d) < 0.5){
+    //   integral_d = 0;
+    //   power_x = 0;
+    //   power_y = 0;
+    // }
+
+//DOES MOD OF A NEGATIVE# RETURN POSTITIVE OR NEGATIVE VALUE? -- Negative!
+    power_a = error_a*kP_a + integral_a*kI_a;
+    if (error_x >= 0){
+      power_x = error_d*cos(difference_a)*kP_d + integral_d*kI_d;
+      power_y = error_d*sin(difference_a)*kP_d + integral_d*kI_d;
+    }
+    else{
+      power_x = -error_d*cos(difference_a)*kP_d + integral_d*kI_d;
+      power_y = -error_d*sin(difference_a)*kP_d + integral_d*kI_d;
+    }
+
+//controlling max power for a, x, and y
+    if (fabs(power_a) > max_power_a){
+      power_a = sgn(power_a)*max_power_a;
+    }
+    //need to scale x and y powers
+    if (fabs(power_x) > max_power_xy || fabs(power_y) > max_power_xy){
+      if (fabs(power_x) > fabs(power_y)){
+        scale = max_power_xy/fabs(power_x);
+        power_x = max_power_xy *sgn(power_x);
+        power_y = power_y *scale;
+      }
+      else {
+        scale = max_power_xy/fabs(power_y);
+        power_y = max_power_xy *sgn(power_y);
+        power_x = power_x *scale;
+      }
+    }
+
+//setting min power if a, x, and y are not within target
+    if(fabs(power_a) < min_power_a){
+      if (fabs(error_a) > deg_to_rad(0.5)){
+        power_a = sgn(power_a)*min_power_a;
+      }
+      else{
+        power_a = 0;
+      }
+    }
+
+    if (fabs(error_x) > 0.5){
+        if (fabs(power_x) < min_power_xy){
+        power_x = sgn(power_x)*min_power_xy;
+      }
+    }
+    else{
+      if(Time == false){
+        target_y = last_point_y;
+        target_x = last_power_x;
+        Time = true;
+      }
+      else power_x = 0;
+    }
+
+    if (fabs(error_y) > 0.5){
+      if(fabs(power_y) < min_power_xy){
+      power_y = sgn(power_y)*min_power_xy;
+      }
+    }
+    else{
+      if(Time == false){
+        target_y = last_point_y;
+        target_x = last_power_x;
+        Time = true;
+      }
+      else power_y = 0;
+    }
+
+    if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), power_x, power_y, power_a);
+    move_drive(power_x, power_y, power_a);
+    if(power_x != 0) last_power_x = power_x;
+    if(power_y != 0) last_power_y = power_y;
+    if(power_a != 0) last_power_a = power_a;
+    last_time = millis();
+    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
+      printf("Here 1\n");
+      if(cubeLineUp){
+        green.linedUp = false;
+        while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
+          error_y = target_y - ycoord;
+          error_a = fmod(target_a - global_angle, 2*M_PI);
+          green.update();
+          green.lineMiddle(0.8, target_y, target_a);
+          move_drive(power_x, power_y, power_a);
+        }
+        tracking.xcoord = target_x;
+        move_drive(0, 0, 0);
+        difference_a = 0;
+        printf("Movement to (%f, %f, %f) en ded\n", target_x, target_y, rad_to_deg(target_a));
+        printf("X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+        master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+        master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+        break;
+        }
+    }
+    else if (fabs(error_a) <= deg_to_rad(0.5) && error_d < 0.7 && !cubeLineUp){
+      difference_a = 0;
+      brake();
+      if(brakeOn) {
+        delay(600);
+      }
+      move_drive(0, 0, 0);
+      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
+      master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      break;
+    }
+    else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
+      difference_a = 0;
+      brake();
+      delay(600);
+      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
+      master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      master.print(0, 5, "Movement to (%f, %f, %f) ended", target_x, target_y, rad_to_deg(target_a));
+      break;
+    }
+    delay(3);
+  }
+}

@@ -26,6 +26,7 @@ public:
   void turn_to_target(double target_x, double target_y, bool debug = false);
   void turn_to_angle(double target_a, bool debug = false);
   void flattenAgainstWall(bool forward, bool hold = true);
+  void U_turn_to_target(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 90, bool cubeLineUp = false,  bool debug = false);
 };
 
 extern Tracking tracking;
