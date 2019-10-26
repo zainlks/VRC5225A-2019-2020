@@ -1,3 +1,16 @@
+#pragma once
+#include "main.h"
+#include "config.hpp"
+#include "vision.hpp"
+#include "fBar.hpp"
+#include "drive.hpp"
+#include <iostream>
+#include <cmath>
+#include <memory>
+#include <vector>
+using namespace std;
+using namespace pros;
+
 #define INTK_IN_BUTTON E_CONTROLLER_DIGITAL_X
 #define INTK_OUT_BUTTON E_CONTROLLER_DIGITAL_A
 #define TOWER_HEIGHT E_CONTROLLER_DIGITAL_L2
@@ -8,3 +21,5 @@
 #define JOY_TURN E_CONTROLLER_ANALOG_LEFT_X
 #define JOY_STRAFE E_CONTROLLER_ANALOG_RIGHT_X
 extern bool doublePressCheck;
+
+void printTemp(void *param);

@@ -4,6 +4,7 @@
 #include "fBar.hpp"
 #include "angler.hpp"
 #include "drive.hpp"
+#include "controller.hpp"
 using namespace pros;
 
 /**
