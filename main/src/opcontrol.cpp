@@ -27,15 +27,15 @@ void opcontrol() {
 		bool intk_stop = false;
 		green.sig_num = 1;
 		purple.sig_num = 2;
-		tracking.setAngleHold(0);
+		//tracking.setAngleHold(0);
 		int lastTime = 0;
 		printf("done\n");
-		angler.move_absolute(1800, 100);
+		//angler.move_absolute(1800, 100);
 	  while (true){
-			 if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
+			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 // printf("angler: %f\n", angler.get_position());
-			 anglerHandle();
-			 fBarHandle();
+			 // anglerHandle();
+			 // fBarHandle();
 			 if(millis() - stoptime >= 500 && intk_stop){
 				 intakeL.move_relative(0,50);
 				 intakeR.move_relative(0,50);
