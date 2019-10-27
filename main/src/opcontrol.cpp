@@ -23,6 +23,8 @@ int startNum = 0;
 void opcontrol() {
 		double power = 0;
 		double kP = 1.2;
+		uint32_t stoptime = 0;
+		bool intk_stop = false;
 		green.sig_num = 1;
 		purple.sig_num = 2;
 		tracking.setAngleHold(0);
@@ -31,15 +33,21 @@ void opcontrol() {
 		angler.move_absolute(1800, 100);
 	  while (true){
 			 if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
-			 printf("angler: %f\n", angler.get_position());
+			 // printf("angler: %f\n", angler.get_position());
 			 anglerHandle();
 			 fBarHandle();
-			 driveHandle();
+			 if(millis() - stoptime >= 500 && intk_stop){
+				 intakeL.move_relative(0,50);
+				 intakeR.move_relative(0,50);
+				 intk_stop = false;
+			 }
 			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
-					 intakeL.move_relative(0,50);
-           intakeR.move_relative(0,50);
+					 intakeR.move(25);
+					 intakeL.move(-25);
+					 stoptime = millis();
+					 intk_stop = true;
 				 }
 				 else {
 					 intakeL.move(-127);
@@ -49,7 +57,7 @@ void opcontrol() {
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
-					 intakeL.move_relative(0,50);
+					 intakeL.move_relative(0, 50);
            intakeR.move_relative(0,50);
 				 }
 				 else
@@ -65,6 +73,6 @@ void opcontrol() {
 	     // green.lineMiddle(1.2);
 			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
 
-
+			 delay(1);
 	   }
 	}

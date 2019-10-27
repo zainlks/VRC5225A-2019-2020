@@ -23,6 +23,7 @@ void initialize() {
 	delay(6000);
 	Task tracking_task(update);
 	Task controllerUpdate(printTemp);
+	Task driveUpdate(driveHandle);
 }
 
 /**

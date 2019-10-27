@@ -12,12 +12,15 @@ void setDriveState(driveStates state) {
   printf(" to %d\n", driveState);
 }
 
-void driveHandle() {
-  switch(driveState) {
-    case driveStates::Driver:
-      tracking.trackingInput();
+void driveHandle(void *param) {
+  while(true){
+    switch(driveState) {
+      case driveStates::Driver:
+        tracking.trackingInput();
+        break;
+      case driveStates::Auto:
       break;
-    case driveStates::Auto:
-    break;
+    }
+    delay(1);
   }
 }

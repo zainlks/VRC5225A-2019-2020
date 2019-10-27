@@ -15,6 +15,6 @@ enum class driveStates {
   Auto
 };
 void setDriveState(driveStates state);
-void driveHandle();
+void driveHandle(void *param);
 extern driveStates driveState;
 extern driveStates driveStateLast;
