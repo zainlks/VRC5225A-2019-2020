@@ -38,7 +38,7 @@ void clear_line(int line) {
 
 
 void update (void* param){
- double distance_LR = 14.7135; double distance_B = 7.25;
+ tracking.distance_LR = 14.7135; tracking.distance_B = 7.25;
  double radiusR = 0;
  double radiusB = 0;
  double h = 0;
@@ -69,14 +69,14 @@ void update (void* param){
 	 lastright = newright;
 	 lastleft = newleft;
 	 lastback = newback;
-	 theta = (Left - Right) / distance_LR;
+	 theta = (Left - Right) / tracking.distance_LR;
 //if robot turned in any direction
 	 if (theta != 0){
 		 radiusR = Right / theta;
 		 beta = theta / 2.0;
-		 h = (radiusR + distance_LR/2) * 2 *sin(beta);
+		 h = (radiusR + tracking.distance_LR/2) * 2 *sin(beta);
 		 radiusB = Back / theta;
-		 h2 = (radiusB + distance_B) * 2 *sin(beta);
+		 h2 = (radiusB + tracking.distance_B) * 2 *sin(beta);
 	 }
 //if robot moved straight or didn't move
 	 else {
@@ -450,4 +450,41 @@ void Tracking::turn_to_angle(double target_a, bool debug){
     }
     delay(1);
   }
+}
+
+void Tracking :: sweepTurn(double x1, double y1, double a1, double x2, double y2, double a2){
+  double radius = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2)) / 2;
+  double arclength = radius * M_PI;
+  bool forwards;
+  int segments = 30;
+  double total_angle = a2 - a1;
+  double angle_section = total_angle / segments;
+  double angle_interval = M_PI / segments;
+  double current_angle = angle_interval;
+  double target_x, target_y, target_a;
+  double power_x, power_y, power_a;
+//accelerate to x1, x2
+  while(true){
+    if (x2 - x1 >= 0){
+      target_x = x1 + (arclength/segments * sin(current_angle));
+    }
+    else{
+      target_x = x1 - (arclength/segments * sin(current_angle));
+    }
+    if (forwards){
+      target_y = y1 + (arclength/segments * cos(current_angle));
+    }
+    else{
+      target_y = y1 - (arclength/segments * cos(current_angle));
+    }
+    target_a = a1 + angle_section;
+
+    move_to_target(target_x, target_y, target_a);
+    if (target_x == x2 && target_y == y2 && target_a == a2){
+      break;
+    }
+    current_angle += angle_interval;
+    target_a += angle_section;
+  }
+  //deccelerate??
 }
