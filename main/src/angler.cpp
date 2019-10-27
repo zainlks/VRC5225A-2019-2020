@@ -19,6 +19,17 @@ void anglerCal()
 {
   uint32_t timeout_time = millis() + 100;
   bool success = true;
+  // angler.move(-15);
+  // delay(100);
+  // while (fabs(angler.get_actual_velocity()) < 12 && (success = (millis() < timeout_time))){
+  //   delay(10);
+  // }
+  // timeout_time = millis() + 3500;
+  // while (fabs(angler.get_actual_velocity()) > 10 && (success = (millis() < timeout_time))){
+	// 	delay(10);
+	// }
+  // delay(100);
+  //angler.move_absolute(,);
   angler.move(-15);
   delay(100);
   while (fabs(angler.get_actual_velocity()) < 12 && (success = (millis() < timeout_time)))
@@ -82,11 +93,15 @@ void anglerHandle() {
       }
         if((ANGLER_TOP-angler.get_position())<25 && stateCheck == 0)
         {
-          setDriveState(driveStates::Auto);
-          tracking.reset();
-          tracking.move_to_target(0, -10.0, 0, false, 50, false, false);
-          setDriveState(driveStates::Driver);
-          stateCheck++;
+          fBar.move_absolute(FBAR_MID, 75);
+          if(fabs(fBar.get_position()-FBAR_MID)<10 && stateCheck == 0)
+          {
+            setDriveState(driveStates::Auto);
+            tracking.reset();
+            tracking.move_to_target(0, -10.0, 0, false, 50, false, false);
+            setDriveState(driveStates::Driver);
+            stateCheck++;
+          }
         }
       if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
         angler.move_absolute(1, 200);
@@ -144,7 +159,7 @@ void anglerHandle() {
         {
           intakeL.move(-25);
           intakeR.move(25);
-          angler.move_absolute(ANGLER_TOP, 50);
+          angler.move_absolute(ANGLER_TOP, 150);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
         }
@@ -152,7 +167,7 @@ void anglerHandle() {
         {
           intakeL.move(-25);
           intakeR.move(25);
-          angler.move_absolute(ANGLER_TOP, 50);
+          angler.move_absolute(ANGLER_TOP, 150);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
         }

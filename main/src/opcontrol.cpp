@@ -6,7 +6,7 @@
 #include "drive.hpp"
 #include "controller.hpp"
 using namespace pros;
-
+int startNum = 0;
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -28,8 +28,10 @@ void opcontrol() {
 		tracking.setAngleHold(0);
 		int lastTime = 0;
 		printf("done\n");
+		angler.move_absolute(1800, 100);
 	  while (true){
-			 // printf("fbar: %f\n", fBar.get_position());
+			 if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
+			 printf("angler: %f\n", angler.get_position());
 			 anglerHandle();
 			 fBarHandle();
 			 driveHandle();
