@@ -5,6 +5,7 @@
 #include "angler.hpp"
 #include "drive.hpp"
 #include "controller.hpp"
+#include "logging.hpp"
 using namespace pros;
 
 /**
@@ -30,9 +31,10 @@ void opcontrol() {
 		printf("done\n");
 	  while (true){
 			 // printf("fbar: %f\n", fBar.get_position());
-			 anglerHandle();
-			 fBarHandle();
-			 driveHandle();
+			 // anglerHandle();
+			 // fBarHandle();
+			 // driveHandle();
+			 log("hello %d\n",2);
 			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
