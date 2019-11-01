@@ -8,31 +8,6 @@
 using namespace pros;
 int startNum = 0;
 
-void intk_break(int maxVel){
-	double errorL, errorR, integralL, integralR, powerL, powerR;
-	double kP = 0.1;
-	uint32_t lastTime = millis();
-
-	while(true){
-		lastTime = millis();
-		errorL = -1 * intakeL.get_actual_velocity();
-		errorR = -1 * intakeR.get_actual_velocity();
-		integralL = errorL * (millis() - lastTime);
-		integralR = errorR * (millis() - lastTime);
-		powerL = errorL * kP;
-		powerR = errorR * kP;
-
-
-		if(powerL > maxVel) powerL = maxVel * -sgn(intakeL.get_actual_velocity());
-		if(powerR > maxVel) powerR = maxVel * -sgn(intakeR.get_actual_velocity());
-
-		intakeL.move_velocity(powerL);
-		intakeR.move_velocity(powerR);
-
-
-		if (abs(intakeL.get_actual_velocity()) < 5 && abs(intakeR.get_actual_velocity()) < 5)break;
-	}
-}
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -70,7 +45,7 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
-			 }
+
 			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
@@ -105,4 +80,4 @@ void opcontrol() {
 
 			 delay(1);
 	   }
-	}
+}
