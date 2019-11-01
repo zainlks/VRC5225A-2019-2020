@@ -70,21 +70,12 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
-			 if(millis() - stoptime >= 500 && intk_stop){
-				 // intakeL.move_relative(0,50);
-				 // intakeR.move_relative(0,50);
-				 intakeL.move(-5);
-				 intakeR.move(5);
-				 //intk_break(50);
-				 intk_stop = false;
 			 }
 			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
-					 intakeR.move(25);
-					 intakeL.move(-25);
-					 stoptime = millis();
-					 intk_stop = true;
+					 intakeR.move(5);
+					 intakeL.move(-5);
 				 }
 				 else {
 					 intakeL.move(-127);
