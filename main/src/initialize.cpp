@@ -24,7 +24,7 @@ void initialize() {
 	// delay(6000);
 	Task tracking_task(update);
 
-	Task driveUpdate(driveHandle);
+	//Task driveUpdate(driveHandle);
 }
 
 /**
