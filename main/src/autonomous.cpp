@@ -4,8 +4,10 @@
 #include "fBar.hpp"
 #include "angler.hpp"
 #include "drive.hpp"
+#include "config.hpp"
+#include "controller.hpp"
 using namespace pros;
-
+uint32_t autotimer;
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -19,26 +21,27 @@ using namespace pros;
  */
 void autonomous() {
   tracking.reset();
-  // printf("global angle:%f",tracking.global_angle);
-  delay(1000);
-
-  tracking.move_to_target(16, 15, -M_PI/4);
-  tracking.flattenAgainstWall(true, true);
-  tracking.xcoord = 0;
-  tracking.ycoord = 0;
-  double error;
-  int target;
-  tracking.move_to_target(0, -2, -M_PI/4);
-  move_drive(sgn(347-ultrasonic.get_value()),  0, 0);
-  while(true){
-    error = ultrasonic.get_value();
-    if(error > 340 && error < 355){
-      brake();
-      delay(300);
-      move_drive(0, 0, 0);
-      break;
-    }
-  }
-  tracking.flattenAgainstWall(true, true);
-
+  autotimer = pros::millis();
+  printf("global angle:%f",tracking.global_angle);
+  intakeOn();
+  angler.move_absolute(2100, 200);
+  tracking.move_to_target(0, 22.5, 0, true, 75);
+  delay(50);
+  fBar.move_absolute(towerHeights[1], 200);
+  angler.move_absolute(900, 200);
+  while(fBar.get_position()<towerHeights[1]- 350|| angler.get_position()>1600) delay(1);
+  move_drive(0,40,0);
+  while(tracking.ycoord<24)delay(1);
+  move_drive(0, -10, 0);
+  delay(100);
+  fBar.move_absolute(1, 200);
+  while(fBar.get_position() > 1000) delay(1);
+  tracking.move_to_target(0, 29.5, 0);
+  angler.move_absolute(2500, 200);
+  tracking.move_to_target(-24, 2, 0);
+  tracking.move_to_target(-24, 39, 0, false, 75);
+  printf("time is %d\n", autotimer-pros::millis());
+  master.clear();
+  delay(50);
+  master.print(2,0,"%d",millis()-autotimer);
 }

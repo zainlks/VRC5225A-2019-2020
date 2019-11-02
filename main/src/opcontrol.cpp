@@ -32,6 +32,7 @@ void opcontrol() {
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
 		printf("done\n");
+		// Task driveUpdate(driveHandle);
 		//angler.move_absolute(1800, 100);
 	  while (true){
 
@@ -45,12 +46,16 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
-
+			 if(master.get_digital_new_press(SPEED_LIMIT))
+			 {
+				 if(speedLimit)speedLimit = false;
+				 else speedLimit = true;
+			 }
 			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
-				 if(fabs(intakeL.get_actual_velocity())>10)
+				 if(fabs(intakeL.get_actual_velocity())>25)
 				 {
-					 intakeR.move(5);
-					 intakeL.move(-5);
+					 intakeR.move(8);
+					 intakeL.move(-8);
 				 }
 				 else {
 					 intakeL.move(-127);

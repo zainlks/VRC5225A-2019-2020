@@ -39,7 +39,7 @@ void fBarHandle() {
       if(fBar.get_position()<20) fBar.move(-8);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
         fBar.move_absolute(FBAR_MID, 200);
-        angler.move_absolute(ANGLER_MID-500, 40);
+        angler.move_absolute(ANGLER_MID-2700, 150);
         setAnglerState(anglerStates::Mid);
         setfBarState(fBarStates::Mid);
       }
@@ -60,7 +60,7 @@ void fBarHandle() {
       cubeHeightCounter--;
     }
     if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)) {
-      fBar.move_absolute(1, 60);
+      fBar.move_absolute(1, 120);
       while(fBar.get_position()>towerHeights[1]) delay(1);
       setDriveState(driveStates::Auto);
       tracking.reset();

@@ -10,6 +10,7 @@
 using namespace std;
 using namespace pros;
 int sgn(double num);
+extern bool speedLimit;
 double deg_to_rad(double degrees);
 void move_drive(int x, int y, int a);
 void brake();
@@ -20,7 +21,7 @@ public:
   double xcoord, ycoord, global_angle, power_a, power_x, power_y, x2 , y2 , a2, holdAngle  = 0;
   bool toggle_target, toggle_cube, target, cube = false;
   void reset();
-  void move_to_target(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 90, bool cubeLineUp = false,  bool debug = false);
+  void move_to_target(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool cubeLineUp = false,  bool debug = false);
   void trackingInput();
   void setAngleHold(double angle);
   void turn_to_target(double target_x, double target_y, bool debug = false);

@@ -3,6 +3,7 @@
 
 Tracking tracking;
 
+bool speedLimit = 0;
 
 //test without extra angle thing
 //test which way negative mode turns
@@ -141,7 +142,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
   double error_a, error_x, error_y, error_d;
   double difference_a;
-  double kP_a = 137, kP_d = 14;
+  double kP_a = 140, kP_d = 14;
   double kI_a = 0.0, kI_d = 0.0022;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
 
@@ -166,8 +167,8 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       power_a  = 0;
     }
 
-    if (error_d < 1){ // what triggers integral to start adding?
-      // integral_d += error_d * (millis() - last_time);
+    if (error_d < 2){ // what triggers integral to start adding?
+      integral_d += error_d * (millis() - last_time);
     }
     if(debug) {
     printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
@@ -279,31 +280,28 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       break;
     }
-    else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-      difference_a = 0;
-      brake();
-      delay(600);
-      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
-      master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
-      master.print(0, 5, "Movement to (%f, %f, %f) ended", target_x, target_y, rad_to_deg(target_a));
-      break;
-    }
     delay(3);
   }
 }
 void Tracking::trackingInput() {
-  tracking.power_a = master.get_analog(JOY_TURN);
-  tracking.power_x = master.get_analog(JOY_STRAFE);
-  tracking.power_y = master.get_analog(JOY_FORWARD);
+  if(!speedLimit) {
+    tracking.power_a = master.get_analog(JOY_TURN);
+    tracking.power_x = master.get_analog(JOY_STRAFE);
+    tracking.power_y = master.get_analog(JOY_FORWARD);
+  }
+  else {
+    tracking.power_a = 35*sgn(master.get_analog(JOY_TURN));
+    tracking.power_x = 35*sgn(master.get_analog(JOY_STRAFE));
+    tracking.power_y = 35*sgn(master.get_analog(JOY_FORWARD));
+  }
 
-  if (fabs(tracking.power_a) < 5){
+  if (fabs(tracking.power_a) < 7){
     tracking.power_a = 0;
   }
-  if (fabs(tracking.power_x) < 5){
+  if (fabs(tracking.power_x) < 7){
     tracking.power_x = 0;
   }
-  if (fabs(tracking.power_y) < 5){
+  if (fabs(tracking.power_y) < 7){
     tracking.power_y = 0;
   }
 
@@ -392,15 +390,6 @@ void Tracking::turn_to_target(double target_x, double target_y, bool debug){
       master.print(0, 2,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       break;
     }
-    else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-      brake();
-      delay(300);
-      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-      master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-      master.print(0, 2, "Movement to (%f, %f, %f) ended", target_x, target_y, rad_to_deg(target_a));
-      break;
-    }
     delay(1);
   }
 }
@@ -437,15 +426,6 @@ void Tracking::turn_to_angle(double target_a, bool debug){
       printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 2,"Movement to (%f, %f, %f) ended\n", rad_to_deg(target_a));
-      break;
-    }
-    else if (master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-      brake();
-      delay(300);
-      printf("Movement to (%f) ended\n", rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-      master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-      master.print(0, 2, "Movement to (%f) ended", rad_to_deg(target_a));
       break;
     }
     delay(1);
