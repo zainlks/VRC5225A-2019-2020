@@ -94,8 +94,8 @@ void opcontrol() {
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
 				 if(fabs(intakeL.get_actual_velocity())>10)
 				 {
-					 intakeL.move(5);
-           intakeR.move(-5);
+					 intakeL.move(-5);
+           intakeR.move(5);
 				 }
 				 else
 				 {
