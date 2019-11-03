@@ -143,7 +143,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   double error_a, error_x, error_y, error_d;
   double difference_a;
   double kP_a = 140, kP_d = 14;
-  double kI_a = 0.0, kI_d = 0.012;   // kI_a = 0.01, kI_d = 0.0022;
+  double kI_a = 0.0, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
 
   while (true){
@@ -330,9 +330,9 @@ void Tracking::trackingInput() {
 }
 void Tracking::flattenAgainstWall(bool forward,bool hold) {
   if(forward) {
-    move_drive(0, 30, 0);
-    delay(50);
-    while(back_L.get_actual_velocity() != 0 || back_R.get_actual_velocity()) {
+    move_drive(0, 40, 0);
+    delay(100);
+    while(fabs(back_L.get_actual_velocity()) > 4 || fabs(back_R.get_actual_velocity()) > 4) {
       delay(1);
     }
     if(hold) move_drive(0,25,0);

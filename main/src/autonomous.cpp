@@ -19,6 +19,16 @@ uint32_t autotimer;
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+void intakeTask(void *param) {
+  while(true) {
+      if(tracking.xcoord<-28 && tracking.ycoord<20) {
+        intakeL.move(-10);
+        intakeR.move(10);
+        break;
+      }
+  }
+
+}
 void autonomous() {
   tracking.reset();
   autotimer = pros::millis();
@@ -30,6 +40,7 @@ void autonomous() {
   delay(100);
   move_drive(0,0,0);
   fBar.move_absolute(towerHeights[1]-300, 200);
+  move_drive(0, -30, 0);
   angler.move_absolute(400, 200);
   while(fBar.get_position()<towerHeights[1]- 350 || angler.get_position()>1600) delay(1);
   tracking.move_to_target(0, 24.5, 0, false, 60);
@@ -38,15 +49,23 @@ void autonomous() {
   move_drive(0,0,0);
   fBar.move_absolute(1, 200);
   while(fBar.get_position() > 1000) delay(1);
-  tracking.move_to_target(0, 29, 0);
-  angler.move_absolute(2100, 200);
-  tracking.move_to_target(-24, 2, 0, false);
+  tracking.move_to_target(0, 29, 0, false);
+  angler.move_absolute(1700, 200);
+  tracking.move_to_target(-25.5, 2, 0, false);
   move_drive(0, 95, 0);
-  while(tracking.ycoord<25)delay(1);
-  tracking.move_to_target(-24, 47, 0, false, 65);
+  while(tracking.ycoord<19)delay(1);
+  tracking.move_to_target(-25.5, 48, 0, false, 60);
   intakeL.move(-10);
   intakeR.move(10);
-  tracking.move_to_target(-30, 12, deg_to_rad(-135),true,127,false,true);
+  tracking.move_to_target(-33,9, deg_to_rad(-135),false,127,false,true);
+  angler.move_absolute(ANGLER_TOP-500, 200);
+  tracking.flattenAgainstWall(true,true);
+  tracking.reset();
+  intakeL.move(30);
+  intakeR.move(-30);
+  angler.move_absolute(ANGLER_TOP, 100);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  tracking.move_to_target(0, -10, 0);
   printf("i am done\n");
   printf("time is %d\n", autotimer-pros::millis());
   master.clear();
