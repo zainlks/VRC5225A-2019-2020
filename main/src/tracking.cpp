@@ -143,7 +143,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   double error_a, error_x, error_y, error_d;
   double difference_a;
   double kP_a = 140, kP_d = 14;
-  double kI_a = 0.0, kI_d = 0.0022;   // kI_a = 0.01, kI_d = 0.0022;
+  double kI_a = 0.0, kI_d = 0.012;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
 
   while (true){
@@ -170,12 +170,16 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     if (error_d < 2){ // what triggers integral to start adding?
       integral_d += error_d * (millis() - last_time);
     }
-    if(debug) {
+    if(fabs(error_d)<=0.7) {
+      integral_d = 0;
+    }
+
+    // if(debug) {
     printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
     printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
     printf("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
     printf("%d | I value %f \n", millis(), integral_d*kI_d);
-    }
+    // }
 
     // if (fabs(error_d) < 0.5){
     //   integral_d = 0;
@@ -267,7 +271,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
         break;
         }
     }
-    else if (fabs(error_a) <= deg_to_rad(0.5) && error_d < 0.7 && !cubeLineUp){
+    else if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_x)<=0.5 && fabs(error_y)<=0.5 && !cubeLineUp){
       difference_a = 0;
       brake();
       if(brakeOn) {
