@@ -149,7 +149,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   while (true){
 
 
-    error_a = fmod(target_a - global_angle, 2*M_PI);
+    error_a = target_a - global_angle;
     error_x = target_x - xcoord;
     error_y = target_y - ycoord;
     error_d = sqrtf(powf(error_x, 2) + powf(error_y, 2));
@@ -190,14 +190,15 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 //DOES MOD OF A NEGATIVE# RETURN POSTITIVE OR NEGATIVE VALUE? -- Negative!
     power_a = error_a*kP_a + integral_a*kI_a;
     if (error_x >= 0){
-      power_x = error_d*cos(difference_a)*kP_d + integral_d*kI_d;
-      power_y = error_d*sin(difference_a)*kP_d + integral_d*kI_d;
+      power_x = error_d*cos(difference_a)*kP_d;
+      power_y = error_d*sin(difference_a)*kP_d;
     }
     else{
-      power_x = -error_d*cos(difference_a)*kP_d + integral_d*kI_d;
-      power_y = -error_d*sin(difference_a)*kP_d + integral_d*kI_d;
+      power_x = -error_d*cos(difference_a)*kP_d;
+      power_y = -error_d*sin(difference_a)*kP_d;
     }
-
+    power_x+= sgn(power_x) * integral_d * kI_d;
+    power_y+= sgn(power_y) * integral_d * kI_d;
 //controlling max power for a, x, and y
     if (fabs(power_a) > max_power_a){
       power_a = sgn(power_a)*max_power_a;
