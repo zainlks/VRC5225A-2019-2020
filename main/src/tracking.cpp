@@ -187,19 +187,19 @@ void move_to_target(void* params){
       tracking.power_a  = 0;
     }
 
-    if (error_d < 2){ // what triggers integral to start adding?
+    if (fabs(error_d) < 2){ // what triggers integral to start adding?
       integral_d += error_d * (millis() - last_time);
     }
     if(fabs(error_d)<=0.7) {
       integral_d = 0;
     }
 
-    // if(debug) {
+    if(debug) {
     printf("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
     printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
     printf("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
     printf("%d | I value %f \n", millis(), integral_d*kI_d);
-    // }
+    }
 
     // if (fabs(error_d) < 0.5){
     //   integral_d = 0;
@@ -252,9 +252,8 @@ void move_to_target(void* params){
         tracking.power_x = sgn(tracking.power_x)*min_power_xy;
       }
     }
-    else{
-      tracking.power_x = 0;
-    }
+    else tracking.power_x = 0;
+
 
     if (fabs(error_y) > 0.5){
       if(fabs(tracking.power_y) < min_power_xy){
@@ -311,7 +310,6 @@ void move_to_target(void* params){
     }
     delay(1);
   }
-  moveStopTask();
 }
 
 void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
