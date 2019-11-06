@@ -32,12 +32,13 @@ void opcontrol() {
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
 		printf("done\n");
+		setDriveState(driveStates::Driver);
 		// Task driveUpdate(driveHandle);
 		//angler.move_absolute(1800, 100);
 	  while (true){
 
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
-			 printf("angler: %f\n", angler.get_position());
+			 //printf("angler: %f\n", angler.get_position());
 			 anglerHandle();
 			 fBarHandle();
 			//  for(int x = 0; x < 50; x++){

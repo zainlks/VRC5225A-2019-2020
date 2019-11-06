@@ -37,15 +37,12 @@ void anglerCal()
   delay(100);
   while (fabs(angler.get_actual_velocity()) < 19 && (success = (millis() < timeout_time)))
   {
-    printf("%f:::%f \n", angler.get_power(), angler.get_actual_velocity());
     delay(10);
   }
   //timeout_time = millis() + 3500;
   printf("here \n");
-  printf("%f::%f \n", angler.get_power(), angler.get_actual_velocity());
   while (fabs(angler.get_actual_velocity()) > 16)
 	{
-    printf("%f:::%f \n", angler.get_power(), angler.get_actual_velocity());
 		delay(10);
 
 	}
@@ -62,7 +59,7 @@ bool taskComplete = false;
 void dropOff(void *param) {
   tracking.reset();
   printf("x is: %f, y is: %f\n", tracking.xcoord, tracking.ycoord);
-  tracking.move_to_target(0, -10.0, 0, 40, false, true);
+  move_to_target_sync(0, -10.0, 0, 40, false, true);
   setDriveState(driveStates::Driver);
 }
 
@@ -107,7 +104,7 @@ void anglerHandle() {
         {
             setDriveState(driveStates::Auto);
             tracking.reset();
-            tracking.move_to_target(0, -10.0, 0, false, 50, false, false);
+            move_to_target_sync(0, -10.0, 0, false, 50, false, false);
             setDriveState(driveStates::Driver);
             stateCheck++;
         }

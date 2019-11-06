@@ -5,13 +5,26 @@ Tracking tracking;
 
 bool speedLimit = 0;
 
+pros::Task *moveTask = nullptr;
+moveTargetParams moveParams;
 //test without extra angle thing
 //test which way negative mode turns
 //print values every hundred millis after exit
 //decrease angle threshold
 //tune PID after adding intake stuff
 //classes and cleaning code
+void moveStartTask() {
+  moveTask = new Task(move_to_target);
+}
 
+void moveStopTask() {
+  if(moveTask != nullptr)
+  {
+    moveTask->remove();
+    delete moveTask;
+    moveTask = nullptr;
+  }
+}
 double deg_to_rad(double degrees){
   return degrees/180 *M_PI;
 }
@@ -131,9 +144,15 @@ void Tracking::reset() {
   tracking.ycoord = 0;
   tracking.global_angle = 0;
 }
-void Tracking::move_to_target(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug){
+void move_to_target(void* params){
+  double target_x = moveParams.target_x;
+  double target_y = moveParams.target_y;
+  double target_a = moveParams.target_a;
+  bool debug = moveParams.debug;
+  bool cubeLineUp = moveParams.cubeLineUp;
+  bool brakeOn = moveParams.brakeOn;
   printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
-  double max_power_a = 55.0, max_power_xy = max_xy;
+  double max_power_a = 55.0, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 20;
   double scale;
 
@@ -149,12 +168,13 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
   while (true){
 
 
-    error_a = target_a - global_angle;
-    error_x = target_x - xcoord;
-    error_y = target_y - ycoord;
+    error_a = target_a - tracking.global_angle;
+    error_x = target_x - tracking.xcoord;
+    error_y = target_y - tracking.ycoord;
     error_d = sqrtf(powf(error_x, 2) + powf(error_y, 2));
+    tracking.driveError = error_d;
 
-    difference_a = global_angle + atan(error_y/error_x);
+    difference_a = tracking.global_angle + atan(error_y/error_x);
 
 
 
@@ -164,7 +184,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
 
     if (fabs(error_a) < deg_to_rad(0.5)){
       integral_a = 0;
-      power_a  = 0;
+      tracking.power_a  = 0;
     }
 
     if (error_d < 2){ // what triggers integral to start adding?
@@ -175,7 +195,7 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     }
 
     // if(debug) {
-    printf("%d | X: %f, Y: %f, A: %f\n", millis(), xcoord, ycoord, rad_to_deg(global_angle));
+    printf("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
     printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
     printf("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
     printf("%d | I value %f \n", millis(), integral_d*kI_d);
@@ -188,87 +208,89 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
     // }
 
 //DOES MOD OF A NEGATIVE# RETURN POSTITIVE OR NEGATIVE VALUE? -- Negative!
-    power_a = error_a*kP_a + integral_a*kI_a;
+    tracking.power_a = error_a*kP_a + integral_a*kI_a;
     if (error_x >= 0){
-      power_x = error_d*cos(difference_a)*kP_d;
-      power_y = error_d*sin(difference_a)*kP_d;
+      tracking.power_x = error_d*cos(difference_a)*kP_d;
+      tracking.power_y = error_d*sin(difference_a)*kP_d;
     }
     else{
-      power_x = -error_d*cos(difference_a)*kP_d;
-      power_y = -error_d*sin(difference_a)*kP_d;
+      tracking.power_x = -error_d*cos(difference_a)*kP_d;
+      tracking.power_y = -error_d*sin(difference_a)*kP_d;
     }
-    power_x+= sgn(power_x) * integral_d * kI_d;
-    power_y+= sgn(power_y) * integral_d * kI_d;
+    tracking.power_x+= sgn(tracking.power_x) * integral_d * kI_d;
+    tracking.power_y+= sgn(tracking.power_y) * integral_d * kI_d;
 //controlling max power for a, x, and y
-    if (fabs(power_a) > max_power_a){
-      power_a = sgn(power_a)*max_power_a;
+    if (fabs(tracking.power_a) > max_power_a){
+      tracking.power_a = sgn(tracking.power_a)*max_power_a;
     }
     //need to scale x and y powers
-    if (fabs(power_x) > max_power_xy || fabs(power_y) > max_power_xy){
-      if (fabs(power_x) > fabs(power_y)){
-        scale = max_power_xy/fabs(power_x);
-        power_x = max_power_xy *sgn(power_x);
-        power_y = power_y *scale;
+    if (fabs(tracking.power_x) > max_power_xy || fabs(tracking.power_y) > max_power_xy){
+      if (fabs(tracking.power_x) > fabs(tracking.power_y)){
+        scale = max_power_xy/fabs(tracking.power_x);
+        tracking.power_x = max_power_xy *sgn(tracking.power_x);
+        tracking.power_y = tracking.power_y *scale;
       }
       else {
-        scale = max_power_xy/fabs(power_y);
-        power_y = max_power_xy *sgn(power_y);
-        power_x = power_x *scale;
+        scale = max_power_xy/fabs(tracking.power_y);
+        tracking.power_y = max_power_xy *sgn(tracking.power_y);
+        tracking.power_x = tracking.power_x *scale;
       }
     }
 
 //setting min power if a, x, and y are not within target
-    if(fabs(power_a) < min_power_a){
+    if(fabs(tracking.power_a) < min_power_a){
       if (fabs(error_a) > deg_to_rad(0.5)){
-        power_a = sgn(power_a)*min_power_a;
+        tracking.power_a = sgn(tracking.power_a)*min_power_a;
       }
       else{
-        power_a = 0;
+        tracking.power_a = 0;
       }
     }
 
     if (fabs(error_x) > 0.5){
-        if (fabs(power_x) < min_power_xy){
-        power_x = sgn(power_x)*min_power_xy;
+        if (fabs(tracking.power_x) < min_power_xy){
+        tracking.power_x = sgn(tracking.power_x)*min_power_xy;
       }
     }
     else{
-      power_x = 0;
+      tracking.power_x = 0;
     }
 
     if (fabs(error_y) > 0.5){
-      if(fabs(power_y) < min_power_xy){
-      power_y = sgn(power_y)*min_power_xy;
+      if(fabs(tracking.power_y) < min_power_xy){
+      tracking.power_y = sgn(tracking.power_y)*min_power_xy;
       }
     }
     else{
-      power_y = 0;
+      tracking.power_y = 0;
     }
 
-    if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), power_x, power_y, power_a);
-    move_drive(power_x, power_y, power_a);
-    if(power_x != 0) last_power_x = power_x;
-    if(power_y != 0) last_power_y = power_y;
-    if(power_a != 0) last_power_a = power_a;
+    if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
+    move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
+    if(tracking.power_x != 0) last_power_x = tracking.power_x;
+    if(tracking.power_y != 0) last_power_y = tracking.power_y;
+    if(tracking.power_a != 0) last_power_a = tracking.power_a;
     last_time = millis();
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
       printf("Here 1\n");
       if(cubeLineUp){
         green.linedUp = false;
         while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
-          error_y = target_y - ycoord;
-          error_a = fmod(target_a - global_angle, 2*M_PI);
+          error_y = target_y - tracking.ycoord;
+          error_a = fmod(target_a - tracking.global_angle, 2*M_PI);
           green.update();
           green.lineMiddle(0.8, target_y, target_a);
-          move_drive(power_x, power_y, power_a);
+          move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
         }
         tracking.xcoord = target_x;
         move_drive(0, 0, 0);
         difference_a = 0;
         printf("Movement to (%f, %f, %f) en ded\n", target_x, target_y, rad_to_deg(target_a));
-        printf("X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
-        master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+        printf("X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+        master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
         master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+        tracking.moveComplete = true;
+        moveStopTask();
         break;
         }
     }
@@ -280,14 +302,30 @@ void Tracking::move_to_target(double target_x, double target_y, double target_a,
       }
       move_drive(0, 0, 0);
       printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", xcoord, ycoord, rad_to_deg(global_angle));
-      master.print(0, 3, "X : %f, Y : %f, A : %f", xcoord, ycoord, rad_to_deg(global_angle));
+      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      tracking.moveComplete = true;
+      moveStopTask();
       break;
     }
-    delay(3);
+    delay(1);
   }
+  moveStopTask();
 }
+
+void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
+  move_to_target(nullptr);
+}
+void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
+  tracking.driveError = 0;
+  tracking.moveComplete = false;
+  moveStartTask();
+}
+
+
 void Tracking::trackingInput() {
   if(!speedLimit) {
     tracking.power_a = master.get_analog(JOY_TURN);
@@ -327,6 +365,13 @@ void Tracking::trackingInput() {
   //   tracking.move_to_target(0, 0, 0, false, true);
   //
   // }
+}
+
+void Tracking::waitForDistance(double distance) {
+  while( (fabs(driveError) - distance) > 1 || driveError == 0 ) delay(1);
+}
+void Tracking::waitForComplete() {
+  while(!moveComplete) delay(1);
 }
 void Tracking::flattenAgainstWall(bool forward,bool hold) {
   if(forward) {

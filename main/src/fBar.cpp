@@ -64,10 +64,10 @@ void fBarHandle() {
       while(fBar.get_position()>towerHeights[1]) delay(1);
       setDriveState(driveStates::Auto);
       tracking.reset();
-      tracking.move_to_target(0,3,0, false);
+      move_to_target_sync(0,3,0, false);
       tracking.reset();
       while(fBar.get_position()>50) delay(1);
-      tracking.move_to_target(0, 5, 0, false);
+      move_to_target_sync(0, 5, 0, false);
       cubeHeightCounter = 0;
       setfBarState(fBarStates::Idle);
       setDriveState(driveStates::Driver);

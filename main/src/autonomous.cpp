@@ -30,12 +30,13 @@ void intakeTask(void *param) {
 
 }
 void autonomous() {
+  setDriveState(driveStates::Auto);
   tracking.reset();
   autotimer = pros::millis();
   printf("global angle:%f",tracking.global_angle);
   intakeOn();
   angler.move_absolute(1700, 200);
-  tracking.move_to_target(0,22.5,0,false,75);
+  move_to_target_sync(0,22.5,0,false,75);
   brake();
   delay(100);
   move_drive(0,0,0);
@@ -43,21 +44,21 @@ void autonomous() {
   move_drive(0, -30, 0);
   angler.move_absolute(400, 200);
   while(fBar.get_position()<towerHeights[1]- 350 || angler.get_position()>1600) delay(1);
-  tracking.move_to_target(0, 24.5, 0, false, 60);
+  move_to_target_sync(0, 24.5, 0, false, 60);
   brake();
   delay(100);
   move_drive(0,0,0);
   fBar.move_absolute(1, 200);
   while(fBar.get_position() > 1000) delay(1);
-  tracking.move_to_target(0, 29, 0, false);
+  move_to_target_sync(0, 29, 0, false);
   angler.move_absolute(1700, 200);
-  tracking.move_to_target(-25.5, 2, 0, false);
+  move_to_target_sync(-25.5, 2, 0, false);
   move_drive(0, 95, 0);
   while(tracking.ycoord<19)delay(1);
-  tracking.move_to_target(-25.5, 48, 0, false, 60);
+  move_to_target_sync(-25.5, 48, 0, false, 60);
   intakeL.move(-10);
   intakeR.move(10);
-  tracking.move_to_target(-33,9, deg_to_rad(-135),false,127,false,true);
+  move_to_target_sync(-33,9, deg_to_rad(-135),false,127,false,true);
   angler.move_absolute(ANGLER_TOP-500, 200);
   tracking.flattenAgainstWall(true,true);
   tracking.reset();
@@ -65,10 +66,11 @@ void autonomous() {
   intakeR.move(-30);
   angler.move_absolute(ANGLER_TOP, 100);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  tracking.move_to_target(0, -10, 0);
+  move_to_target_sync(0, -10, 0);
   printf("i am done\n");
   printf("time is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);
   master.print(2,0,"%d",millis()-autotimer);
+
 }
