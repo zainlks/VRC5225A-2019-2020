@@ -12,6 +12,7 @@ using namespace pros;
 extern pros::Task *moveTask;
 int sgn(double num);
 extern bool speedLimit;
+extern int offset;
 double deg_to_rad(double degrees);
 void move_drive(int x, int y, int a);
 void brake();

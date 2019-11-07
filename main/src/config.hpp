@@ -7,6 +7,7 @@ extern ADIEncoder leftencoder;
 extern ADIEncoder rightencoder;
 extern ADIUltrasonic ultrasonic;
 extern ADIEncoder backencoder;
+extern Vision vision;
 extern Motor intakeR, intakeL;
 extern Motor angler;
 extern Motor fBar;

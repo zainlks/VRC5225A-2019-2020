@@ -4,7 +4,7 @@
 Tracking tracking;
 
 bool speedLimit = 0;
-
+int offset = 0;
 pros::Task *moveTask = nullptr;
 moveTargetParams moveParams;
 //test without extra angle thing
@@ -162,7 +162,7 @@ void move_to_target(void* params){
   double error_a, error_x, error_y, error_d;
   double difference_a;
   double kP_a = 140, kP_d = 14;
-  double kI_a = 0.0, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
+  double kI_a = 0.01, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
 
   while (true){
@@ -178,7 +178,7 @@ void move_to_target(void* params){
 
 
 
-    if (fabs(last_power_a) < max_power_a){
+    if (fabs(error_a) < 5){
       integral_a += error_a * (millis() - last_time);
     }
 
@@ -281,7 +281,7 @@ void move_to_target(void* params){
           green.lineMiddle(0.8, target_y, target_a);
           move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
         }
-        tracking.xcoord = target_x;
+        offset = target_x - tracking.xcoord;
         move_drive(0, 0, 0);
         difference_a = 0;
         printf("Movement to (%f, %f, %f) en ded\n", target_x, target_y, rad_to_deg(target_a));
@@ -376,7 +376,14 @@ void Tracking::flattenAgainstWall(bool forward,bool hold) {
     move_drive(0, 40, 0);
     delay(100);
     while(fabs(back_L.get_actual_velocity()) > 4 || fabs(back_R.get_actual_velocity()) > 4) {
-      delay(1);
+      if(fabs(back_L.get_actual_velocity()) < 4) {
+        front_L.move(0);
+        back_L.move(0);
+      }
+      if(fabs(back_R.get_actual_velocity()) < 4) {
+        front_R.move(0);
+        back_R.move(0);
+      }
     }
     if(hold) move_drive(0,25,0);
   }

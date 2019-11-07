@@ -5,11 +5,6 @@
 #include <memory>
 #include <vector>
 using namespace std;
-extern pros::Vision vision;
-extern pros::Motor drive_fl;
-extern pros::Motor drive_fr;
-extern pros::Motor drive_bl;
-extern pros::Motor drive_br;
 
 class visionClass {
 public:

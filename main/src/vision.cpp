@@ -1,5 +1,4 @@
 #include "vision.hpp"
-pros::Vision vision(6);
 visionClass green;
 visionClass purple;
 int avg_height = 0;
