@@ -5,7 +5,8 @@ using namespace pros;
 
 extern ADIEncoder leftencoder;
 extern ADIEncoder rightencoder;
-extern ADIUltrasonic ultrasonic;
+extern ADIAnalogIn leftLs;
+extern ADIAnalogIn rightLs;
 extern ADIEncoder backencoder;
 extern Vision vision;
 extern Motor intakeR, intakeL;

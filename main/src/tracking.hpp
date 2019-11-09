@@ -15,6 +15,7 @@ extern bool speedLimit;
 extern int offset;
 double deg_to_rad(double degrees);
 void move_drive(int x, int y, int a);
+void move_drive_side(int L, int R);
 void brake();
 void update(void *param);
 void pointToAngle(void *param);
@@ -47,6 +48,7 @@ public:
   void turn_to_target(double target_x, double target_y, bool debug = false);
   void turn_to_angle(double target_a, bool debug = false);
   void flattenAgainstWall(bool forward, bool hold = true);
+  void LSLineup(bool hold = true);
 };
 
 extern Tracking tracking;

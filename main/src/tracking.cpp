@@ -132,6 +132,12 @@ void move_drive(int x, int y, int a){
   back_R.move(x + y - a);
 
 }
+void move_drive_side(int L, int R) {
+  front_L.move(L);
+  front_R.move(R);
+  back_L.move(L);
+  back_R.move(R);
+}
 
 void brake(){
   front_L.move_relative(0,200);
@@ -485,4 +491,27 @@ void Tracking::turn_to_angle(double target_a, bool debug){
     }
     delay(1);
   }
+}
+
+void Tracking::LSLineup(bool hold) {
+  bool left = false, right = false;
+  move_drive(0, 40, 0);
+  while(!left && !right) {
+    if(leftLs.get_value()<1500)  left = true;
+    if(rightLs.get_value()<1500) right = true;
+  }
+  intakeL.move(20);
+  intakeR.move(-20);
+  if(left) {
+    move_drive_side(25,40);
+  }
+  if(right) {
+    move_drive_side(40,25);
+  }
+  while(!left || !right) {
+    if(leftLs.get_value()<1500)  left = true;
+    if(rightLs.get_value()<1500) right = true;
+  }
+  if(hold) move_drive(0,20,0);
+  else move_drive(0,0,0);
 }
