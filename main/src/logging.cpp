@@ -2,6 +2,7 @@
 using namespace std;
 FILE* logfile = NULL;
 
+pros::Mutex mutex;
 bool log_done = false;
 
 void log_init() {
@@ -12,6 +13,7 @@ void log_init() {
 }
 
 void log(const char * format, ...){
+  mutex.take(50);
   va_list arguments;
   va_start(arguments,format);
   vprintf(format,arguments);
@@ -19,6 +21,7 @@ void log(const char * format, ...){
   if(logfile == NULL) return;
   vfprintf(logfile, format, arguments);
   fclose(logfile);
-  // while ((logfile = fopen("/usd/log.txt","a")) == NULL) pros::delay(3);
+  while ((logfile = fopen("/usd/log.txt","a")) == NULL) pros::delay(3);
   va_end(arguments);
+  mutex.give();
 }

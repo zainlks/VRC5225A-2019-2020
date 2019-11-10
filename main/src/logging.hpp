@@ -9,8 +9,12 @@
 #include <vector>
 #include <fstream>
 #include <stdarg.h>
+#include <time.h>
+#include <stdio.h>
 using namespace std;
 using namespace pros;
+
+extern pros::Mutex mutex;
 
 extern bool log_done;
 void log_init();
