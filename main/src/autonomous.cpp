@@ -36,7 +36,7 @@ void autonomous() {
   delay(80);
   green.sig_num = 1;
   autotimer = pros::millis();
-  printf("global angle:%f",tracking.global_angle);
+  log("global angle:%f",tracking.global_angle);
   angler.move_absolute(1700, 200);
   intakeOn();
   move_to_target_sync(0,23.5,0,false,75,false,true);
@@ -91,8 +91,7 @@ void autonomous() {
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
   move_to_target_sync(-26,14, deg_to_rad(-135));
 
-  printf("i am done\n");
-  printf("time is %d\n", autotimer-pros::millis());
+  log("autotime is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);
   master.print(2,0,"%d",millis()-autotimer);
@@ -107,7 +106,7 @@ void autonomous() {
 
 
 
-// 
+//
 // move_to_target_sync(0,23.5,0,false,75,false,true);
 // brake();
 // delay(100);

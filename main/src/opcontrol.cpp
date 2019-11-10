@@ -5,6 +5,7 @@
 #include "angler.hpp"
 #include "drive.hpp"
 #include "controller.hpp"
+#include "logging.hpp"
 using namespace pros;
 int startNum = 0;
 
@@ -31,7 +32,6 @@ void opcontrol() {
 		purple.sig_num = 2;
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
-		printf("done\n");
 		setDriveState(driveStates::Driver);
 		// Task driveUpdate(driveHandle);
 		//angler.move_absolute(1800, 100);
@@ -39,9 +39,9 @@ void opcontrol() {
 
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
-			 anglerHandle();
-			 fBarHandle();
-			 printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
+			 // anglerHandle();
+			 // fBarHandle();
+			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
 			//  for(int x = 0; x < 50; x++){
 			//  	intakeL.move_velocity(-x);
 			// 	intakeR.move_velocity(x);

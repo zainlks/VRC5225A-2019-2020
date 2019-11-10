@@ -5,11 +5,11 @@ fBarStates fBarStateLast = fBarState;
 int fBarStateChangeTime = 0;
 int cubeHeightCounter = 0;
 void setfBarState(fBarStates state) {
-  printf("Going from %d", fBarState);
+  log("Going from %d", fBarState);
 	fBarStateLast = fBarState;
 	fBarState = state;
 	fBarStateChangeTime = pros::millis();
-  printf(" to %d\n", fBarState);
+  log(" to %d\n", fBarState);
 }
 
 void fBarCal()

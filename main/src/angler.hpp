@@ -5,6 +5,7 @@
 #include "fBar.hpp"
 #include "drive.hpp"
 #include "controller.hpp"
+#include "logging.hpp"
 #include <iostream>
 #include <cmath>
 #include <memory>

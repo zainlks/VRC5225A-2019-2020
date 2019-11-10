@@ -9,7 +9,7 @@ void setDriveState(driveStates state) {
 	driveStateLast = driveState;
 	driveState = state;
 	driveStateChangeTime = pros::millis();
-  printf(" to %d\n", driveState);
+  log(" to %d\n", driveState);
 }
 
 void driveHandle(void *param) {

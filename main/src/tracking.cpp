@@ -157,7 +157,7 @@ void move_to_target(void* params){
   bool debug = moveParams.debug;
   bool cubeLineUp = moveParams.cubeLineUp;
   bool brakeOn = moveParams.brakeOn;
-  printf("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
+  log("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 20;
   double scale;
@@ -201,10 +201,10 @@ void move_to_target(void* params){
     }
 
     if(debug) {
-    printf("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-    printf("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
-    printf("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
-    printf("%d | I value %f \n", millis(), integral_d*kI_d);
+    log("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+    log("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
+    log("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
+    log("%d | I value %f \n", millis(), integral_d*kI_d);
     }
 
     // if (fabs(error_d) < 0.5){
@@ -270,14 +270,13 @@ void move_to_target(void* params){
       tracking.power_y = 0;
     }
 
-    if(debug) printf("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
+    if(debug) log("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
     move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
     if(tracking.power_x != 0) last_power_x = tracking.power_x;
     if(tracking.power_y != 0) last_power_y = tracking.power_y;
     if(tracking.power_a != 0) last_power_a = tracking.power_a;
     last_time = millis();
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
-      printf("Here 1\n");
       if(cubeLineUp){
         green.linedUp = false;
         while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
@@ -290,8 +289,8 @@ void move_to_target(void* params){
         offset = target_x - tracking.xcoord;
         move_drive(0, 0, 0);
         difference_a = 0;
-        printf("Movement to (%f, %f, %f) en ded\n", target_x, target_y, rad_to_deg(target_a));
-        printf("X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+        log("Movement to (%f, %f, %f) en ded\n", target_x, target_y, rad_to_deg(target_a));
+        log("X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
         master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
         master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
         tracking.moveComplete = true;
@@ -306,8 +305,8 @@ void move_to_target(void* params){
         delay(600);
       }
       move_drive(0, 0, 0);
-      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      log("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      log("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 5,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       tracking.moveComplete = true;
@@ -438,15 +437,15 @@ void Tracking::turn_to_target(double target_x, double target_y, bool debug){
         power_a = 0;
       }
     }
-    if(debug) printf("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
+    if(debug) log("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
     move_drive(0, 0, power_a);
     if (fabs(error_a) <= deg_to_rad(0.5)){
       brake();
       delay(300);
       move_drive(0, 0, 0);
       delay(500);
-      printf("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      log("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
+      log("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 2,"Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       break;
@@ -476,15 +475,15 @@ void Tracking::turn_to_angle(double target_a, bool debug){
         power_a = 0;
       }
     }
-    if(debug) printf("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
+    if(debug) log("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
     move_drive(0, 0, power_a);
     if (fabs(error_a) <= deg_to_rad(0.5)){
       brake();
       delay(300);
       move_drive(0, 0, 0);
       delay(500);
-      printf("Movement to (%f) ended\n", rad_to_deg(target_a));
-      printf("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
+      log("Movement to (%f) ended\n", rad_to_deg(target_a));
+      log("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 2,"Movement to (%f, %f, %f) ended\n", rad_to_deg(target_a));
       break;

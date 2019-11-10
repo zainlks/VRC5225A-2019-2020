@@ -8,11 +8,11 @@ int stateCheck = 0;
 uint32_t timer = 0;
 bool dropOffHold = false;
 void setAnglerState(anglerStates state) {
-  printf("Going from %d", anglerState);
+  log("Going from %d", anglerState);
 	anglerStateLast = anglerState;
 	anglerState = state;
 	anglerStateChangeTime = pros::millis();
-  printf(" to %d\n", anglerState);
+  log(" to %d\n", anglerState);
 }
 void intakeOn(){
   intakeL.move(-127);
@@ -40,13 +40,11 @@ void anglerCal()
     delay(10);
   }
   //timeout_time = millis() + 3500;
-  printf("here \n");
   while (fabs(angler.get_actual_velocity()) > 16)
 	{
 		delay(10);
 
 	}
-  printf("done");
   delay(100);
   angler.move(0);
   delay(100);
@@ -58,7 +56,7 @@ bool taskComplete = false;
 
 void dropOff(void *param) {
   tracking.reset();
-  printf("x is: %f, y is: %f\n", tracking.xcoord, tracking.ycoord);
+  log("x is: %f, y is: %f\n", tracking.xcoord, tracking.ycoord);
   move_to_target_sync(0, -10.0, 0, 40, false, true);
   setDriveState(driveStates::Driver);
 }
@@ -129,7 +127,6 @@ void anglerHandle() {
       }
       if(master.get_digital_new_press(DROPOFF_BUTTON) || doublePressCheck) {
         doublePressCheck = true;
-        printf("i am doing this \n");
         if(timer == 0) timer = pros::millis();
         if((pros::millis()-timer)>200)
         {

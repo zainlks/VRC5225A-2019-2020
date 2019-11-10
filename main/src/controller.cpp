@@ -7,7 +7,7 @@ void printTemp(void* param) {
   while(true)
   {
     master.print(2, 0, "L:%d, R:%d, FB:%d", int(intakeL.get_temperature()), int(intakeR.get_temperature()), int(fBar.get_temperature()));
-    printf("%d, %d, %d\n", int(intakeL.get_temperature()), int(intakeR.get_temperature()), int(angler.get_temperature()));
+    log("%d, %d, %d\n", int(intakeL.get_temperature()), int(intakeR.get_temperature()), int(angler.get_temperature()));
     delay(1500);
   }
 }
