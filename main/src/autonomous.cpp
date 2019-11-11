@@ -29,14 +29,7 @@ void intakeTask(void *param) {
   }
 
 }
-void autonomous() {
-  setDriveState(driveStates::Auto);
-  tracking.reset();
-  intakeL.move(127);
-  delay(80);
-  green.sig_num = 1;
-  autotimer = pros::millis();
-  log("global angle:%f",tracking.global_angle);
+void blue9() {
   angler.move_absolute(1700, 200);
   intakeOn();
   move_to_target_sync(0,23.5,0,false,75,false,true);
@@ -90,6 +83,60 @@ void autonomous() {
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
   move_to_target_sync(-26,14, deg_to_rad(-135));
+}
+
+void blueSweep() {
+  intakeOn();
+  move_to_target_sync(0, 40, 0, false, 45);
+  move_to_target_sync(4, 44, deg_to_rad(30), false, 45);
+  move_to_target_sync(12, 47, deg_to_rad(110), false, 45);
+  move_to_target_sync(17, 51, deg_to_rad(150), false, 45);
+  move_to_target_sync(19,45, deg_to_rad(150), false, 45);
+  move_to_target_sync(21, 20, deg_to_rad(180), false, 45);
+  move_to_target_sync(-10, 9.75, deg_to_rad(-135), false, 127);
+  //tracking.waitForDistance(12);
+
+  return;
+
+
+
+
+
+
+
+  move_to_target_async(-31.75,9.75, deg_to_rad(-135),false,127);
+  tracking.waitForDistance(12);
+  intakeL.move(-15);
+  intakeR.move(15);
+  tracking.waitForDistance(7);
+  angler.move_absolute(ANGLER_MID-1800, 200);
+  tracking.waitForComplete();
+  brake();
+  delay(75);
+  move_drive(0,0,0);
+  angler.move_absolute(ANGLER_TOP-1000, 100);
+  intakeL.move(15);
+  intakeR.move(-15);
+  delay(50);
+  tracking.LSLineup();
+  angler.move_absolute(ANGLER_TOP, 120);
+  while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  intakeL.move(-10);
+  intakeR.move(10);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  move_to_target_sync(-26,14, deg_to_rad(-135));
+}
+
+void autonomous() {
+  setDriveState(driveStates::Auto);
+  tracking.reset();
+  intakeL.move(127);
+  delay(80);
+  green.sig_num = 1;
+  autotimer = pros::millis();
+  log("global angle:%f",tracking.global_angle);
+
+  blue9();
 
   log("autotime is %d\n", autotimer-pros::millis());
   master.clear();

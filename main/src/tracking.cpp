@@ -318,6 +318,7 @@ void move_to_target(void* params){
 }
 
 void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
+  if(moveTask != nullptr) moveStopTask();
   moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
   move_to_target(nullptr);
 }
@@ -494,7 +495,7 @@ void Tracking::turn_to_angle(double target_a, bool debug){
 
 void Tracking::LSLineup(bool hold) {
   bool left = false, right = false;
-  move_drive(0, 40, 0);
+  move_drive(0, 50, 0);
   while(!left && !right) {
     if(leftLs.get_value()<1500)  left = true;
     if(rightLs.get_value()<1500) right = true;

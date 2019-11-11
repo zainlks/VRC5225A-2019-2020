@@ -9,11 +9,11 @@ void log_init() {
   logfile = fopen("/usd/log.txt","a");
   if(logfile==NULL) {printf("could not open logfile\n"); return;}
   else printf("logfile found\n");
-  fprintf(logfile, "\n>>>>>START LOGGING FOR PROGRAM\n");
+  if(logfile != NULL)fprintf(logfile, "\n>>>>>START LOGGING FOR PROGRAM\n");
 }
 
 void log(const char * format, ...){
-  mutex.take(50);
+  // mutex.take(50);
   va_list arguments;
   va_start(arguments,format);
   vprintf(format,arguments);
@@ -23,5 +23,5 @@ void log(const char * format, ...){
   fclose(logfile);
   while ((logfile = fopen("/usd/log.txt","a")) == NULL) pros::delay(3);
   va_end(arguments);
-  mutex.give();
+  // mutex.give();
 }
