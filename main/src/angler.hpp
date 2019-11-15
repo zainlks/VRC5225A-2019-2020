@@ -12,7 +12,7 @@
 #include <vector>
 using namespace std;
 using namespace pros;
-constexpr double ANGLER_TOP = 7200;
+constexpr double ANGLER_TOP = 7500;
 constexpr double ANGLER_MID = 5200;
 enum class anglerStates {
   Idle,

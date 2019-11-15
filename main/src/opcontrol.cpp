@@ -40,8 +40,8 @@ void opcontrol() {
 			log("hey dudes %d\n", pros::millis());
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
-			 // anglerHandle();
-			 // fBarHandle();
+			 anglerHandle();
+			 fBarHandle();
 			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
 			//  for(int x = 0; x < 50; x++){
 			//  	intakeL.move_velocity(-x);
