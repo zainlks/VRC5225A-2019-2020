@@ -33,11 +33,9 @@ void opcontrol() {
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
 		setDriveState(driveStates::Driver);
-		log("hey dudes %d\n", pros::millis());
 		// Task driveUpdate(driveHandle);
 		//angler.move_absolute(1800, 100);
 	  while (true){
-			log("hey dudes %d\n", pros::millis());
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
 			 anglerHandle();

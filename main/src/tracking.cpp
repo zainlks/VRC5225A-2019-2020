@@ -6,6 +6,7 @@ Tracking tracking;
 bool speedLimit = 0;
 int offset = 0;
 pros::Task *moveTask = nullptr;
+pros::Task *updateTask = nullptr;
 moveTargetParams moveParams;
 //test without extra angle thing
 //test which way negative mode turns
@@ -25,6 +26,20 @@ void moveStopTask() {
     moveTask = nullptr;
   }
 }
+
+void updateStartTask() {
+  updateTask = new Task(update);
+}
+
+void updateStopTask(){
+  if(updateTask != nullptr)
+  {
+    updateTask->remove();
+    delete updateTask;
+    updateTask = nullptr;
+  }
+}
+
 double deg_to_rad(double degrees){
   return degrees/180 *M_PI;
 }

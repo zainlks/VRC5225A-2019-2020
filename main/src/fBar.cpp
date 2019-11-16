@@ -36,7 +36,7 @@ void fBarCal()
 void fBarHandle() {
   switch(fBarState) {
     case fBarStates::Idle:
-      if(fBar.get_position()<20) fBar.move(-8);
+      if(fBar.get_position()<20) fBar.move(-13);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
         fBar.move_absolute(FBAR_MID, 200);
         angler.move_absolute(ANGLER_MID-2700, 150);

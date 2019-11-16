@@ -101,7 +101,10 @@ void anglerHandle() {
         if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0)
         {
             setDriveState(driveStates::Auto);
+            updateStopTask();
             tracking.reset();
+            updateStartTask();
+            log("%d | global angle: %d, xcoord: %d, ycoord: %d", pros::millis(), tracking.global_angle, tracking.xcoord, tracking.ycoord);
             move_to_target_sync(0, -10.0, 0, false, 50, false, false);
             setDriveState(driveStates::Driver);
             stateCheck++;

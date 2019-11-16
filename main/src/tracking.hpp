@@ -32,13 +32,15 @@ extern moveTargetParams moveParams;
 
 void moveStartTask();
 void moveStopTask();
+void updateStartTask();
+void updateStopTask();
 void move_to_target(void* params);
 void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool cubeLineUp = false,  bool debug = false);
 void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool cubeLineUp = false,  bool debug = false);
 
 class Tracking {
 public:
-  double xcoord, ycoord, global_angle, power_a, power_x, power_y, x2 , y2 , a2, holdAngle, driveError  = 0;
+  double xcoord = 0, ycoord = 0, global_angle = 0, power_a = 0, power_x = 0, power_y = 0, x2 = 0 , y2 = 0, a2= 0, holdAngle= 0, driveError  = 0;
   bool toggle_target, toggle_cube, target, cube, moveComplete = false;
   void reset();
   void waitForDistance(double distance);

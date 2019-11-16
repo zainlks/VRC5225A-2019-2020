@@ -24,7 +24,7 @@ void initialize() {
 	back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	// delay(6000);
-	Task tracking_task(update);
+	updateStartTask();
 
 	Task driveUpdate(driveHandle);
 }
