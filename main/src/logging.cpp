@@ -21,7 +21,7 @@ void log(const char * format, ...){
   if(logfile == NULL) return;
   vfprintf(logfile, format, arguments);
   fclose(logfile);
-  while ((logfile = fopen("/usd/log.txt","a")) == NULL) pros::delay(3);
+  // while ((logfile = fopen("/usd/log.txt","a")) == NULL) pros::delay(3);
   va_end(arguments);
   // mutex.give();
 }

@@ -6,6 +6,7 @@
 #include "drive.hpp"
 #include "controller.hpp"
 #include "logging.hpp"
+#include "tracking.hpp"
 #include <iostream>
 #include <cmath>
 #include <memory>

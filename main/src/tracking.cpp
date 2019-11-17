@@ -5,6 +5,7 @@ Tracking tracking;
 
 bool speedLimit = 0;
 int offset = 0;
+int updateCount = 0;
 pros::Task *moveTask = nullptr;
 pros::Task *updateTask = nullptr;
 moveTargetParams moveParams;
@@ -67,20 +68,20 @@ void clear_line(int line) {
 
 
 void update (void* param){
- double distance_LR = 14.7135; double distance_B = 7.25;
- double radiusR = 0;
- double radiusB = 0;
- double h = 0;
- double h2 = 0;
- double theta = 0; double beta = 0; double alpha = 0;
- double Xx = 0; double Xy = 0; double Yx = 0; double Yy = 0;
+   double distance_LR = 14.7135; double distance_B = 7.25;
+   double radiusR = 0;
+   double radiusB = 0;
+   double h = 0;
+   double h2 = 0;
+   double theta = 0; double beta = 0; double alpha = 0;
+   double Xx = 0; double Xy = 0; double Yx = 0; double Yy = 0;
 
- leftencoder.reset(); rightencoder.reset(); backencoder.reset();
- double newleft = 0; double newright = 0; double newback = 0;
- double Right = 0; double Left = 0; double Back = 0;
- double lastleft = 0, lastright = 0, lastback = 0;
- double last_time = 0;
-
+   leftencoder.reset(); rightencoder.reset(); backencoder.reset();
+   double newleft = 0; double newright = 0; double newback = 0;
+   double Right = 0; double Left = 0; double Back = 0;
+   double lastleft = 0, lastright = 0, lastback = 0;
+   double last_time = 0;
+   tracking.reset();
  // printf("%d | rightE: %d\n", millis(), rightencoder.get_value());
  // printf("%d | leftE: %d\n", millis(), leftencoder.get_value());
  // printf("%d | backE: %d\n", millis(), backencoder.get_value());
