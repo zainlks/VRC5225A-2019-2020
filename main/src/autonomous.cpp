@@ -32,7 +32,8 @@ void intakeTask(void *param) {
 void blue9() {
   angler.move_absolute(1700, 200);
   intakeOn();
-  move_to_target_sync(0,23.5,0,false,75,false,true);
+  move_to_target_sync(0,20,0,false,80,false,true);
+  move_to_target_sync(0,23.5,0,false,50,false,true);
   brake();
   delay(100);
   move_drive(0,0,0);
@@ -135,10 +136,10 @@ void autonomous() {
   green.sig_num = 1;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-  fBar.move_absolute(300, 200);
+  fBar.move_absolute(500, 200);
   angler.move_absolute(1700, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
-  delay(100);
+  while(fBar.get_position() < 495 ){delay(1);}
+  delay(300);
   master.print(1,0,"%d",millis()-autotimer);
   fBar.move(-13);
   //intakeOn();
