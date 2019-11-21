@@ -135,9 +135,14 @@ void autonomous() {
   green.sig_num = 1;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-
+  fBar.move_absolute(300, 200);
+  angler.move_absolute(1700, 200);
+  while(fBar.get_position() < 295 ){delay(1);}
+  delay(100);
+  master.print(1,0,"%d",millis()-autotimer);
+  fBar.move(-13);
+  //intakeOn();
   blue9();
-
   log("autotime is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);
