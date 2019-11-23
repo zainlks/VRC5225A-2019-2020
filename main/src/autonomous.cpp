@@ -31,11 +31,17 @@ void intakeTask(void *param) {
 }
 void blue9() {
   angler.move_absolute(1700, 200);
-  intakeOn();
-  move_to_target_sync(0,20,0,false,80,false,true);
-  move_to_target_sync(0,23.5,0,false,50,false,true);
-  brake();
+  fBar.move_absolute(300, 200);
+  while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
+  master.print(1,0,"%d",millis()-autotimer);
+  fBar.move(-13);
+  angler.move_absolute(1700, 200);
+  intakeOn();
+  move_to_target_sync(0,20,0,false,85,false,true);
+  move_to_target_sync(0,23.5,0,false,55,false,true);
+  brake();
+  delay(50);
   move_drive(0,0,0);
   fBar.move_absolute(towerHeights[1]-300, 200);
   move_drive(0, -30, 0);
@@ -46,7 +52,7 @@ void blue9() {
   fBar.move_absolute(1, 200);
   tracking.waitForComplete();
   brake();
-  delay(100);
+  delay(50);
   move_drive(0,0,0);
   while(fBar.get_position() > 1000) delay(1);
   move_to_target_async(0, 30.5, 0, false);
@@ -128,6 +134,32 @@ void blueSweep() {
   move_to_target_sync(-26,14, deg_to_rad(-135));
 }
 
+void blueLeft(){
+  fBar.move_absolute(500, 200);
+  while(fBar.get_position() < 495 ){delay(1);}
+  delay(100);
+  master.print(1,0,"%d",millis()-autotimer);
+  fBar.move(-13);
+  intakeOn();
+
+  move_to_target_async(0, 18, 0, false, 60);
+  tracking.waitForDistance(12);
+  fBar.move_absolute(towerHeights[2], 200);
+  tracking.waitForComplete();
+  brake();
+  delay(100);
+  angler.move_absolute(2000,200);
+  while(fBar.get_position() < (towerHeights[2] -50)){delay(2);}
+  move_to_target_sync(0, 24, 0, true, 60);
+  fBar.move_absolute(towerHeights[0], 200);
+  while(fBar.get_position() > (towerHeights[0] +50)){delay(2);}
+  move_to_target_sync(0,27,false,65);
+  fBar.move_absolute(1, 200);
+  while(fBar.get_position()>50) delay(1);
+  move_to_target_sync(0, 32, 0, true);
+
+}
+
 void autonomous() {
   setDriveState(driveStates::Auto);
   tracking.reset();
@@ -136,14 +168,10 @@ void autonomous() {
   green.sig_num = 1;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-  fBar.move_absolute(500, 200);
-  angler.move_absolute(1700, 200);
-  while(fBar.get_position() < 495 ){delay(1);}
-  delay(300);
-  master.print(1,0,"%d",millis()-autotimer);
-  fBar.move(-13);
-  //intakeOn();
-  blue9();
+
+
+  //blue9();
+  blueLeft();
   log("autotime is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);

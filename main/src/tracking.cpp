@@ -75,13 +75,17 @@ void update (void* param){
    double h2 = 0;
    double theta = 0; double beta = 0; double alpha = 0;
    double Xx = 0; double Xy = 0; double Yx = 0; double Yy = 0;
-
    leftencoder.reset(); rightencoder.reset(); backencoder.reset();
    double newleft = 0; double newright = 0; double newback = 0;
    double Right = 0; double Left = 0; double Back = 0;
    double lastleft = 0, lastright = 0, lastback = 0;
    double last_time = 0;
    tracking.reset();
+   while (leftencoder.get_value() != 0 || rightencoder.get_value() != 0 || backencoder.get_value() != 0){
+        leftencoder.reset(); rightencoder.reset(); backencoder.reset();
+        printf("I am here.");
+        delay(1);
+   }
  // printf("%d | rightE: %d\n", millis(), rightencoder.get_value());
  // printf("%d | leftE: %d\n", millis(), leftencoder.get_value());
  // printf("%d | backE: %d\n", millis(), backencoder.get_value());
