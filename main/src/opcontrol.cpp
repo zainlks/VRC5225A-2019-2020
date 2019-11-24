@@ -41,6 +41,11 @@ void opcontrol() {
 			 //printf("angler: %f\n", angler.get_position());
 			 anglerHandle();
 			 fBarHandle();
+			 green.update();
+			 printf("%d, %d\n", leftLs.get_value(), rightLs.get_value());
+			 // printf("%d | %d\n",green.obj.height, green.obj.width);
+			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
+
 			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
 			//  for(int x = 0; x < 50; x++){
 			//  	intakeL.move_velocity(-x);

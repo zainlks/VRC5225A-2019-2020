@@ -8,6 +8,7 @@ int offset = 0;
 int updateCount = 0;
 pros::Task *moveTask = nullptr;
 pros::Task *updateTask = nullptr;
+bool resetDone = false;
 moveTargetParams moveParams;
 //test without extra angle thing
 //test which way negative mode turns
@@ -75,23 +76,26 @@ void update (void* param){
    double h2 = 0;
    double theta = 0; double beta = 0; double alpha = 0;
    double Xx = 0; double Xy = 0; double Yx = 0; double Yy = 0;
-   leftencoder.reset(); rightencoder.reset(); backencoder.reset();
    double newleft = 0; double newright = 0; double newback = 0;
    double Right = 0; double Left = 0; double Back = 0;
    double lastleft = 0, lastright = 0, lastback = 0;
    double last_time = 0;
+   resetDone = false;
    tracking.reset();
-   while (leftencoder.get_value() != 0 || rightencoder.get_value() != 0 || backencoder.get_value() != 0){
-        leftencoder.reset(); rightencoder.reset(); backencoder.reset();
-        printf("I am here.");
-        delay(1);
-   }
+   do {
+     leftencoder.reset(); rightencoder.reset(); backencoder.reset();
+     printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
+     delay(5);
+   } while (leftencoder.get_value() != 0 || rightencoder.get_value() != 0 || backencoder.get_value() != 0);
+         resetDone = true;
+   printf("%d | %d | %d| x: %f | y: %f\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value(), tracking.xcoord, tracking.ycoord);
  // printf("%d | rightE: %d\n", millis(), rightencoder.get_value());
  // printf("%d | leftE: %d\n", millis(), leftencoder.get_value());
  // printf("%d | backE: %d\n", millis(), backencoder.get_value());
 
  while (true) {
 //amount encoders moved (radians)
+   green.update();
 	 newleft = leftencoder.get_value() / 360.0* (2.75*M_PI);
 	 newright = rightencoder.get_value() / 360.0* (2.75*M_PI);
 	 newback = backencoder.get_value() / 360.0* (2.77*M_PI);
@@ -141,6 +145,7 @@ void update (void* param){
 	// 	 }
 	// 	 delay(10);
  // }
+ delay(1);
 }
 }
 
@@ -221,6 +226,7 @@ void move_to_target(void* params){
     }
 
     if(debug) {
+    log("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
     log("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
     log("%d | err_x: %f, err_y: %f, err_a: %f, err_d: %f\n", millis(), error_x, error_y, rad_to_deg(error_a), error_d);
     log("%d | difference_a: %f\n", millis(), rad_to_deg(difference_a));
@@ -245,6 +251,7 @@ void move_to_target(void* params){
     }
     tracking.power_x+= sgn(tracking.power_x) * integral_d * kI_d;
     tracking.power_y+= sgn(tracking.power_y) * integral_d * kI_d;
+    printf("the y power is %f", tracking.power_y);
 //controlling max power for a, x, and y
     if (fabs(tracking.power_a) > max_power_a){
       tracking.power_a = sgn(tracking.power_a)*max_power_a;
@@ -283,11 +290,13 @@ void move_to_target(void* params){
 
     if (fabs(error_y) > 0.5){
       if(fabs(tracking.power_y) < min_power_xy){
+
       tracking.power_y = sgn(tracking.power_y)*min_power_xy;
       }
     }
     else{
       tracking.power_y = 0;
+      printf("setting to 0 : %f\n", error_y);
     }
 
     if(debug) log("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
@@ -298,6 +307,7 @@ void move_to_target(void* params){
     last_time = millis();
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
       if(cubeLineUp){
+        printf("I'm doing a cube line up\n");
         green.linedUp = false;
         while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
           error_y = target_y - tracking.ycoord;
@@ -513,15 +523,17 @@ void Tracking::turn_to_angle(double target_a, bool debug){
   }
 }
 
-void Tracking::LSLineup(bool hold) {
+void Tracking::LSLineup(bool hold, bool intake_deposit) {
   bool left = false, right = false;
   move_drive(0, 50, 0);
   while(!left && !right) {
-    if(leftLs.get_value()<1500)  left = true;
-    if(rightLs.get_value()<1500) right = true;
+    if(leftLs.get_value()<800)  left = true;
+    if(rightLs.get_value()<800) right = true;
   }
+  if(intake_deposit) {
   intakeL.move(20);
   intakeR.move(-20);
+  }
   if(left) {
     move_drive_side(25,40);
   }
@@ -529,8 +541,8 @@ void Tracking::LSLineup(bool hold) {
     move_drive_side(40,25);
   }
   while(!left || !right) {
-    if(leftLs.get_value()<1500)  left = true;
-    if(rightLs.get_value()<1500) right = true;
+    if(leftLs.get_value()<800)  left = true;
+    if(rightLs.get_value()<800) right = true;
   }
   if(hold) move_drive(0,20,0);
   else move_drive(0,0,0);
