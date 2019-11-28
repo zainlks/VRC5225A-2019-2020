@@ -251,7 +251,6 @@ void move_to_target(void* params){
     }
     tracking.power_x+= sgn(tracking.power_x) * integral_d * kI_d;
     tracking.power_y+= sgn(tracking.power_y) * integral_d * kI_d;
-    printf("the y power is %f", tracking.power_y);
 //controlling max power for a, x, and y
     if (fabs(tracking.power_a) > max_power_a){
       tracking.power_a = sgn(tracking.power_a)*max_power_a;
@@ -348,11 +347,14 @@ void move_to_target(void* params){
 }
 
 void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
-  if(moveTask != nullptr) moveStopTask();
+  if(moveTask != nullptr) moveTask = nullptr;
   moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
+  tracking.driveError = 0;
+  tracking.moveComplete = false;
   move_to_target(nullptr);
 }
 void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
+  if(moveTask != nullptr) moveTask = nullptr;
   moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
   tracking.driveError = 0;
   tracking.moveComplete = false;
@@ -527,8 +529,8 @@ void Tracking::LSLineup(bool hold, bool intake_deposit) {
   bool left = false, right = false;
   move_drive(0, 50, 0);
   while(!left && !right) {
-    if(leftLs.get_value()<800)  left = true;
-    if(rightLs.get_value()<800) right = true;
+    if(leftLs.get_value()<600)  left = true;
+    if(rightLs.get_value()<600) right = true;
   }
   if(intake_deposit) {
   intakeL.move(20);
@@ -541,8 +543,8 @@ void Tracking::LSLineup(bool hold, bool intake_deposit) {
     move_drive_side(40,25);
   }
   while(!left || !right) {
-    if(leftLs.get_value()<800)  left = true;
-    if(rightLs.get_value()<800) right = true;
+    if(leftLs.get_value()<600)  left = true;
+    if(rightLs.get_value()<600) right = true;
   }
   if(hold) move_drive(0,20,0);
   else move_drive(0,0,0);

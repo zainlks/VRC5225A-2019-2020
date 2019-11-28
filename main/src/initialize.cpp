@@ -23,6 +23,7 @@ void initialize() {
 	front_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+	fBar.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	// delay(6000);
 	updateStartTask();
 
@@ -34,7 +35,8 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field

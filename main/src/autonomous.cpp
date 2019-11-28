@@ -145,19 +145,25 @@ void blueLeft(){
   master.print(1,0,"%d",millis()-autotimer);
   intakeOn();
 
-  move_to_target_sync(0, 15, 0, false, 60,false,true);
+  move_to_target_async(0, 15, 0, false, 60,false,true);
+  tracking.waitForDistance(3);
   fBar.move_absolute(towerHeights[2]+250, 200);
   angler.move_absolute(2000,200);
+  tracking.waitForComplete();
+  move_drive(0,17,0);
   while(fBar.get_position() < (towerHeights[2] +200)){delay(2);}
-  move_drive(0,50,0);
+  move_drive(0,60,0);
   while(green.obj.height < 10) delay(1);
-  printf("done cube line up\n");
   brake();
   delay(50);
   move_to_target_sync(0, tracking.ycoord-5.5, 0,false,127);
+  double curPos = tracking.ycoord;
+  fBar.move_absolute(towerHeights[1]+250, 200);
+  while(fBar.get_position() > (towerHeights[1]+350)){delay(2); printf("stuck\n");}
+  move_drive(0,-12,0);
   fBar.move_absolute(towerHeights[0]+250, 200);
   while(fBar.get_position() > (towerHeights[0]+350)){delay(2); printf("stuck\n");}
-  move_to_target_sync(0, tracking.ycoord+1.5, 0,false,127);
+  move_to_target_sync(0, curPos+1.5, 0,false,127);
   fBar.move_absolute(1, 200);
   while(fBar.get_position()>75) delay(1);
   move_to_target_sync(0, tracking.ycoord + 6, 0, false,127);
@@ -165,17 +171,21 @@ void blueLeft(){
   move_drive(0,-50,0);
   delay(300);
   move_to_target_sync(14, 32, (3*M_PI/4),false);
-  angler.move_absolute(ANGLER_MID-1800, 80);
-  move_to_target_sync(24, 19, (3*M_PI/4),false);
-  tracking.LSLineup(true, false);
-  intakeL.move(15);
-  intakeR.move(-15);
-  delay(50);
-  angler.move_absolute(ANGLER_TOP, 120);
-  while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  move_to_target_async(22, 19, (3*M_PI/4),false);
+  tracking.waitForDistance(10);
+  angler.move_absolute(ANGLER_TOP-1000, 100);
+  tracking.waitForComplete();
+  tracking.LSLineup(true, true);
+  intakeL.move(25);
+  intakeR.move(-25);
+  angler.move_absolute(ANGLER_TOP, 80);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
-  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  move_to_target_sync(0, -10.0, 0, false, 127, false, false);
   // move_to_target_sync(0,27,false,65);
   // fBar.move_absolute(1, 200);
   // while(fBar.get_position()>50) delay(1);
@@ -195,8 +205,8 @@ void autonomous() {
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
 
-  //blue9();
-  blueLeft();
+  blue9();
+  // blueLeft();
   log("autotime is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);
