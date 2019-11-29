@@ -69,6 +69,8 @@ void blue9() {
   move_to_target_sync(-25.5, 45, 0, false, 60); //50
   tracking.waitForComplete();
   delay(70);
+  intakeL.move(-8);
+  intakeR.move(8);
   move_to_target_async(-31.75,9.75, deg_to_rad(-135),false,127);
   tracking.waitForDistance(12);
   intakeL.move(-15);
@@ -193,6 +195,95 @@ void blueLeft(){
 
 }
 
+void red9() {
+  angler.move_absolute(1700, 200);
+  fBar.move_absolute(300, 200);
+  while(fBar.get_position() < 295 ){delay(1);}
+  delay(100);
+  master.print(1,0,"%d",millis()-autotimer);
+  fBar.move(-13);
+  angler.move_absolute(1700, 200);
+  intakeOn();
+  move_to_target_sync(0,20,0,false,85,false,true);
+  move_to_target_sync(0,23.5,0,false,55,false,true);
+  brake();
+  delay(50);
+  move_drive(0,0,0);
+  fBar.move_absolute(towerHeights[1]-300, 200);
+  move_drive(0, -30, 0);
+  angler.move_absolute(400, 200);
+  while(fBar.get_position()<towerHeights[1]- 350 || angler.get_position()>1600) delay(1);
+  move_to_target_async(0, 25.25, 0, false, 75);
+  tracking.waitForDistance(0.75);
+  fBar.move_absolute(1, 200);
+  tracking.waitForComplete();
+  brake();
+  delay(50);
+  move_drive(0,0,0);
+  while(fBar.get_position() > 1000) delay(1);
+  move_to_target_async(0, 30.5, 0, false);
+  angler.move_absolute(1700, 200);
+  tracking.waitForComplete();
+  fBar.move(-10);
+  move_drive(0, -100, 0); //80
+  while(tracking.ycoord>18)delay(1);
+  move_to_target_sync(24, 2, 0, false,127);
+  move_drive(0, 80, 0); //80
+  while(tracking.ycoord<9)delay(1);
+  move_to_target_async(24, 45, 0, false, 70); //60
+  tracking.waitForDistance(18);
+  move_to_target_sync(24, 45, 0, false, 60); //50
+  tracking.waitForComplete();
+  delay(70);
+  move_to_target_async(31.75,9.75, deg_to_rad(135),false,127);
+  tracking.waitForDistance(30);
+  intakeL.move(-8);
+  intakeR.move(8);
+  tracking.waitForDistance(12);
+  intakeL.move(-15);
+  intakeR.move(15);
+  tracking.waitForDistance(7);
+  angler.move_absolute(ANGLER_MID-1800, 200);
+  tracking.waitForComplete();
+  brake();
+  delay(75);
+  move_drive(0,0,0);
+  angler.move_absolute(ANGLER_TOP-1000, 100);
+  intakeL.move(15);
+  intakeR.move(-15);
+  delay(50);
+  //tracking.LSLineup();
+  bool left = false, right = false;
+  move_drive(0, 50, 0);
+  //yes yes I know that this should be in the ls lineup function
+  //I was going to put in into a switch based off of side with the different thresholds, but wait, I did something stupid
+  //what side your on still isnt recorded to a file, once thats done  ill fix this stupidity
+  while(!left && !right) {
+    printf("l %d, r %d \n",leftLs.get_value(),rightLs.get_value());
+    if(leftLs.get_value()<400)  left = true;
+    if(rightLs.get_value()<400) right = true;
+  }
+  intakeL.move(20);
+  intakeR.move(-20);
+  if(left) {
+    move_drive_side(25,40);
+  }
+  if(right) {
+    move_drive_side(40,25);
+  }
+  while(!left || !right) {
+    if(leftLs.get_value()<400)  left = true;
+    if(rightLs.get_value()<400) right = true;
+  }
+  move_drive(0,20,0);
+  angler.move_absolute(ANGLER_TOP, 120);
+  while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  intakeL.move(-10);
+  intakeR.move(10);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  move_to_target_sync(26,14, deg_to_rad(135));
+}
+
 void autonomous() {
   setDriveState(driveStates::Auto);
   updateStopTask();
@@ -204,9 +295,9 @@ void autonomous() {
   green.sig_num = 1;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-
-  blue9();
-  // blueLeft();
+  red9();
+  // blue9();
+  //blueLeft();
   log("autotime is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);
