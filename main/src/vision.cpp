@@ -1,6 +1,7 @@
 #include "vision.hpp"
 visionClass green;
 visionClass purple;
+visionClass orange;
 int avg_height = 0;
 const double FOCAL_LENGTH = 225.9649;
 const double CUBE_HEIGHT = 5.7;

@@ -96,6 +96,7 @@ void update (void* param){
  while (true) {
 //amount encoders moved (radians)
    green.update();
+   orange.update();
 	 newleft = leftencoder.get_value() / 360.0* (2.75*M_PI);
 	 newright = rightencoder.get_value() / 360.0* (2.75*M_PI);
 	 newback = backencoder.get_value() / 360.0* (2.77*M_PI);

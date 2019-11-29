@@ -202,6 +202,7 @@ void autonomous() {
   while(resetDone == false) delay(1);
   // intakeL.move(127);
   green.sig_num = 1;
+  orange.sig_num = 2;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
 

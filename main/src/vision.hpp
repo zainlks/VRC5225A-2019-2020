@@ -19,4 +19,5 @@ public:
 };
 extern visionClass green;
 extern visionClass purple;
+extern visionClass orange;
 extern int avg_height;
