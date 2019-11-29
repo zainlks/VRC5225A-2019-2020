@@ -82,6 +82,10 @@ void anglerHandle() {
         intakeL.move(25);
         setAnglerState(anglerStates::Mid);
       }
+      if(master.get_digital_new_press(ANGLER_DOWN)){
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
+      }
     break;
     case anglerStates::Top:
       if(master.get_digital(DROPOFF_BUTTON)) dropOffHold = true;
@@ -112,7 +116,7 @@ void anglerHandle() {
             log("done back");
             stateCheck++;
         }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+      if(master.get_digital_new_press(ANGLER_DOWN)){
         angler.move_absolute(1, 200);
         setAnglerState(anglerStates::Idle);
       }
@@ -127,7 +131,7 @@ void anglerHandle() {
         intakeL.move(0);
         intakeR.move(0);
       }
-      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+      if(master.get_digital_new_press(ANGLER_DOWN)){
         angler.move_absolute(1, 200);
         setAnglerState(anglerStates::Idle);
       }
@@ -164,6 +168,10 @@ void anglerHandle() {
         doublePressCheck = false;
         setAnglerState(anglerStates::Mid);
       }
+      if(master.get_digital_new_press(ANGLER_DOWN)){
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
+      }
     break;
     case anglerStates::CubeOutFirst:
     // printf("here\n");
@@ -186,6 +194,10 @@ void anglerHandle() {
           angler.move_absolute(ANGLER_TOP, 75);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
+        }
+        if(master.get_digital_new_press(ANGLER_DOWN)){
+          angler.move_absolute(1, 200);
+          setAnglerState(anglerStates::Idle);
         }
     break;
   }
