@@ -528,10 +528,20 @@ void Tracking::turn_to_angle(double target_a, bool debug){
 
 void Tracking::LSLineup(bool hold, bool intake_deposit) {
   bool left = false, right = false;
+  int thresh;
+  switch(side){
+    case sides::blue:
+      thresh = 600;
+    break;
+    case sides::red:
+      thresh = 400;
+    break;
+
+  }
   move_drive(0, 50, 0);
   while(!left && !right) {
-    if(leftLs.get_value()<600)  left = true;
-    if(rightLs.get_value()<600) right = true;
+    if(leftLs.get_value()<thresh)  left = true;
+    if(rightLs.get_value()<thresh) right = true;
   }
   if(intake_deposit) {
   intakeL.move(20);
@@ -544,8 +554,8 @@ void Tracking::LSLineup(bool hold, bool intake_deposit) {
     move_drive_side(40,25);
   }
   while(!left || !right) {
-    if(leftLs.get_value()<600)  left = true;
-    if(rightLs.get_value()<600) right = true;
+    if(leftLs.get_value()<thresh)  left = true;
+    if(rightLs.get_value()<thresh) right = true;
   }
   if(hold) move_drive(0,20,0);
   else move_drive(0,0,0);

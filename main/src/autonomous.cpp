@@ -6,6 +6,7 @@
 #include "drive.hpp"
 #include "config.hpp"
 #include "controller.hpp"
+#include "menu.hpp"
 using namespace pros;
 uint32_t autotimer;
 /**
@@ -72,6 +73,9 @@ void blue9() {
   intakeL.move(-8);
   intakeR.move(8);
   move_to_target_async(-31.75,9.75, deg_to_rad(-135),false,127);
+  tracking.waitForDistance(30);
+  intakeL.move(-8);
+  intakeR.move(8);
   tracking.waitForDistance(12);
   intakeL.move(-15);
   intakeR.move(15);
@@ -149,26 +153,31 @@ void blueLeft(){
 
   move_to_target_async(0, 15, 0, false, 60,false,true);
   tracking.waitForDistance(3);
-  fBar.move_absolute(towerHeights[2]+250, 200);
+  fBar.move_absolute(towerHeights[2], 200);
   angler.move_absolute(2000,200);
   tracking.waitForComplete();
   move_drive(0,17,0);
-  while(fBar.get_position() < (towerHeights[2] +200)){delay(2);}
-  move_drive(0,60,0);
-  while(green.obj.height < 10) delay(1);
-  brake();
-  delay(50);
-  move_to_target_sync(0, tracking.ycoord-5.5, 0,false,127);
-  double curPos = tracking.ycoord;
-  fBar.move_absolute(towerHeights[1]+250, 200);
-  while(fBar.get_position() > (towerHeights[1]+350)){delay(2); printf("stuck\n");}
-  move_drive(0,-12,0);
-  fBar.move_absolute(towerHeights[0]+250, 200);
-  while(fBar.get_position() > (towerHeights[0]+350)){delay(2); printf("stuck\n");}
-  move_to_target_sync(0, curPos+1.5, 0,false,127);
-  fBar.move_absolute(1, 200);
-  while(fBar.get_position()>75) delay(1);
-  move_to_target_sync(0, tracking.ycoord + 6, 0, false,127);
+  while(fBar.get_position() < (towerHeights[2]-50)){delay(2);}
+
+  move_to_target_sync(0, 23.5, 0,false,127);
+  fBar.move_absolute(1, 120);
+  while(fBar.get_position()>towerHeights[1]) delay(1);
+  move_to_target_sync(0,25.5,0, false);
+  while(fBar.get_position()>50) delay(1);
+  move_to_target_sync(0, 30.5, 0, false);
+
+  //
+  // fBar.move_absolute(towerHeights[1]+250, 200);
+  // while(fBar.get_position() > (towerHeights[1]+350)){delay(2); printf("stuck\n");}
+  // move_drive(0,-17,0);
+  // fBar.move_absolute(towerHeights[0]+250, 200);
+  // while(fBar.get_position() > (towerHeights[0]+350)){delay(2); printf("stuck\n");}
+  // move_to_target_async(0, curPos+1.5, 0,false,127);
+  // tracking.waitForDistance(0.5);
+  // fBar.move_absolute(1, 150);
+  // tracking.waitForComplete();
+  // while(fBar.get_position()>75) delay(1);
+  // move_to_target_sync(0, tracking.ycoord + 6, 0, false,127);
   move_to_target_sync(8, 48, (M_PI/4),false);
   move_drive(0,-50,0);
   delay(300);
@@ -252,36 +261,85 @@ void red9() {
   intakeL.move(15);
   intakeR.move(-15);
   delay(50);
-  //tracking.LSLineup();
-  bool left = false, right = false;
-  move_drive(0, 50, 0);
-  //yes yes I know that this should be in the ls lineup function
-  //I was going to put in into a switch based off of side with the different thresholds, but wait, I did something stupid
-  //what side your on still isnt recorded to a file, once thats done  ill fix this stupidity
-  while(!left && !right) {
-    printf("l %d, r %d \n",leftLs.get_value(),rightLs.get_value());
-    if(leftLs.get_value()<400)  left = true;
-    if(rightLs.get_value()<400) right = true;
-  }
-  intakeL.move(20);
-  intakeR.move(-20);
-  if(left) {
-    move_drive_side(25,40);
-  }
-  if(right) {
-    move_drive_side(40,25);
-  }
-  while(!left || !right) {
-    if(leftLs.get_value()<400)  left = true;
-    if(rightLs.get_value()<400) right = true;
-  }
-  move_drive(0,20,0);
+  tracking.LSLineup();
   angler.move_absolute(ANGLER_TOP, 120);
   while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
   move_to_target_sync(26,14, deg_to_rad(135));
+}
+
+void redProtect(){
+  fBar.move_absolute(500, 200);
+  intakeL.move(127);
+  intakeR.move(-127);
+  while(fBar.get_position() < 495 ){delay(1);}
+  delay(50);
+  fBar.move_absolute(1,200);
+  delay(50);
+  master.print(1,0,"%d",millis()-autotimer);
+  intakeOn();
+
+  move_to_target_async(0, 15, 0, false, 60,false,true);
+  tracking.waitForDistance(3);
+  fBar.move_absolute(towerHeights[2], 200);
+  angler.move_absolute(2000,200);
+  tracking.waitForComplete();
+  move_drive(0,17,0);
+  while(fBar.get_position() < (towerHeights[2]-50)){delay(2);}
+
+  move_to_target_sync(0, 23.5, 0,false,127);
+  fBar.move_absolute(1, 120);
+  while(fBar.get_position()>towerHeights[1]) delay(1);
+  move_to_target_sync(0,25.5,0, false);
+  while(fBar.get_position()>50) delay(1);
+  move_to_target_sync(0, 30.5, 0, false);
+
+
+  // move_to_target_async(0, 15, 0, false, 60,false,true);
+  // tracking.waitForDistance(3);
+  // fBar.move_absolute(towerHeights[2]+400, 200);
+  // angler.move_absolute(2000,200);
+  // tracking.waitForComplete();
+  // move_drive(0,20,0);
+  // while(fBar.get_position() < (towerHeights[2] +350)){delay(2);}
+  // move_to_target_async(0, 10000, 0,false,60);
+  // while(orange.obj.height < 10) delay(1);
+  // moveStopTask();
+  // brake();
+  // delay(50);
+  // move_to_target_sync(0, tracking.ycoord-5.5, 0,false,127);
+  // double curPos = tracking.ycoord;
+  // fBar.move_absolute(towerHeights[1]+250, 200);
+  // while(fBar.get_position() > (towerHeights[1]+350)){delay(2); printf("stuck\n");}
+  // move_drive(0,-9,0);
+  // fBar.move_absolute(towerHeights[0]+250, 200);
+  // while(fBar.get_position() > (towerHeights[0]+350)){delay(2); printf("stuck\n");}
+  // move_to_target_sync(0, curPos+1.5, 0,false,127);
+  // fBar.move_absolute(1, 200);
+  // while(fBar.get_position()>75) delay(1);
+  // move_to_target_sync(0, tracking.ycoord + 6, 0, false,127);
+
+  move_to_target_sync(-8, 47.25, -(M_PI/4),false);
+  move_drive(0,-50,0);
+  delay(300);
+  move_to_target_sync(-14, 32, -(3*M_PI/4),false);
+  move_to_target_async(-22, 19, -(3*M_PI/4),false);
+  tracking.waitForDistance(10);
+  angler.move_absolute(ANGLER_TOP-1000, 100);
+  tracking.waitForComplete();
+  tracking.LSLineup(true, true);
+  intakeL.move(25);
+  intakeR.move(-25);
+  angler.move_absolute(ANGLER_TOP, 80);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  intakeL.move(-10);
+  intakeR.move(10);
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  move_to_target_sync(0, -10.0, 0, false, 127, false, false);
 }
 
 void autonomous() {
@@ -296,7 +354,33 @@ void autonomous() {
   orange.sig_num = 2;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-  red9();
+  switch(side) {
+    case sides::blue:
+      switch(cur_auto) {
+        case autos::auto1:
+          blueLeft();
+        break;
+        case autos::auto2:
+          blue9();
+        break;
+        case autos::auto3:
+        break;
+      }
+    break;
+    case sides::red:
+      switch(cur_auto) {
+        case autos::auto1:
+          redProtect();
+        break;
+        case autos::auto2:
+          red9();
+        break;
+        case autos::auto3:
+        break;
+      }
+    break;
+
+  }
   // blue9();
   //blueLeft();
   log("autotime is %d\n", autotimer-pros::millis());

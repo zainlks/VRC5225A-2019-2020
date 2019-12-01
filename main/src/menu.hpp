@@ -26,12 +26,17 @@ enum class autos{
 };
 
 const string auto_names[] = {
-  "9    ",
-  "sweep",
-  "3    "
+  "protected    ",
+  "unprotected  ",
+  "skills       "
 };
 
+extern sides side;
+extern autos cur_auto;
+
+
 void menu();
+void menu_init();
 void menu_update();
 void autos_page();
 

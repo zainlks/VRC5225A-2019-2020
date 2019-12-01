@@ -30,7 +30,7 @@ void opcontrol() {
 		uint32_t LTimer = millis();
 		bool intk_stop = false;
 		green.sig_num = 1;
-		purple.sig_num = 2;
+		orange.sig_num = 2;
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
 		setDriveState(driveStates::Driver);
@@ -42,7 +42,7 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();
-			 printf("%d, %d\n", leftLs.get_value(), rightLs.get_value());
+			 // printf("%d, %d\n", leftLs.get_value(), rightLs.get_value());
 			 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
 
@@ -53,6 +53,7 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
+			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
 			 {
 				 if(speedLimit)speedLimit = false;

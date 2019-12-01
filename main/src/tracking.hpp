@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "vision.hpp"
 #include "controller.hpp"
+#include "menu.hpp"
 #include <iostream>
 #include <cmath>
 #include <memory>
