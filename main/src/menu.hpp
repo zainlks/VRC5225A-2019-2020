@@ -34,12 +34,13 @@ const string auto_names[] = {
 extern sides side;
 extern autos cur_auto;
 
-
 void menu();
 void menu_init();
 void menu_update();
 void autos_page();
+void Offset();
 
+extern double Inches_Off;
 // extern screens pages;
 // extern sides side;
 // extern autos cur_auto;

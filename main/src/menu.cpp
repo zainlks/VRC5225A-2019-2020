@@ -11,8 +11,10 @@ FILE* autoFile = NULL;
 bool auto_set = false;
 autos cur_auto = autos::auto1;
 sides side = sides::red;
+inch_off inches = inch_off::exact;
 screens pages = screens::autos;
 bool side_select = true;
+double Inches_Off = 0;
 
 
 
@@ -160,11 +162,29 @@ void menu_update(){
   }
 }
 
+void Offset(){
+
+  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+    Inches_Off += 0.5;
+    master.print(2,0,"Inches_Off: %d     ", Inches_Off);
+  }
+  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+    Inches_Off -= 0.5;
+    master.print(2,0,"Inches_Off: %d     ", Inches_Off);
+  }
+  if (Inches_Off > 1.5) Inches_Off = -1.5;
+  if (Inches_Off < -1.5) Inches_Off = 1.5;
+
+}
 
 void menu(){
   menu_update();
   while(true){
     delay(10);
     autos_page();
+  }
+  while(true){
+    delay(10);
+    Offset();
   }
 }
