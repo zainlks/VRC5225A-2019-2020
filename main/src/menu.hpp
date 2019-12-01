@@ -28,7 +28,27 @@ enum class autos{
 const string auto_names[] = {
   "protected    ",
   "unprotected  ",
-  "skills       "
+  "sr5kills       "
+};
+
+const string Off_set_arrayS[] = {
+  "-1.5",
+  "-1",
+  "-0.5",
+  "0",
+  "0.5",
+  "1",
+  "1.5"
+};
+
+const double Off_set_arrayI[] = {
+  -1.5,
+  -1,
+  -0.5,
+  0,
+  0.5,
+  1,
+  1.5
 };
 
 extern sides side;

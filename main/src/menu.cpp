@@ -7,15 +7,17 @@ FILE* autoSideFile = NULL;
 
 FILE* autoFile = NULL;
 
+FILE* offsetFile = NULL;
+
 
 bool auto_set = false;
 autos cur_auto = autos::auto1;
 sides side = sides::red;
-inch_off inches = inch_off::exact;
 screens pages = screens::autos;
 bool side_select = true;
 double Inches_Off = 0;
 bool Done = false;
+
 
 
 
@@ -41,8 +43,28 @@ void menu_init() {
     if(!strcmp(autoC,"auto2")) cur_auto = autos::auto2;
     if(!strcmp(autoC,"auto3")) cur_auto = autos::auto3;
   }
-  if(autoSideFile != NULL) fclose(autoSideFile);
+  if(autoFile != NULL) fclose(autoFile);
+
+
+    offsetFile = fopen("/usd/offset.txt","r");
+    if(offsetFile == NULL){printf("could not open logfile\n"); return;}
+    else printf("logfile found\n");
+    char offsetC[80];
+    if(offsetFile != NULL){
+      for()
+      fscanf(offsetFile, "%s", offsetC);
+      if(!strcmp(offsetC, "-1.5"))Inches_Off = -1.5;
+      if(!strcmp(offsetC, "-1"))Inches_Off = -1;
+      if(!strcmp(offsetC, "-0.5"))Inches_Off = -0.5;
+      if(!strcmp(offsetC, "0"))Inches_Off = 0;
+      if(!strcmp(offsetC, "0.5"))Inches_Off = 0.5;
+      if(!strcmp(offsetC, "1"))Inches_Off = 1;
+      if(!strcmp(offsetC, "1.5"))Inches_Off = 1.5;
+    }
+    if(offsetFile != NULL) fclose(offsetFile);
 }
+
+
 
 void autos_page(){
   if(!auto_set){
@@ -164,17 +186,22 @@ void menu_update(){
 }
 
 void Offset(){
-  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP) && Done == false){
-    Inches_Off += 0.5;
-    master.print(2,0,"Inches_Off: %d     ", Inches_Off);
+
+
+
+  if(Done){
+    if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+      Inches_Off += 0.5;
+      master.print(2,0,"Inches_Off: %d     ", Inches_Off);
+    }
+    if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+      Inches_Off -= 0.5;
+      master.print(2,0,"Inches_Off: %d     ", Inches_Off);
+    }
+    if (Inches_Off > 1.5) Inches_Off = -1.5;
+    if (Inches_Off < -1.5) Inches_Off = 1.5;
+    if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) Done = true;
   }
-  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN) && Done == false){
-    Inches_Off -= 0.5;
-    master.print(2,0,"Inches_Off: %d     ", Inches_Off);
-  }
-  if (Inches_Off > 1.5) Inches_Off = -1.5;
-  if (Inches_Off < -1.5) Inches_Off = 1.5;
-  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) Done = true;
 }
 
 void menu(){
