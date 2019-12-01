@@ -321,7 +321,9 @@ void redProtect(){
   // while(fBar.get_position()>75) delay(1);
   // move_to_target_sync(0, tracking.ycoord + 6, 0, false,127);
 
-  move_to_target_sync(-8, 47.25, -(M_PI/4),false);
+  //move_to_target_sync(-7, 47.5, deg_to_rad(-40), false);
+  move_to_target_sync(-8, 40, 0, false);
+  move_to_target_sync(-8, 47, 0, false);
   move_drive(0,-50,0);
   delay(300);
   move_to_target_sync(-14, 32, -(3*M_PI/4),false);
