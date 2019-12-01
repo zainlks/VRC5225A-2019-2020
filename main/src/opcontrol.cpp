@@ -1,97 +1,33 @@
 #include "main.h"
-#include "tracking.hpp"
-#include "vision.hpp"
-#include "fBar.hpp"
-#include "angler.hpp"
-#include "drive.hpp"
-#include "controller.hpp"
-#include "logging.hpp"
-#include "menu.hpp"
 using namespace pros;
-int startNum = 0;
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
 void opcontrol() {
-		double power = 0;
-		double kP = 1.2;
-		uint32_t stoptime = 0;
-		uint32_t LTimer = millis();
-		bool intk_stop = false;
-		green.sig_num = 1;
-		orange.sig_num = 2;
-		//tracking.setAngleHold(0);
-		int lastTime = 0;
-		setDriveState(driveStates::Driver);
-		// Task driveUpdate(driveHandle);
-		//angler.move_absolute(1800, 100);
+		Motor front_L(20, false);
+		Motor front_R(12, true);
+		Motor back_L(10, false);
+		Motor back_R(1, true);
+		Controller master(E_CONTROLLER_MASTER);
+		int power_x = 0;
+		int power_y = 0;
+		int power_a = 0;
 	  while (true){
-			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
-			 //printf("angler: %f\n", angler.get_position());
-			 anglerHandle();
-			 fBarHandle();
-			 green.update();
-			 // printf("%d, %d\n", leftLs.get_value(), rightLs.get_value());
-			 // printf("%d | %d\n",green.obj.height, green.obj.width);
-			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
+			power_x = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X);
+			power_y = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
+			power_a = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
 
-			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
-			//  for(int x = 0; x < 50; x++){
-			//  	intakeL.move_velocity(-x);
-			// 	intakeR.move_velocity(x);
-			// 	printf("%d \n", x);
-			// 	delay(500);
-			// }
-			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
-			 if(master.get_digital_new_press(SPEED_LIMIT))
-			 {
-				 if(speedLimit)speedLimit = false;
-				 else speedLimit = true;
-			 }
-			 if(master.get_digital_new_press(INTK_IN_BUTTON)) {
-				 if(fabs(intakeL.get_actual_velocity())>25)
-				 {
-					 intakeR.move(8);
-					 intakeL.move(-8);
-				 }
-				 else {
-					 intakeL.move(-127);
-					 intakeR.move(127);
-				 }
-			 }
-			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
-				 if(fabs(intakeL.get_actual_velocity())>10)
-				 {
-					 intakeL.move(-5);
-           intakeR.move(5);
-				 }
-				 else
-				 {
-					 intakeL.move(127);
-					 intakeR.move(-127);
-			 	 }
-			 }
+			if (abs(power_x) < 5){
+				power_x = 0;
+			}
+			if (abs(power_y) < 5){
+				power_y = 0;
+			}
+			if (abs(power_a) < 5){
+				power_a = 0;
+			}
 
-
-			 // tracking.move_to_target(0, 10, 0);
-			 // green.update();
-			 // printf("center: %d\n",green.obj.x_middle_coord);
-			 // printf("global angle: %f\n", tracking.global_angle);
-	     // green.lineMiddle(1.2);
-			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
-
-			 delay(1);
+			front_L.move(power_x + power_y + power_a);
+			front_R.move(-power_x + power_y - power_a);
+			back_L.move(power_x + power_y - power_a);
+			back_R.move(-power_x + power_y + power_a);
 	   }
-		//menu();
 }

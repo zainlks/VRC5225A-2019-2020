@@ -1,10 +1,5 @@
 #include "main.h"
-#include "fBar.hpp"
-#include "angler.hpp"
-#include "controller.hpp"
-#include "logging.hpp"
-#include "menu.hpp"
-
+using namespace pros;
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -12,24 +7,13 @@
  * to keep execution time for this mode under a few seconds.
  */
 
-
 void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
-	// Task controllerUpdate(printTemp);
-	fBarCal();
-	anglerCal();
-	log_init();
-	menu_init();
-	front_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	front_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	fBar.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-	// delay(6000);
-	updateStartTask();
 
-	Task driveUpdate(driveHandle);
+	// Task controllerUpdate(printTemp);
+
+
 }
 
 /**
