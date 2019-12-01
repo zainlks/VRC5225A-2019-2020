@@ -186,6 +186,7 @@ void move_to_target(void* params){
   bool debug = moveParams.debug;
   bool cubeLineUp = moveParams.cubeLineUp;
   bool brakeOn = moveParams.brakeOn;
+  bool inDrive = moveParams.inDrive;
   log("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 20;
@@ -200,7 +201,7 @@ void move_to_target(void* params){
   double kI_a = 0.01, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
 
-  while (true){
+  while (fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y))<5 || inDrive == false){
 
 
     error_a = target_a - tracking.global_angle;
@@ -350,16 +351,16 @@ void move_to_target(void* params){
   }
 }
 
-void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
+void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
   if(moveTask != nullptr) moveTask = nullptr;
-  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
   tracking.driveError = 0;
   tracking.moveComplete = false;
   move_to_target(nullptr);
 }
-void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug) {
+void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
   if(moveTask != nullptr) moveTask = nullptr;
-  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug};
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
   tracking.driveError = 0;
   tracking.moveComplete = false;
   moveStartTask();

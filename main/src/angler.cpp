@@ -112,7 +112,7 @@ void anglerHandle() {
             tracking.reset();
             updateStartTask();
             log("%d | global angle: %d, xcoord: %d, ycoord: %d", pros::millis(), tracking.global_angle, tracking.xcoord, tracking.ycoord);
-            move_to_target_sync(0, -10.0, 0, false, 50, false, false);
+            move_to_target_sync(0, -10.0, 0, false, 50, false, false, true);
             setDriveState(driveStates::Driver);
             log("done back");
             stateCheck++;
