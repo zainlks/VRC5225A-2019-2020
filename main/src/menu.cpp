@@ -15,6 +15,7 @@ inch_off inches = inch_off::exact;
 screens pages = screens::autos;
 bool side_select = true;
 double Inches_Off = 0;
+bool Done = false;
 
 
 
@@ -163,18 +164,17 @@ void menu_update(){
 }
 
 void Offset(){
-
-  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP) && Done == false){
     Inches_Off += 0.5;
     master.print(2,0,"Inches_Off: %d     ", Inches_Off);
   }
-  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN) && Done == false){
     Inches_Off -= 0.5;
     master.print(2,0,"Inches_Off: %d     ", Inches_Off);
   }
   if (Inches_Off > 1.5) Inches_Off = -1.5;
   if (Inches_Off < -1.5) Inches_Off = 1.5;
-
+  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) Done = true;
 }
 
 void menu(){
