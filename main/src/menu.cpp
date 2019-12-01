@@ -13,6 +13,7 @@ autos cur_auto = autos::auto1;
 sides side = sides::red;
 screens pages = screens::autos;
 bool side_select = true;
+bool done = false;
 
 
 
@@ -101,6 +102,7 @@ void autos_page(){
               fprintf(autoFile, "auto1");
               fclose(autoFile);
             }
+            done = true;
           }
           if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
         break;
@@ -120,6 +122,7 @@ void autos_page(){
               fprintf(autoFile, "auto2");
               fclose(autoFile);
             }
+            done = true;
           }
           if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
         break;
@@ -139,6 +142,7 @@ void autos_page(){
                 fprintf(autoFile, "auto3");
                 fclose(autoFile);
               }
+              done = true;
           }
           if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
         break;
@@ -163,7 +167,8 @@ void menu_update(){
 
 void menu(){
   menu_update();
-  while(true){
+  done = false;
+  while(!done){
     delay(10);
     autos_page();
   }

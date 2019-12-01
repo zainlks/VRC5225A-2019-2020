@@ -3,6 +3,7 @@
 
 Tracking tracking;
 
+bool trackingReset = false;
 bool speedLimit = 0;
 int offset = 0;
 int updateCount = 0;
@@ -29,7 +30,9 @@ void moveStopTask() {
   }
 }
 
-void updateStartTask() {
+void updateStartTask(bool reset) {
+  if(reset) trackingReset = true;
+  else trackingReset = false;
   updateTask = new Task(update);
 }
 
@@ -81,7 +84,7 @@ void update (void* param){
    double lastleft = 0, lastright = 0, lastback = 0;
    double last_time = 0;
    resetDone = false;
-   tracking.reset();
+   if(trackingReset)tracking.reset();
    do {
      leftencoder.reset(); rightencoder.reset(); backencoder.reset();
      printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());

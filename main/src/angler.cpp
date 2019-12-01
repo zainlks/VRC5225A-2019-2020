@@ -80,6 +80,7 @@ void anglerHandle() {
         angler.move_absolute(ANGLER_MID, 100);
         intakeR.move(-25);
         intakeL.move(25);
+        delay(50);
         setAnglerState(anglerStates::Mid);
       }
       if(master.get_digital_new_press(ANGLER_DOWN)){
