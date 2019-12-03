@@ -18,6 +18,7 @@ extern int offset;
 extern int updateCount;
 extern bool resetDone;
 double deg_to_rad(double degrees);
+double rad_to_deg(double radians);
 void move_drive(int x, int y, int a);
 void move_drive_side(int L, int R);
 void brake();
@@ -46,7 +47,7 @@ void move_to_target_async(double target_x, double target_y, double target_a, boo
 
 class Tracking {
 public:
-  double xcoord = 0, ycoord = 0, global_angle = 0, power_a = 0, power_x = 0, power_y = 0, x2 = 0 , y2 = 0, a2= 0, holdAngle= 0, driveError  = 0;
+  double xcoord = 0, ycoord = 0, global_angle = 0, power_a = 0, power_x = 0, power_y = 0, x2 = 0 , y2 = 0, a2= 0, holdAngle= 0, driveError  = 0, velocityL = 0, velocityR = 0;
   bool toggle_target, toggle_cube, target, cube, moveComplete = false;
   void reset();
   void waitForDistance(double distance);
@@ -56,7 +57,7 @@ public:
   void turn_to_target(double target_x, double target_y, bool debug = false);
   void turn_to_angle(double target_a, bool debug = false);
   void flattenAgainstWall(bool forward, bool hold = true);
-  void LSLineup(bool hold = true, bool intake_deposit = true);
+  void LSLineup(bool hold = true, bool intake_deposit = true, int timeoutTime = 5000);
 };
 
 extern Tracking tracking;

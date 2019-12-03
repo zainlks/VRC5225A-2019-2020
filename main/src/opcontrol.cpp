@@ -39,6 +39,7 @@ void opcontrol() {
 	  while (true){
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
+			 // printf("L: %f, R: %f\n", tracking.velocityL, tracking.velocityR);
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();

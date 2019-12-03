@@ -24,6 +24,7 @@ enum class anglerStates {
   Top
 };
 void intakeOn();
+void intakeReverse();
 void startDropOff();
 void stopDropOff();
 void dropOff(void *param);

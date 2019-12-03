@@ -31,8 +31,7 @@ void moveStopTask() {
 }
 
 void updateStartTask(bool reset) {
-  if(reset) trackingReset = true;
-  else trackingReset = false;
+  trackingReset = reset;
   updateTask = new Task(update);
 }
 
@@ -82,7 +81,8 @@ void update (void* param){
    double newleft = 0; double newright = 0; double newback = 0;
    double Right = 0; double Left = 0; double Back = 0;
    double lastleft = 0, lastright = 0, lastback = 0;
-   double last_time = 0;
+   uint32_t last_time = 0;
+   double leftLastVel = 0; double rightLastVel;
    resetDone = false;
    if(trackingReset)tracking.reset();
    do {
@@ -106,7 +106,13 @@ void update (void* param){
 	 Right = newright - lastright;
 	 Left = newleft - lastleft;
 	 Back = newback - lastback;
-
+   if(millis()-last_time >= 20) {
+     tracking.velocityL = (newleft - leftLastVel)/(millis() - last_time);
+     tracking.velocityR = (newright - rightLastVel)/(millis() - last_time);
+     leftLastVel = newleft;
+     rightLastVel = newright;
+     last_time = millis();
+   }
 //update last
 	 lastright = newright;
 	 lastleft = newleft;
@@ -135,7 +141,6 @@ void update (void* param){
 		 tracking.xcoord += Yx + Xx;
 		 tracking.ycoord += Yy + Xy;
      tracking.global_angle += theta;
-
 
 	// 	 if ((millis() - last_time) > 100){
 	// 		 printf("%d | X: %f, Y: %f, A: %f\n", millis(), tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
@@ -189,13 +194,13 @@ void move_to_target(void* params){
   bool inDrive = moveParams.inDrive;
   log("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 55.0, max_power_xy = moveParams.max_xy;
-  double min_power_a = 12, min_power_xy = 20;
+  double min_power_a = 12, min_power_xy = 25;
   double scale;
 
   double last_power_a = max_power_a, last_power_x = max_power_xy, last_power_y = max_power_xy;
   double integral_a = 0.0, integral_d = 0.0;
 
-  double error_a, error_x, error_y, error_d;
+  double error_a, error_x, error_y, error_d, errorLocalx, errorLocaly;
   double difference_a;
   double kP_a = 140, kP_d = 14;
   double kI_a = 0.01, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
@@ -211,7 +216,8 @@ void move_to_target(void* params){
     tracking.driveError = error_d;
 
     difference_a = tracking.global_angle + atan(error_y/error_x);
-
+    errorLocalx = cos(difference_a) * error_d;
+    errorLocaly = sin(difference_a) * error_d;
 
 
     if (fabs(error_a) < 5){
@@ -284,15 +290,17 @@ void move_to_target(void* params){
       }
     }
 
-    if (fabs(error_x) > 0.5){
+    if (fabs(errorLocalx) > 0.5 || fabs(error_x) > 0.5){
         if (fabs(tracking.power_x) < min_power_xy){
         tracking.power_x = sgn(tracking.power_x)*min_power_xy;
       }
     }
-    else tracking.power_x = 0;
+    else {
+      tracking.power_x = 0;
+    }
 
 
-    if (fabs(error_y) > 0.5){
+    if (fabs(errorLocaly) > 0.5 || fabs(error_y) > 0.5){
       if(fabs(tracking.power_y) < min_power_xy){
 
       tracking.power_y = sgn(tracking.power_y)*min_power_xy;
@@ -300,7 +308,6 @@ void move_to_target(void* params){
     }
     else{
       tracking.power_y = 0;
-      printf("setting to 0 : %f\n", error_y);
     }
 
     if(debug) log("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
@@ -530,8 +537,9 @@ void Tracking::turn_to_angle(double target_a, bool debug){
   }
 }
 
-void Tracking::LSLineup(bool hold, bool intake_deposit) {
+void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime) {
   bool left = false, right = false;
+  uint32_t startTime = pros::millis();
   int thresh;
   switch(side){
     case sides::blue:
@@ -543,9 +551,10 @@ void Tracking::LSLineup(bool hold, bool intake_deposit) {
 
   }
   move_drive(0, 50, 0);
-  while(!left && !right) {
-    if(leftLs.get_value()<thresh)  left = true;
-    if(rightLs.get_value()<thresh) right = true;
+  delay(100);
+  while(!left && !right && (millis()-startTime)<timeoutTime) {
+    if(velocityL<0.000002)  left = true;
+    if(velocityR<0.000002) right = true;
   }
   if(intake_deposit) {
   intakeL.move(20);
@@ -553,13 +562,15 @@ void Tracking::LSLineup(bool hold, bool intake_deposit) {
   }
   if(left) {
     move_drive_side(25,40);
+    delay(50);
   }
   if(right) {
     move_drive_side(40,25);
+    delay(50);
   }
-  while(!left || !right) {
-    if(leftLs.get_value()<thresh)  left = true;
-    if(rightLs.get_value()<thresh) right = true;
+  while((!left || !right) && (millis()-startTime)<timeoutTime) {
+    if(velocityL<0.000002)  left = true;
+    if(velocityR<0.000002) right = true;
   }
   if(hold) move_drive(0,20,0);
   else move_drive(0,0,0);

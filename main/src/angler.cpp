@@ -18,6 +18,11 @@ void intakeOn(){
   intakeL.move(-127);
   intakeR.move(127);
 }
+
+void intakeReverse() {
+  intakeL.move(70);
+  intakeR.move(-70);
+}
 void anglerCal()
 {
   uint32_t timeout_time = millis() + 1500;
