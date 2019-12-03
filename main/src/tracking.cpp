@@ -460,7 +460,7 @@ void pointToAngle(void *param) {
       else tracking.power_a = 0;
     }
 }
-void Tracking::turn_to_target(double target_x, double target_y, bool debug){
+void Tracking::turn_to_target(double target_x, double target_y, bool debug, bool brakeOn){
   double target_a = atan2((target_x - tracking.xcoord), (target_y - tracking.ycoord));
   double error_a;
   double kP_a = 137;
@@ -486,9 +486,9 @@ void Tracking::turn_to_target(double target_x, double target_y, bool debug){
     move_drive(0, 0, power_a);
     if (fabs(error_a) <= deg_to_rad(0.5)){
       brake();
-      delay(300);
+      if(brakeOn)delay(300);
       move_drive(0, 0, 0);
-      delay(500);
+      // delay(500);
       log("Movement to (%f, %f, %f) ended\n", target_x, target_y, rad_to_deg(target_a));
       log("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
@@ -499,7 +499,7 @@ void Tracking::turn_to_target(double target_x, double target_y, bool debug){
   }
 }
 
-void Tracking::turn_to_angle(double target_a, bool debug){
+void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
   double error_a;
   double kP_a = 137;
   double power_a;
@@ -524,9 +524,10 @@ void Tracking::turn_to_angle(double target_a, bool debug){
     move_drive(0, 0, power_a);
     if (fabs(error_a) <= deg_to_rad(0.5)){
       brake();
-      delay(300);
+      if(brakeOn)delay(300);
       move_drive(0, 0, 0);
-      delay(500);
+      //delay(500);
+      printf("TURN TO TARGET to %f ended\n", rad_to_deg(target_a));
       log("Movement to (%f) ended\n", rad_to_deg(target_a));
       log("X : %f, Y : %f, A : %f\n", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
       master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));

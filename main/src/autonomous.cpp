@@ -438,7 +438,7 @@ void skills() {
   move_to_target_sync(8, 16, deg_to_rad(90), true);
   intakeReverse();
   delay(800);
-  tracking.turn_to_angle(deg_to_rad(45));
+  tracking.turn_to_angle(deg_to_rad(45),false,false);
   fBar.move_absolute(1,200);
   while(fBar.get_position()>100) delay(1);
   intakeOn();
