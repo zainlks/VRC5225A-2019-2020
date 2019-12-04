@@ -348,10 +348,14 @@ void skills() {
   while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
+  intakeL.move(-10);
+  intakeR.move(10);
   fBar.move_absolute(1,200);
   angler.move_absolute(1700, 200);
+  move_to_target_async(0,20,0,false,85,false,true);
+  tracking.waitForDistance(17);
   intakeOn();
-  move_to_target_sync(0,20,0,false,85,false,true);
+  tracking.waitForComplete();
   move_to_target_sync(0,23,0,false,55,false,true);
   brake();
   delay(50);
@@ -390,7 +394,7 @@ void skills() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 200);
+  angler.move_absolute(ANGLER_MID-1800, 120);
   tracking.waitForComplete();
   brake();
   delay(75);
@@ -473,7 +477,7 @@ void skills() {
   delay(100);
   uint32_t timer = millis();
   while((tracking.velocityB!=0 || front_L.get_actual_velocity() != 0) && millis()-timer < 2500) delay(1);
-  delay(100);
+  delay(150);
   updateStopTask();
   tracking.xcoord = -40.5;
   updateStartTask(false);
@@ -494,6 +498,8 @@ void skills() {
   move_to_target_sync(-21,110,0,false,55);
   delay(75);
   move_to_target_sync(0, 120, M_PI);
+  move_drive(0,-60,0);
+  delay(100);
   tracking.flattenAgainstWall(false);
   updateStopTask();
   tracking.ycoord = 0;
@@ -528,7 +534,7 @@ void skills() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 200);
+  angler.move_absolute(ANGLER_MID-1800, 120);
   tracking.waitForComplete();
   brake();
   delay(75);
