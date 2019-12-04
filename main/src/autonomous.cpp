@@ -423,6 +423,8 @@ void skills() {
   intakeOn();
   tracking.waitForComplete();
   move_to_target_sync(-12, 7, 0,false);
+  move_drive(-65,0,0);
+  delay(200);
   tracking.flattenAgainstWall(false);
   updateStopTask();
   tracking.ycoord = 0;
@@ -499,15 +501,15 @@ void skills() {
   delay(75);
   move_to_target_sync(0, 120, M_PI);
   move_drive(0,-60,0);
-  delay(100);
+  delay(200);
   tracking.flattenAgainstWall(false);
   updateStopTask();
   tracking.ycoord = 0;
   tracking.global_angle = 0;
   tracking.xcoord = -tracking.xcoord;
   updateStartTask(false);
-  move_to_target_sync(-1,20,0,false,85,false,true);
-  move_to_target_sync(-1,24,0,false,55,false,true);
+  move_to_target_sync(0,20,0,false,85,false,true);
+  move_to_target_sync(0,24,0,false,55,false,true);
   brake();
   delay(50);
   move_drive(0,0,0);
@@ -515,7 +517,7 @@ void skills() {
   move_drive(0, -30, 0);
   angler.move_absolute(400, 200);
   while(fBar.get_position()<towerHeights[1]- 350 || angler.get_position()>1600) delay(1);
-  move_to_target_async(-1, 25.25, 0, false, 75);
+  move_to_target_async(0, 25.25, 0, false, 75);
   tracking.waitForDistance(0.75);
   fBar.move_absolute(1, 200);
   tracking.waitForComplete();
@@ -523,7 +525,7 @@ void skills() {
   delay(50);
   move_drive(0,0,0);
   while(fBar.get_position() > 1000) delay(1);
-  move_to_target_async(-1, 30.5, 0, false);
+  move_to_target_async(0, 30.5, 0, false);
   angler.move_absolute(1700, 200);
   tracking.waitForComplete();
   move_to_target_async(31.75,9.75, deg_to_rad(135),false,127);
