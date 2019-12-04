@@ -108,16 +108,15 @@ void anglerHandle() {
           intakeR.move(40);
         }
       }
+      if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
         if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0)
         {
             setDriveState(driveStates::Auto);
-            log("hello");
             updateStopTask();
-            log("hey there shordy");
             tracking.reset();
             updateStartTask();
             log("%d | global angle: %d, xcoord: %d, ycoord: %d", pros::millis(), tracking.global_angle, tracking.xcoord, tracking.ycoord);
-            move_to_target_sync(0, -10.0, 0, false, 50, false, false, true);
+            move_to_target_sync(0, -10.0, 0, false, 80, false, false, true);
             setDriveState(driveStates::Driver);
             log("done back");
             stateCheck++;
@@ -189,7 +188,7 @@ void anglerHandle() {
           intakeL.move(7 * intakeL.get_direction());
           intakeR.move(7 * intakeR.get_direction());
           //intakeL.move(5)
-          angler.move_absolute(ANGLER_TOP, 75);
+          angler.move_absolute(ANGLER_TOP, 130);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
         }

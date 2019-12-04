@@ -82,7 +82,7 @@ void update (void* param){
    double Right = 0; double Left = 0; double Back = 0;
    double lastleft = 0, lastright = 0, lastback = 0;
    uint32_t last_time = 0;
-   double leftLastVel = 0; double rightLastVel;
+   double leftLastVel = 0; double rightLastVel=0; double backLastVel = 0;
    resetDone = false;
    if(trackingReset)tracking.reset();
    do {
@@ -109,8 +109,10 @@ void update (void* param){
    if(millis()-last_time >= 20) {
      tracking.velocityL = (newleft - leftLastVel)/(millis() - last_time);
      tracking.velocityR = (newright - rightLastVel)/(millis() - last_time);
+     tracking.velocityB = (newback - backLastVel)/(millis() - last_time);
      leftLastVel = newleft;
      rightLastVel = newright;
+     backLastVel = newback;
      last_time = millis();
    }
 //update last
@@ -229,7 +231,7 @@ void move_to_target(void* params){
       tracking.power_a  = 0;
     }
 
-    if (fabs(error_d) < 2){ // what triggers integral to start adding?
+    if (fabs(error_d) < 2.5){ // what triggers integral to start adding?
       integral_d += error_d * (millis() - last_time);
     }
     if(fabs(error_d)<=0.7) {
@@ -438,9 +440,9 @@ void Tracking::flattenAgainstWall(bool forward,bool hold) {
     if(hold) move_drive(0,25,0);
   }
   else {
-    move_drive(0, -50, 0);
-    delay(50);
-    while(front_L.get_actual_velocity() != 0 || front_R.get_actual_velocity()) {
+    move_drive(0, -60, 0);
+    delay(100);
+    while(velocityL != 0 || velocityR !=0) {
       delay(1);
     }
     if(hold) move_drive(0,-25,0);
@@ -551,11 +553,11 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime) {
     break;
 
   }
-  move_drive(0, 50, 0);
+  move_drive(0, 65, 0);
   delay(100);
   while(!left && !right && (millis()-startTime)<timeoutTime) {
-    if(velocityL<0.000002)  left = true;
-    if(velocityR<0.000002) right = true;
+    if(velocityL==0)  left = true;
+    if(velocityR==0) right = true;
   }
   if(intake_deposit) {
   intakeL.move(20);

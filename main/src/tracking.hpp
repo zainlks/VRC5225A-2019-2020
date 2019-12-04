@@ -47,7 +47,7 @@ void move_to_target_async(double target_x, double target_y, double target_a, boo
 
 class Tracking {
 public:
-  double xcoord = 0, ycoord = 0, global_angle = 0, power_a = 0, power_x = 0, power_y = 0, x2 = 0 , y2 = 0, a2= 0, holdAngle= 0, driveError  = 0, velocityL = 0, velocityR = 0;
+  double xcoord = 0, ycoord = 0, global_angle = 0, power_a = 0, power_x = 0, power_y = 0, x2 = 0 , y2 = 0, a2= 0, holdAngle= 0, driveError  = 0, velocityL = 0, velocityR = 0, velocityB = 0;
   bool toggle_target, toggle_cube, target, cube, moveComplete = false;
   void reset();
   void waitForDistance(double distance);
