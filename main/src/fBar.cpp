@@ -38,7 +38,7 @@ void fBarHandle() {
     case fBarStates::Idle:
       if(fBar.get_position()<20) fBar.move(-13);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
-        fBar.move_absolute(FBAR_MID, 200);
+        fBar.move_absolute(FBAR_MID-50, 200);
         angler.move_absolute(ANGLER_MID-2700, 150);
         setAnglerState(anglerStates::Mid);
         setfBarState(fBarStates::Mid);
@@ -67,7 +67,6 @@ void fBarHandle() {
       move_to_target_sync(0,2,0, false);
       tracking.reset();
       while(fBar.get_position()>50) delay(1);
-      move_to_target_sync(0, 5, 0, false);
       cubeHeightCounter = 0;
       setfBarState(fBarStates::Idle);
       setDriveState(driveStates::Driver);
@@ -92,7 +91,7 @@ void fBarHandle() {
         setfBarState(fBarStates::Idle);
       }
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){
-        fBar.move_absolute(FBAR_TOP, 150);
+        fBar.move_absolute(FBAR_TOP-50, 150);
         setfBarState(fBarStates::Top);
       }
       break;

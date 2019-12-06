@@ -69,7 +69,7 @@ void blue9() {
   move_to_target_sync(-25.5, 2, 0, false,127);
   move_drive(0, 80, 0); //80
   while(tracking.ycoord<9)delay(1);
-  move_to_target_async(-25.5, 45, 0, false, 60); //60
+  move_to_target_async(-25.5, 45, 0, false, 70); //60
   tracking.waitForDistance(18);
   move_to_target_sync(-25.5, 45, 0, false, 60); //50
   tracking.waitForComplete();
@@ -245,15 +245,12 @@ void red9() {
   move_to_target_sync(24, 2, 0, false,127);
   move_drive(0, 80, 0); //80
   while(tracking.ycoord<9)delay(1);
-  move_to_target_async(24, 45, 0, false, 70); //60
+  move_to_target_async(24, 43, 0, false, 70); //60
   tracking.waitForDistance(18);
-  move_to_target_sync(24, 45, 0, false, 60); //50
+  move_to_target_sync(24, 43, 0, false, 60); //50
   tracking.waitForComplete();
   delay(70);
   move_to_target_async(31.75,9.75, deg_to_rad(135),false,127);
-  tracking.waitForDistance(30);
-  intakeL.move(-8);
-  intakeR.move(8);
   tracking.waitForDistance(12);
   intakeL.move(-15);
   intakeR.move(15);
@@ -333,7 +330,7 @@ void redProtect(){
   move_drive(0,-50,0);
   delay(300);
   move_to_target_sync(-14, 32, -(3*M_PI/4),false);
-  move_to_target_async(-22, 19, -(3*M_PI/4),false);
+  move_to_target_async(-20, 17, -(3*M_PI/4),false);
   tracking.waitForDistance(10);
   angler.move_absolute(ANGLER_TOP-1000, 100);
   tracking.waitForComplete();
@@ -386,14 +383,14 @@ void skills() {
   fBar.move(-10);
   move_drive(0, -100, 0); //80
   while(tracking.ycoord>18)delay(1);
-  move_to_target_sync(-25, 2, 0, false,127);
+  move_to_target_sync(-26, 2, 0, false,127);
   move_drive(0, 80, 0); //80
   while(tracking.ycoord<9)delay(1);
-  move_to_target_async(-25, 45, 0, false, 55); //60
+  move_to_target_async(-26, 42, 0, false, 55); //60
   tracking.waitForDistance(18);
-  move_to_target_sync(-25, 45, 0, false, 55); //50
+  move_to_target_sync(-26, 42, 0, false, 55); //50
   tracking.waitForComplete();
-  delay(70);
+  delay(200);
   move_to_target_async(-30.75,10.75, deg_to_rad(-135),false,127,false, true);
   tracking.waitForDistance(30);
   intakeL.move(-8);
@@ -425,14 +422,14 @@ void skills() {
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  move_to_target_async(-21.5,19, deg_to_rad(-135), false);
+  move_to_target_async(-21.5,19, deg_to_rad(-135), false,65);
   tracking.waitForDistance(8);
   angler.move_absolute(1, 200);
   intakeOn();
   tracking.waitForComplete();
   move_to_target_sync(-12, 7, 0,false);
   move_drive(0,-65,0);
-  delay(200);
+  delay(500);
   tracking.flattenAgainstWall(false);
   updateStopTask();
   tracking.ycoord = 0;
@@ -441,7 +438,8 @@ void skills() {
   move_to_target_sync(2.5, 16, deg_to_rad(90),false);
   printf("GLOBAL ANGLE IS %f\n",rad_to_deg(tracking.global_angle));
   move_drive(0, 50, 0);
-  while(tracking.xcoord<=6) delay(1);
+  while(tracking.xcoord<=6.4) delay(1);
+  delay(200);
   move_to_target_async(-6, 16, deg_to_rad(90), false);
   fBar.move_absolute(FBAR_TOP+100, 200);
   angler.move_absolute(600, 150);
@@ -464,7 +462,7 @@ void skills() {
   angler.move_absolute(600, 150);
   tracking.waitForComplete();
   while(fBar.get_position()<FBAR_MID-50) delay(1);
-  move_to_target_sync(-10, 43, 0, false);
+  move_to_target_sync(-11.5, 43, 0, false);
   intakeReverse();
   delay(800);
   move_to_target_async(-18, 36, 0,false);
@@ -475,8 +473,8 @@ void skills() {
   while(fBar.get_position()>50) delay(1);
   move_to_target_sync(-18, 50, 0,false);
   delay(200);
-  move_drive(0, -40, 0);
-  delay(300);
+  move_drive(0, -60, 0);
+  while(tracking.ycoord>43) delay(1);
   // while(tracking.xcoord<13) delay(1);
   // brake();
   // delay(100);
@@ -484,7 +482,7 @@ void skills() {
   // delay(500);
   // brake();
   move_drive(-65, 0, 0);
-  delay(100);
+  delay(300);
   uint32_t timer = millis();
   while((tracking.velocityB!=0 || front_L.get_actual_velocity() != 0) && millis()-timer < 2500) delay(1);
   delay(150);
@@ -507,15 +505,17 @@ void skills() {
   tracking.waitForComplete();
   move_to_target_sync(-21,110,0,false,55);
   delay(75);
-  move_to_target_sync(0, 120, M_PI);
+  move_to_target_sync(-2, 120, M_PI);
   move_drive(0,-60,0);
-  delay(200);
+  delay(400);
   tracking.flattenAgainstWall(false);
+  delay(200);
   updateStopTask();
   tracking.ycoord = 0;
   tracking.global_angle = 0;
   tracking.xcoord = -tracking.xcoord;
   updateStartTask(false);
+  delay(100);
   move_to_target_sync(-0.5,20,0,false,85,false,true);
   move_to_target_sync(-0.5,24,0,false,55,false,true);
   brake();
@@ -536,7 +536,7 @@ void skills() {
   move_to_target_async(-0.5, 30.5, 0, false);
   angler.move_absolute(1700, 200);
   tracking.waitForComplete();
-  move_to_target_async(31.75,9.75, deg_to_rad(135),false,127);
+  move_to_target_async(29.75,11.75, deg_to_rad(135),false,127);
   tracking.waitForDistance(30);
   intakeL.move(-8);
   intakeR.move(8);
@@ -544,7 +544,7 @@ void skills() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 120);
+  angler.move_absolute(ANGLER_MID-1800, 100);
   tracking.waitForComplete();
   brake();
   delay(75);
@@ -554,12 +554,15 @@ void skills() {
   intakeL.move(25);
   intakeR.move(-25);
   delay(100);
-  angler.move_absolute(ANGLER_TOP, 120);
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  angler.move_absolute(ANGLER_TOP, 100);
   while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  move_to_target_sync(26,14, deg_to_rad(135));
+  move_to_target_sync(0,-10, 0, false, 65);
   // move_to_target_sync(53, 3, M_PI/2);
   // move_to_target_async(53, 15, 0, false, 60);
   // tracking.waitForDistance(3);
