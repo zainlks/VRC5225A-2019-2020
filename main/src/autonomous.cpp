@@ -74,7 +74,7 @@ void blue9() {
   move_to_target_sync(-25.5, 45, 0, false, 60); //50
   tracking.waitForComplete();
   delay(70);
-  move_to_target_async(-31.75,9.75, deg_to_rad(-135),false,127);
+  move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
   tracking.waitForDistance(30);
   intakeL.move(-8);
   intakeR.move(8);
@@ -408,7 +408,10 @@ void skills() {
   intakeL.move(15);
   intakeR.move(-15);
   delay(50);
+  move_drive(0,60,0);
+  delay(300);
   tracking.LSLineup(true, false);
+  delay(100);
   updateStopTask();
   tracking.ycoord = 9;
   tracking.xcoord = -31.5;
@@ -537,9 +540,6 @@ void skills() {
   angler.move_absolute(1700, 200);
   tracking.waitForComplete();
   move_to_target_async(29.75,11.75, deg_to_rad(135),false,127);
-  tracking.waitForDistance(30);
-  intakeL.move(-8);
-  intakeR.move(8);
   tracking.waitForDistance(12);
   intakeL.move(-15);
   intakeR.move(15);
@@ -550,6 +550,8 @@ void skills() {
   delay(75);
   move_drive(0,0,0);
   angler.move_absolute(ANGLER_TOP-1000, 100);
+  move_drive(0,60,0);
+  delay(300);
   tracking.LSLineup();
   intakeL.move(25);
   intakeR.move(-25);

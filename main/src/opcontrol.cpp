@@ -40,6 +40,8 @@ void opcontrol() {
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
 			 // printf("L: %f, R: %f\n", tracking.velocityL, tracking.velocityR);
+
+
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();
@@ -90,7 +92,7 @@ void opcontrol() {
 			 // printf("center: %d\n",green.obj.x_middle_coord);
 			 // printf("global angle: %f\n", tracking.global_angle);
 	     // green.lineMiddle(1.2);
-			 // printf("L:%d R:%d G:%f\n",leftencoder.get_value(),rightencoder.get_value(),tracking.global_angle);
+			  //printf("L:%d R:%d G:%d\n",leftencoder.get_value(),rightencoder.get_value(),backencoder.get_value());
 
 			 delay(1);
 	   }
