@@ -554,7 +554,7 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime) {
 
   }
   move_drive(0, 65, 0);
-  delay(100);
+  delay(300);
   while(!left && !right && (millis()-startTime)<timeoutTime) {
     if(velocityL==0)  left = true;
     if(velocityR==0) right = true;

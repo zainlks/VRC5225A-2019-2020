@@ -56,6 +56,16 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
+
+				if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
+					fBar.move_absolute(300, 200);
+				  while(fBar.get_position() < 295 ){delay(1);}
+				  delay(100);
+				  intakeL.move(-10);
+				  intakeR.move(10);
+				  fBar.move_absolute(1,200);
+				  delay(50);
+				}
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
 			 {

@@ -189,7 +189,7 @@ void anglerHandle() {
           intakeL.move(7 * intakeL.get_direction());
           intakeR.move(7 * intakeR.get_direction());
           //intakeL.move(5)
-          angler.move_absolute(ANGLER_TOP, 130);
+          angler.move_absolute(ANGLER_TOP, 100);
           stateCheck = 0;
           setAnglerState(anglerStates::Top);
         }
