@@ -84,17 +84,19 @@ void blue9() {
   brake();
   delay(75);
   move_drive(0,0,0);
-  // angler.move_absolute(ANGLER_TOP-1000, 100);
+  angler.move_absolute(ANGLER_TOP-1000, 170);
   intakeL.move(15);
   intakeR.move(-15);
   delay(50);
   tracking.LSLineup(true, true, 1800);
-  angler.move_absolute(ANGLER_TOP, 120);
+  angler.move_absolute(ANGLER_TOP, 170);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
-  while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  move_to_target_sync(-26,14, deg_to_rad(-135));
+  // while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  // fBar.move_absolute(600,200);
+  // while(fBar.get_position()<300)delay(1);
+  // move_to_target_sync(-26,14, deg_to_rad(-135));
 }
 
 void blueSweep() {
@@ -257,16 +259,17 @@ void red9() {
   brake();
   delay(75);
   move_drive(0,0,0);
-  // angler.move_absolute(ANGLER_TOP-1000, 100);
+  angler.move_absolute(ANGLER_TOP-1000, 150);
   intakeL.move(15);
   intakeR.move(-15);
   delay(50);
   tracking.LSLineup(true,false, 1800);
-  angler.move_absolute(ANGLER_TOP, 120);
+  angler.move_absolute(ANGLER_TOP, 150);
   while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  fBar.move_absolute(600,200);
   move_to_target_sync(26,14, deg_to_rad(135));
 }
 
