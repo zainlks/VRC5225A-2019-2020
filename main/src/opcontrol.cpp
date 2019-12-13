@@ -87,8 +87,8 @@ void opcontrol() {
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
 				 if(fBar.get_position()>200)
 				 {
-					 intakeL.move(80);
-					 intakeR.move(-80);
+					 intakeL.move(127);
+					 intakeR.move(-127);
 					 while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
 					 intakeL.tare_position();
 					 while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
