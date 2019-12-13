@@ -11,8 +11,8 @@
 using namespace std;
 using namespace pros;
 const int towerHeights[3] = {1100,1850,2900};
-constexpr double FBAR_TOP = 3300;
-constexpr double FBAR_MID = 2450;
+constexpr double FBAR_TOP = 3450;
+constexpr double FBAR_MID = 2600;
 enum class fBarStates {
   Idle,
   Mid,

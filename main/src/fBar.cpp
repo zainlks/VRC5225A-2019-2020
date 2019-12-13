@@ -83,6 +83,36 @@ void fBarHandle() {
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
       }
+      // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
+      //   updateStopTask();
+      //   tracking.reset();
+      //   updateStartTask();
+      //   move_drive(0,-70,0);
+      //   delay(250);
+      //   fBar.move_absolute(FBAR_TOP+200,200);
+      //   setDriveState(driveStates::Auto);
+      //   move_to_target_sync(0, 8, 0, false, 80, false, false, true);
+      //   intakeL.move(80);
+      //   intakeR.move(-80);
+      //   while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.tare_position();
+      //   while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.move(-8);
+      //   intakeR.move(8);
+      //   move_to_target_async(0,0,0,false,80,false,false,true);
+      //   tracking.waitForDistance(2);
+      //   intakeL.move(-127);
+      //   intakeR.move(127);
+      //   tracking.waitForComplete();
+      //   intakeL.move(80);
+      //   intakeR.move(-80);
+      //   while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.tare_position();
+      //   while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.move(-8);
+      //   intakeR.move(8);
+      //   setDriveState(driveStates::Driver);
+      // }
       break;
     case fBarStates::Mid:
       if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(15);
@@ -94,6 +124,36 @@ void fBarHandle() {
         fBar.move_absolute(FBAR_TOP-50, 150);
         setfBarState(fBarStates::Top);
       }
+      // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
+      //   updateStopTask();
+      //   tracking.reset();
+      //   updateStartTask();
+      //   move_drive(0,-70,0);
+      //   delay(250);
+      //   fBar.move_absolute(FBAR_MID+200,200);
+      //   setDriveState(driveStates::Auto);
+      //   move_to_target_sync(0, 7, 0, false, 80, false, false, true);
+      //   intakeL.move(80);
+      //   intakeR.move(-80);
+      //   while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.tare_position();
+      //   while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.move(-8);
+      //   intakeR.move(8);
+      //   move_to_target_async(0,0,0,false,80,false,false,true);
+      //   tracking.waitForDistance(2);
+      //   intakeL.move(-127);
+      //   intakeR.move(127);
+      //   tracking.waitForComplete();
+      //   intakeL.move(80);
+      //   intakeR.move(-80);
+      //   while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.tare_position();
+      //   while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+      //   intakeL.move(-8);
+      //   intakeR.move(8);
+      //   setDriveState(driveStates::Driver);
+      // }
       break;
   }
 }

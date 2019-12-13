@@ -31,6 +31,8 @@ void opcontrol() {
 		bool intk_stop = false;
 		green.sig_num = 1;
 		orange.sig_num = 2;
+		bool intakeReverse = false;
+		double cur_coord;
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
 		setDriveState(driveStates::Driver);
@@ -41,11 +43,10 @@ void opcontrol() {
 			 //printf("angler: %f\n", angler.get_position());
 			 // printf("L: %f, R: %f\n", tracking.velocityL, tracking.velocityR);
 
-
+			 // printf("global angle is: %f\n",rad_to_deg(tracking.global_angle));
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();
-			 // printf("%d, %d\n", leftLs.get_value(), rightLs.get_value());
 			 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
 
@@ -84,18 +85,38 @@ void opcontrol() {
 				 }
 			 }
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
-				 if(fabs(intakeL.get_actual_velocity())>10)
+				 if(fBar.get_position()>200)
 				 {
-					 intakeL.move(-5);
-           intakeR.move(5);
+					 intakeL.move(80);
+					 intakeR.move(-80);
+					 while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 intakeL.tare_position();
+					 while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 intakeL.move(-8);
+					 intakeR.move(8);
+					 intakeReverse = true;
+					 updateStopTask();
+					 tracking.reset();
+				   updateStartTask(true);
 				 }
-				 else
-				 {
-					 intakeL.move(127);
-					 intakeR.move(-127);
-			 	 }
+				 else {
+					 if(fabs(intakeL.get_actual_velocity())>10)
+					 {
+						 intakeL.move(-5);
+							intakeR.move(5);
+					 }
+					 else
+					 {
+						 intakeL.move(127);
+						 intakeR.move(-127);
+					 }
+				 }
 			 }
-
+			 if(intakeReverse && fabs(tracking.ycoord)>3) {
+				 intakeL.move(-127);
+				 intakeR.move(127);
+				 intakeReverse = false;
+			 }
 
 			 // tracking.move_to_target(0, 10, 0);
 			 // green.update();
