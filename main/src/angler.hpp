@@ -15,6 +15,7 @@ using namespace std;
 using namespace pros;
 constexpr double ANGLER_TOP = 7500;
 constexpr double ANGLER_MID = 5200;
+extern pros::Motor anglerMotor;
 enum class anglerStates {
   Idle,
   Mid,

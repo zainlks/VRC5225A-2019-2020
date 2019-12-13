@@ -42,7 +42,7 @@ void opcontrol() {
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
 			 // printf("L: %f, R: %f\n", tracking.velocityL, tracking.velocityR);
-
+			 printf("intake velocity = %d\n",anglerMotor.get_actual_velocity());
 			 // printf("global angle is: %f\n",rad_to_deg(tracking.global_angle));
 			 anglerHandle();
 			 fBarHandle();

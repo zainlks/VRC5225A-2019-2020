@@ -1,7 +1,7 @@
 #include "angler.hpp"
 
 pros::Task *dropOffTask = nullptr;
-
+pros::Motor anglerMotor = angler;
 anglerStates anglerState = anglerStates::Idle;
 anglerStates anglerStateLast = anglerState;
 int anglerStateChangeTime = 0;
