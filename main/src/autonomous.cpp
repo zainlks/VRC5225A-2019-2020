@@ -63,7 +63,7 @@ void blue9() {
   move_to_target_async(0, 30.5, 0, false);
   angler.move_absolute(1700, 200);
   tracking.waitForComplete();
-  fBar.move(-10);
+  fBar.move_absolute(1,200);
   move_drive(0, -100, 0); //80
   while(tracking.ycoord>18)delay(1);
   move_to_target_sync(-25.5, 2, 0, false,127);
@@ -79,24 +79,28 @@ void blue9() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 100);
+  angler.move_absolute(ANGLER_MID-1800, 110);
   tracking.waitForComplete();
   brake();
   delay(75);
   move_drive(0,0,0);
-  // angler.move_absolute(ANGLER_TOP-1000, 170);
+  // angler.move_absolute(ANGLER_TOP-2000, 100);
   intakeL.move(15);
   intakeR.move(-15);
   delay(50);
   tracking.LSLineup(true, true, 1500);
-  angler.move_absolute(ANGLER_TOP, 135);
+  angler.move_absolute(ANGLER_TOP, 130);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
   // fBar.move_absolute(600,200);
   // while(fBar.get_position()<300)delay(1);
-  move_to_target_sync(-26,14, deg_to_rad(-135));
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  move_to_target_sync(0,-10, 0,false);
+  // move_to_target_sync(-26,14, deg_to_rad(-135),false);
 }
 
 void blueSweep() {
@@ -269,7 +273,12 @@ void red9() {
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  move_to_target_sync(26,14, deg_to_rad(135));
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  move_to_target_sync(0,-10, 0,false);
+
+  // move_to_target_sync(26,14, deg_to_rad(135),false);
 }
 
 void redProtect(){
