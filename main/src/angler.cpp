@@ -71,9 +71,12 @@ void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
+        printf("start| %d", millis());
         angler.move_absolute(ANGLER_MID, 100);
         intakeR.move(15);
         intakeL.move(-15);
+        while (angler.get_position() < ANGLER_MID -50)delay(1);
+        printf("end| %d", millis());
         setAnglerState(anglerStates::Push);
       }
       // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
@@ -190,8 +193,11 @@ void anglerHandle() {
           intakeL.move(7 * intakeL.get_direction());
           intakeR.move(7 * intakeR.get_direction());
           //intakeL.move(5)
+          printf("start angle, %d", millis());
           angler.move_absolute(ANGLER_TOP, 100);
           stateCheck = 0;
+          while (angler.get_position() < ANGLER_MID -50)delay(1);
+          printf("end| %d", millis());
           setAnglerState(anglerStates::Top);
         }
         if(fabs(intakeL.get_position())>800)

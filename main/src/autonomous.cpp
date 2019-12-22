@@ -79,27 +79,33 @@ void blue9() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
+  printf("angle move: %d", millis()-autotimer);
   angler.move_absolute(ANGLER_MID-1800, 110);
   tracking.waitForComplete();
   brake();
+  printf("move end: %d", millis()-autotimer);
   delay(75);
   move_drive(0,0,0);
   // angler.move_absolute(ANGLER_TOP-2000, 100);
   intakeL.move(15);
   intakeR.move(-15);
   delay(50);
+  printf("startlineup: %d", millis()-autotimer);
   tracking.LSLineup(true, true, 1500);
+  printf("move angle: %d", millis()-autotimer);
   angler.move_absolute(ANGLER_TOP, 130);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
   intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  printf("done angle: %d", millis()-autotimer);
   // fBar.move_absolute(600,200);
   // while(fBar.get_position()<300)delay(1);
   updateStopTask();
   tracking.reset();
   updateStartTask();
   move_to_target_sync(0,-10, 0,false);
+  printf("end: %d", millis()-autotimer);
   // move_to_target_sync(-26,14, deg_to_rad(-135),false);
 }
 
