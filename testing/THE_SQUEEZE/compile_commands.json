@@ -28,11 +28,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/autonomous.cpp.o",
-            "src\\autonomous.cpp"
+            "C:/Users/mikeG/AppData/Local/Temp/tmpduswm71a/angler_move.cpp.o",
+            "src\\angler_move.cpp"
         ],
-        "directory": "C:\\Users\\green\\Documents\\Delete",
-        "file": "src\\autonomous.cpp"
+        "directory": "D:\\Documents\\GitHub\\VRC5225A-2019-2020\\testing\\THE_SQUEEZE",
+        "file": "src\\angler_move.cpp"
     },
     {
         "arguments": [
@@ -63,10 +63,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/initialize.cpp.o",
+            "C:/Users/mikeG/AppData/Local/Temp/tmpduswm71a/initialize.cpp.o",
             "src\\initialize.cpp"
         ],
-        "directory": "C:\\Users\\green\\Documents\\Delete",
+        "directory": "D:\\Documents\\GitHub\\VRC5225A-2019-2020\\testing\\THE_SQUEEZE",
         "file": "src\\initialize.cpp"
     },
     {
@@ -98,10 +98,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/opcontrol.cpp.o",
+            "C:/Users/mikeG/AppData/Local/Temp/tmpduswm71a/opcontrol.cpp.o",
             "src\\opcontrol.cpp"
         ],
-        "directory": "C:\\Users\\green\\Documents\\Delete",
+        "directory": "D:\\Documents\\GitHub\\VRC5225A-2019-2020\\testing\\THE_SQUEEZE",
         "file": "src\\opcontrol.cpp"
     },
     {
@@ -133,10 +133,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/config.cpp.o",
+            "C:/Users/mikeG/AppData/Local/Temp/tmpduswm71a/config.cpp.o",
             "src\\config.cpp"
         ],
-        "directory": "C:\\Users\\green\\Documents\\Delete",
+        "directory": "D:\\Documents\\GitHub\\VRC5225A-2019-2020\\testing\\THE_SQUEEZE",
         "file": "src\\config.cpp"
     },
     {
@@ -168,10 +168,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/angler_move.cpp.o",
-            "src\\angler_move.cpp"
+            "C:/Users/mikeG/AppData/Local/Temp/tmpduswm71a/autonomous.cpp.o",
+            "src\\autonomous.cpp"
         ],
-        "directory": "C:\\Users\\green\\Documents\\Delete",
-        "file": "src\\angler_move.cpp"
+        "directory": "D:\\Documents\\GitHub\\VRC5225A-2019-2020\\testing\\THE_SQUEEZE",
+        "file": "src\\autonomous.cpp"
     }
 ]
