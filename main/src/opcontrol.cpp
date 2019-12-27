@@ -10,25 +10,14 @@
 using namespace pros;
 int startNum = 0;
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
+
 void opcontrol() {
 		double power = 0;
 		double kP = 1.2;
 		uint32_t stoptime = 0;
 		uint32_t LTimer = millis();
 		bool intk_stop = false;
+		double fBar_height = 0;
 		green.sig_num = 1;
 		orange.sig_num = 2;
 		bool intakeReverse = false;
@@ -37,6 +26,7 @@ void opcontrol() {
 		int lastTime = 0;
 		setDriveState(driveStates::Driver);
 		// Task driveUpdate(driveHandle);
+		master.clear();
 		//angler.move_absolute(1800, 100);
 	  while (true){
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
@@ -67,6 +57,16 @@ void opcontrol() {
 				  fBar.move_absolute(1,200);
 				  delay(50);
 				}
+			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+				 fBar_height += 150;
+				 fBar.move_absolute(fBar_height, 80);
+				 master.print(2,0, "Height is: %f", fBar_height);
+			}
+			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
+				fBar_height -= 150;
+				fBar.move_absolute(fBar_height, 80);
+				 master.print(2, 0,"Height is: %f", fBar_height);
+			 }
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
 			 {
