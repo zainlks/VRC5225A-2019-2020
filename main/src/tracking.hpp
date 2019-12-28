@@ -57,7 +57,8 @@ public:
   void turn_to_target(double target_x, double target_y, bool debug = false, bool brakeOn = true);
   void turn_to_angle(double target_a, bool debug = false, bool brakeOn = true);
   void flattenAgainstWall(bool forward, bool hold = true);
-  void LSLineup(bool hold = true, bool intake_deposit = true, int timeoutTime = 5000);
+  void LSLineup(bool hold = true, bool intake_deposit = true, int timeoutTime = 5000, int speed = 65);
+  void straightLift(double height);
 };
 
 extern Tracking tracking;

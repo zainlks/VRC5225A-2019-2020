@@ -73,8 +73,8 @@ void anglerHandle() {
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         printf("start| %d", millis());
         angler.move_absolute(ANGLER_MID, 100);
-        intakeR.move(15);
-        intakeL.move(-15);
+        intakeR.move(30);
+        intakeL.move(-30);
         while (angler.get_position() < ANGLER_MID -50)delay(1);
         printf("end| %d", millis());
         setAnglerState(anglerStates::Push);
@@ -86,7 +86,7 @@ void anglerHandle() {
     break;
     case anglerStates::Push:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
-        angler.move_absolute(ANGLER_MID, 100);
+        angler.move_absolute(ANGLER_MID+200, 100);
         intakeR.move(-25);
         intakeL.move(25);
         delay(50);

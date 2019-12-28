@@ -12,6 +12,9 @@ int startNum = 0;
 
 
 void opcontrol() {
+	  double start_x;
+		double start_y;
+		double start_a;
 		double power = 0;
 		double kP = 1.2;
 		uint32_t stoptime = 0;
@@ -57,16 +60,16 @@ void opcontrol() {
 				  fBar.move_absolute(1,200);
 				  delay(50);
 				}
-			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
-				 fBar_height += 150;
-				 fBar.move_absolute(fBar_height, 80);
-				 master.print(2,0, "Height is: %f", fBar_height);
-			}
-			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-				fBar_height -= 150;
-				fBar.move_absolute(fBar_height, 80);
-				 master.print(2, 0,"Height is: %f", fBar_height);
-			 }
+			//  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+			// 	 fBar_height += 150;
+			// 	 fBar.move_absolute(fBar_height, 80);
+			// 	 master.print(2,0, "Height is: %f", fBar_height);
+			// }
+			// if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
+			// 	fBar_height -= 150;
+			// 	fBar.move_absolute(fBar_height, 80);
+			// 	 master.print(2, 0,"Height is: %f", fBar_height);
+			//  }
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
 			 {
@@ -126,6 +129,37 @@ void opcontrol() {
 			  //printf("L:%d R:%d G:%d\n",leftencoder.get_value(),rightencoder.get_value(),backencoder.get_value());
 
 			 delay(1);
+			// fBar.move_absolute(2250, 200);
+ 		 	// while (fBar.get_position() < 2230) delay(1);
+ 		 	// intakeL.move(-127);
+ 		 	// intakeR.move(127);
+ 			// if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
+			// 	start_y = tracking.ycoord;
+			// 	start_x = tracking.xcoord;
+			// 	start_a = tracking.global_angle;
+			// 	// master.print(2,0,"hit button");
+			// 	// updateStopTask();
+			//   // tracking.reset();
+			//   // updateStartTask();
+			// 	// delay(10);
+			// 	// master.print(1,0,"here");
+ 		 	// 	move_to_target_sync(start_x , start_y+4, start_a, false, 127);
+ 		 	// 	fBar.move_absolute(1600, 125);
+			// 	while (fBar.get_position() >  1620) delay(1);
+ 		 	// 	move_to_target_async(start_x , start_y+6, start_a, false, 127);
+ 		 	// 	fBar.move_absolute(1050, 125);
+			// 	while (fBar.get_position() >  1070) delay(1);
+ 		 	// 	tracking.waitForComplete();
+ 		 	// 	fBar.move_absolute(1, 125);
+			// 	while (fBar.get_position() > 1000) delay(1);
+			// 	move_to_target_sync(start_x , start_y+9, start_a, false, 127);
+			// 	while (fBar.get_position() > 10) delay(1);
+			// 	delay(500);
+ 	 		// }
+
+
 	   }
+
+
 		//menu();
 }

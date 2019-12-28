@@ -540,7 +540,7 @@ void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
   }
 }
 
-void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime) {
+void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int speed) {
   bool left = false, right = false;
   uint32_t startTime = pros::millis();
   int thresh;
@@ -553,7 +553,7 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime) {
     break;
 
   }
-  move_drive(0, 65, 0);
+  move_drive(0, speed, 0);
   delay(300);
   while(!left && !right && (millis()-startTime)<timeoutTime) {
     if(velocityL==0)  left = true;
@@ -578,3 +578,21 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime) {
   if(hold) move_drive(0,20,0);
   else move_drive(0,0,0);
 }
+
+// void Tracking::straightLift(double height){
+
+//   double length = 17.5;
+//   double angle;
+//   double bottom_angle = 50, bottom_dist;
+//   double ticks_per_deg;
+//   double distance;
+//   double diff;
+//   while (true){
+//     angle = bottom_angle + (fBar.get_position() * ticks_per_deg);
+//     distance = length * sin(angle);
+//     diff = distance - bottom_dist;
+//     move_drive(0, 60, 0);
+//     while ()
+//   }
+//
+// }
