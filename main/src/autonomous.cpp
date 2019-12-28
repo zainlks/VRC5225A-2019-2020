@@ -219,8 +219,8 @@ void blueLeft(){
   tracking.waitForComplete();
   intakeL.move(-15);
   intakeR.move(15);
-  tracking.LSLineup(true, false, 5000, 60);
-  delay(200);
+  tracking.LSLineup(true, false, 5000, 50);
+  //delay(200);
   angler.move_absolute(ANGLER_TOP, 80);
   while(angler.get_position() < ANGLER_MID+1000)
   intakeL.move(25);
