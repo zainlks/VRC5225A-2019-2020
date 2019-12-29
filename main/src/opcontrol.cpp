@@ -60,16 +60,16 @@ void opcontrol() {
 				  fBar.move_absolute(1,200);
 				  delay(50);
 				}
-			//  if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
-			// 	 fBar_height += 150;
-			// 	 fBar.move_absolute(fBar_height, 80);
-			// 	 master.print(2,0, "Height is: %f", fBar_height);
-			// }
-			// if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-			// 	fBar_height -= 150;
-			// 	fBar.move_absolute(fBar_height, 80);
-			// 	 master.print(2, 0,"Height is: %f", fBar_height);
-			//  }
+			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+				 fBar_height += 150;
+				 fBar.move_absolute(fBar_height, 80);
+				 master.print(2,0, "Height is: %f", fBar_height);
+			}
+			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
+				fBar_height -= 150;
+				fBar.move_absolute(fBar_height, 80);
+				 master.print(2, 0,"Height is: %f", fBar_height);
+			 }
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
 			 {
