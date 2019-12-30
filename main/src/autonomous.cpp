@@ -75,25 +75,29 @@ void blue9() {
   tracking.waitForComplete();
   delay(70);
   move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
-  tracking.waitForDistance(12);//
   intakeL.move(-127);
   intakeR.move(127);
-  delay(850);
+  tracking.waitForDistance(12);//
 
+  // angler.move_absolute(ANGLER_MID-1000,200);
+  // while(angler.get_position()<ANGLER_MID-1200) delay(1);
+  // intakeL.move(40);
+  // intakeR.move(-40);
+  // while(rightLs.get_value()>2700) delay(1);
+  // intakeL.move(-15);
+  // intakeR.move(15);
+  // delay(1000);
+  // angler.move_absolute(ANGLER_TOP-1500,200);
+  // while(angler.get_position()<ANGLER_TOP-1650) delay(1);
+  // delay(10000);
+  // angler.move_absolute(ANGLER_TOP,200);
+  // while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  printf("angle move: %d", millis()-autotimer);
+  angler.move_absolute(ANGLER_MID-2000, 200);
+  while(angler.get_position()<ANGLER_MID-2100) delay(1);
   intakeL.move(40);
   intakeR.move(-40);
-  delay(175);
-  intakeL.move(-15);
-  intakeR.move(15);
-
-
-
-  tracking.waitForDistance(7);
-  printf("angle move: %d", millis()-autotimer);
-  angler.move_absolute(ANGLER_MID, 200);
-  intakeL.move(30);
-  intakeR.move(-30);
-  delay(500);
+  while(rightLs.get_value()>2700) delay(1);
   intakeL.move(-15);
   intakeR.move(15);
   //delay(500);
@@ -102,14 +106,14 @@ void blue9() {
   printf("move end: %d", millis()-autotimer);
   delay(75);
   move_drive(0,0,0);
-  angler.move_absolute(ANGLER_TOP-2000, 100);//
+  // angler.move_absolute(ANGLER_TOP-2000, 200);//
   intakeL.move(-15);
   intakeR.move(15);
   delay(50);
   printf("startlineup: %d", millis()-autotimer);
-  tracking.LSLineup(true, false, 1500, 60);
+  tracking.LSLineup(true, true, 1500, 60);
   printf("move angle: %d", millis()-autotimer);
-  angler.move_absolute(ANGLER_TOP, 130);
+  angler.move_absolute(ANGLER_TOP, 200);
   delay(200);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(5);
@@ -123,7 +127,6 @@ void blue9() {
   updateStartTask();
   move_to_target_sync(0,-10, 0,false);
   printf("end: %d", millis()-autotimer);
-  //move_to_target_sync(-26,14, deg_to_rad(-135),false);
 }
 
 void blueSweep() {
