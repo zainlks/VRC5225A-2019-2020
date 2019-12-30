@@ -361,6 +361,7 @@ void move_to_target(void* params){
 }
 
 void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
+  if(!tracking.moveComplete) moveStopTask();
   if(moveTask != nullptr) moveTask = nullptr;
   moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
   tracking.driveError = 0;

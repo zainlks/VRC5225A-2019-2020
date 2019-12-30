@@ -64,6 +64,9 @@ void blue9() {
   angler.move_absolute(1700, 200);
   tracking.waitForComplete();
   fBar.move_absolute(1,200);
+  // delay(100);
+  // move_to_target_sync(-4, 30.5, 0,false);
+  // return;
   move_drive(0, -100, 0); //80
   while(tracking.ycoord>18)delay(1);
   move_to_target_sync(-25.5, 2, 0, false,127);
@@ -100,7 +103,6 @@ void blue9() {
   tracking.reset();
   updateStartTask();
   move_to_target_sync(0,-10, 0,false);
-  // move_to_target_sync(-26,14, deg_to_rad(-135),false);
 }
 
 void blueSweep() {
