@@ -565,7 +565,7 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int spe
   intakeR.move(-20);
   }
   if(left) {
-    move_drive_side(25,40);
+    move_drive_side(25, 40);
     delay(50);
   }
   if(right) {
@@ -580,6 +580,54 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int spe
   else move_drive(0,0,0);
 }
 
+void Tracking::LSLineupSkills(bool hold, bool intake_deposit, int timeoutTime, int speed) {
+  bool left = false, right = false;
+  uint32_t startTime = pros::millis();
+  int thresh;
+  switch(side){
+    case sides::blue:
+      thresh = 600;
+    break;
+    case sides::red:
+      thresh = 400;
+    break;
+
+  }
+  move_drive(0, speed, 0);
+  delay(300);
+  while(!left && !right && (millis()-startTime)<timeoutTime) {
+    if(velocityL==0)  left = true;
+    if(velocityR==0) right = true;
+  }
+  if(intake_deposit) {
+  intakeL.move(20);
+  intakeR.move(-20);
+  }
+  if(left) {
+    // move_drive(80,35,40);
+    // delay(500);
+    move_drive(55,0,0);
+    delay(350);
+    move_drive(0,60,0);
+    delay(100);
+  }
+  if(right) {
+    // move_drive(-80,35,-40);
+    // delay(500);
+    move_drive(-55,0,0);
+    delay(350);
+    move_drive(0,60,0);
+    delay(100);
+  }
+  while((!left || !right) && (millis()-startTime)<timeoutTime) {
+    if(velocityL<0.000002)  left = true;
+    if(velocityR<0.000002) right = true;
+  }
+  move_drive(0,60,0);
+  delay(50);
+  if(hold) move_drive(0,20,0);
+  else move_drive(0,0,0);
+}
 // void Tracking::straightLift(double height){
 
 //   double length = 17.5;
