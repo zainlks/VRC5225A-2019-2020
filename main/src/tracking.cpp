@@ -190,12 +190,13 @@ void move_to_target(void* params){
   double target_x = moveParams.target_x;
   double target_y = moveParams.target_y;
   double target_a = moveParams.target_a;
+  double power_d;
   bool debug = moveParams.debug;
   bool cubeLineUp = moveParams.cubeLineUp;
   bool brakeOn = moveParams.brakeOn;
   bool inDrive = moveParams.inDrive;
   log("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
-  double max_power_a = 55.0, max_power_xy = moveParams.max_xy;
+  double max_power_a = 55, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 25;
   double scale;
 
@@ -207,6 +208,22 @@ void move_to_target(void* params){
   double kP_a = 140, kP_d = 14;
   double kI_a = 0.01, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
   unsigned long last_time = millis();
+
+  error_a = target_a - tracking.global_angle;
+  error_x = target_x - tracking.xcoord;
+  error_y = target_y - tracking.ycoord;
+  error_d = sqrtf(powf(error_x, 2) + powf(error_y, 2));
+
+  // for(int i = 0; i<max_power_xy; i++) {
+  //   if(error_y<-5) tracking.power_y = -i;
+  //   if(error_y>5) tracking.power_y = i;
+  //   if(error_x<-5) tracking.power_x = i;
+  //   if(error_x>5) tracking.power_x = -i;
+  //
+  //   move_drive(tracking.power_x,tracking.power_y,0);
+  //
+  //   delay(3);
+  // }
 
   while (fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y))<5 || inDrive == false){
 
@@ -226,10 +243,10 @@ void move_to_target(void* params){
       integral_a += error_a * (millis() - last_time);
     }
 
-    if (fabs(error_a) < deg_to_rad(0.5)){
-      integral_a = 0;
-      tracking.power_a  = 0;
-    }
+    // if (fabs(error_a) < deg_to_rad(0.5)){
+    //   integral_a = 0;
+    //   tracking.power_a  = 0;
+    // }
 
     if (fabs(error_d) < 2.5){ // what triggers integral to start adding?
       integral_d += error_d * (millis() - last_time);
@@ -254,6 +271,26 @@ void move_to_target(void* params){
 
 //DOES MOD OF A NEGATIVE# RETURN POSTITIVE OR NEGATIVE VALUE? -- Negative!
     tracking.power_a = error_a*kP_a + integral_a*kI_a;
+    // if(fabs(error_a)>deg_to_rad(0.5)){
+    //   tracking.power_a = map_set(fabs(error_a),deg_to_rad(0.5), M_PI,12.0*sgn(error_a),127.0*sgn(error_a),
+    //                     deg_to_rad(5), sgn(error_a)*20.0,
+    //                     deg_to_rad(20),sgn(error_a)*50.0,
+    //                     deg_to_rad(45),sgn(error_a)*85.0,
+    //                     deg_to_rad(60), sgn(error_a)*110.0,
+    //                     deg_to_rad(90),sgn(error_a)*120.0,
+    //                     M_PI,sgn(error_a)*127.0);
+    // }
+    // else {
+    //   tracking.power_a = 0;
+    // }
+
+    power_d = map_set(fabs(error_d),0.5,200.0,15.0,127.0,
+                      10.0,127.0,
+                      15.0,127.0,
+                      18.0, 127.0,
+                      25.0,127.0,
+                      200.0,127.0);
+
     if (error_x >= 0){
       tracking.power_x = error_d*cos(difference_a)*kP_d;
       tracking.power_y = error_d*sin(difference_a)*kP_d;
@@ -268,17 +305,19 @@ void move_to_target(void* params){
     if (fabs(tracking.power_a) > max_power_a){
       tracking.power_a = sgn(tracking.power_a)*max_power_a;
     }
-    //need to scale x and y powers
+    // need to scale x and y powers
     if (fabs(tracking.power_x) > max_power_xy || fabs(tracking.power_y) > max_power_xy){
       if (fabs(tracking.power_x) > fabs(tracking.power_y)){
         scale = max_power_xy/fabs(tracking.power_x);
         tracking.power_x = max_power_xy *sgn(tracking.power_x);
         tracking.power_y = tracking.power_y *scale;
+        // tracking.power_a = tracking.power_a*scale;
       }
       else {
         scale = max_power_xy/fabs(tracking.power_y);
         tracking.power_y = max_power_xy *sgn(tracking.power_y);
         tracking.power_x = tracking.power_x *scale;
+        // tracking.power_a = tracking.power_a*scale;
       }
     }
 
@@ -312,7 +351,9 @@ void move_to_target(void* params){
       tracking.power_y = 0;
     }
 
+
     if(debug) log("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
+    printf("pow_a: %f\n", tracking.power_a);
     move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
     if(tracking.power_x != 0) last_power_x = tracking.power_x;
     if(tracking.power_y != 0) last_power_y = tracking.power_y;

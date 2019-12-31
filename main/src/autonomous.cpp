@@ -30,6 +30,63 @@ void intakeTask(void *param) {
   }
 
 }
+
+void blueFourFirst() {
+  angler.move_absolute(1700, 200);
+  fBar.move_absolute(300, 200);
+  while(fBar.get_position() < 295 ){delay(1);}
+  delay(100);
+  master.print(1,0,"%d",millis()-autotimer);
+  intakeL.move(-10);
+  intakeR.move(10);
+  fBar.move_absolute(1,200);
+  angler.move_absolute(1700, 200);
+  intakeOn();
+  move_drive(0, 90, 0); //80
+  while(tracking.ycoord<9)delay(1);
+  move_to_target_async(0, 38, 0, false, 80); //60
+  tracking.waitForDistance(18);
+  move_to_target_sync(0, 39, 0, false, 70); //50
+  tracking.waitForComplete();
+  delay(70);
+  move_to_target_sync(7.5, 39, 0, false, 127);
+  move_to_target_sync(7.5, 45, 0,false);
+  delay(70);
+  move_to_target_sync(0, 5, 0,false,127); //80
+  move_to_target_sync(23.5, 2, 0, false,127);
+  move_to_target_async(23.5, 36.5, 0,false,90);
+  tracking.waitForDistance(17);
+  move_to_target_sync(23.5, 36.5, 0, false, 60);
+  move_to_target_async(-6,11.5, deg_to_rad(-135),false,127);
+  tracking.waitForDistance(12);
+  intakeL.move(-15);
+  intakeR.move(15);
+  tracking.waitForDistance(7);
+  angler.move_absolute(ANGLER_MID-1800, 150);
+  tracking.waitForComplete();
+  brake();
+  delay(75);
+  move_drive(0,0,0);
+  // angler.move_absolute(ANGLER_TOP-2000, 100);
+  intakeL.move(15);
+  intakeR.move(-15);
+  delay(50);
+  tracking.LSLineup(true, true, 1500);
+  angler.move_absolute(ANGLER_TOP-1000, 180);
+  while(angler.get_position()<ANGLER_TOP-1200) delay(1);
+  angler.move_absolute(ANGLER_TOP,110);
+  while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  intakeL.move(-10);
+  intakeR.move(10);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  // fBar.move_absolute(600,200);
+  // while(fBar.get_position()<300)delay(1);
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  move_to_target_sync(0,-10, 0,false);
+}
+
 void blue9() {
   angler.move_absolute(1700, 200);
   fBar.move_absolute(300, 200);
@@ -634,6 +691,7 @@ void autonomous() {
         break;
         case autos::auto2:
           blue9();
+          // blueFourF irst();
         break;
         case autos::auto3:
           skills();
@@ -665,6 +723,12 @@ void autonomous() {
   // updateStartTask(false);
   // delay(50);
   // move_to_target_sync(10, 10, 0,true);
+  // delay(200);
+  // move_to_target_sync(0, 0, M_PI/2,false,127);
+  // delay(200);
+  // printf("global angle is: %f\n", rad_to_deg(tracking.global_angle));
+  // delay(500);
+  // move_to_target_sync(0, 0, 0,false,127);
   // delay(200);
   // printf("global angle is: %f\n", rad_to_deg(tracking.global_angle));
   // blue9();
