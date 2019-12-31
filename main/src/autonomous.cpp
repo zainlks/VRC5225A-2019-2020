@@ -49,14 +49,17 @@ void blueFourFirst() {
   move_to_target_sync(0, 39, 0, false, 70); //50
   tracking.waitForComplete();
   delay(70);
-  move_to_target_sync(7.5, 39, 0, false, 127);
+  move_drive(70,0,0);
+  while(tracking.xcoord<4) delay(1);
+  // move_to_target_sync(7.5, 39, 0, false, 127);
   move_to_target_sync(7.5, 45, 0,false);
   delay(70);
-  move_to_target_sync(0, 5, 0,false,127); //80
+  move_to_target_async(0, 39, 0,false,127);
+  tracking.waitForDistance(2.5); //80
   move_to_target_sync(23.5, 2, 0, false,127);
-  move_to_target_async(23.5, 36.5, 0,false,90);
+  move_to_target_async(23.5, 38.5, 0,false,90);
   tracking.waitForDistance(17);
-  move_to_target_sync(23.5, 36.5, 0, false, 60);
+  move_to_target_sync(23.5, 38.5, 0, false, 55);
   move_to_target_async(-6,11.5, deg_to_rad(-135),false,127);
   tracking.waitForDistance(12);
   intakeL.move(-15);
@@ -72,8 +75,10 @@ void blueFourFirst() {
   intakeR.move(-15);
   delay(50);
   tracking.LSLineup(true, true, 1500);
-  angler.move_absolute(ANGLER_TOP-1000, 180);
-  while(angler.get_position()<ANGLER_TOP-1200) delay(1);
+  angler.move_absolute(ANGLER_TOP-1000, 135);
+  while(angler.get_position()<ANGLER_TOP-1100) delay(1);
+  // angler.move_absolute(ANGLER_TOP-800,80);
+  // while(angler.get_position()<ANGLER_TOP-1000) delay(1);
   angler.move_absolute(ANGLER_TOP,110);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);
@@ -690,8 +695,8 @@ void autonomous() {
           blueLeft();
         break;
         case autos::auto2:
-          blue9();
-          // blueFourF irst();
+          // blue9();
+          blueFourFirst();
         break;
         case autos::auto3:
           skills();
