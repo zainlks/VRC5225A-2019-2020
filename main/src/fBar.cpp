@@ -18,12 +18,12 @@ void fBarCal()
   bool success = true;
   fBar.move(-50);
   delay(100);
-  while (fabs(fBar.get_actual_velocity()) < 12 && (success = (millis() < timeout_time)))
+  while (fabs(fBar.get_actual_velocity()) < 17 && (success = (millis() < timeout_time)))
   {
     delay(10);
   }
   timeout_time = millis() + 3500;
-  while (fabs(fBar.get_actual_velocity()) > 10 && (success = (millis() < timeout_time)))
+  while (fabs(fBar.get_actual_velocity()) > 15 && (success = (millis() < timeout_time)))
 	{
 		delay(10);
 	}
