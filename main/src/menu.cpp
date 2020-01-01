@@ -1,5 +1,6 @@
 
 #include "menu.hpp"
+#include "stdio.h"
 using namespace pros;
 
 
@@ -15,29 +16,39 @@ screens pages = screens::autos;
 bool side_select = true;
 bool done = false;
 
-
+void auto_increase(){
+  cur_auto = static_cast<autos>(static_cast<int>(cur_auto)+1);
+  if(cur_auto == num_of_ele){
+    cur_auto = auto1;
+  }
+}
+void auto_decrease(){
+  if(cur_auto == auto1){
+    cur_auto = static_cast<autos>(static_cast<int>(num_of_ele)-1);
+  }
+  else{
+    cur_auto = static_cast<autos>(static_cast<int>(cur_auto)-1);
+  }
+}
 
 void menu_init() {
   autoSideFile = fopen("/usd/autoside.txt","r");
   if(autoSideFile==NULL) {printf("could not open logfile\n"); return;}
   else printf("logfile found\n");
-  char colourSide[80];
+  int colourSide;
   if(autoSideFile != NULL){
-    fscanf(autoSideFile, "%s", colourSide);
-    if(!strcmp(colourSide,"red")) side = sides::red;
-    if(!strcmp(colourSide,"blue")) side = sides::blue;
+    fscanf(autoSideFile, "%d", &colourSide);
+    side = static_cast<sides>(colourSide);
   }
   if(autoSideFile != NULL) fclose(autoSideFile);
 
   autoFile = fopen("/usd/auto.txt","r");
   if(autoFile==NULL) {printf("could not open logfile\n"); return;}
   else printf("logfile found\n");
-  char autoC[80];
+  int file_auto;
   if(autoFile != NULL){
-    fscanf(autoFile, "%s", autoC);
-    if(!strcmp(autoC,"auto1")) cur_auto = autos::auto1;
-    if(!strcmp(autoC,"auto2")) cur_auto = autos::auto2;
-    if(!strcmp(autoC,"auto3")) cur_auto = autos::auto3;
+    fscanf(autoFile, "%d", &file_auto);
+    cur_auto = static_cast<autos>(file_auto);
   }
   if(autoSideFile != NULL) fclose(autoSideFile);
 }
@@ -45,107 +56,38 @@ void menu_init() {
 void autos_page(){
   if(!auto_set){
     if (side_select){
-      switch(side){
-        case sides::red:
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
-            side_select = false;
-            autoSideFile = fopen("/usd/autoside.txt","w");
-            if(autoSideFile != NULL){
-              fprintf(autoSideFile, "red");
-              fclose(autoSideFile);
-            }
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
-            side = sides::blue;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-            side = sides::blue;
-            menu_update();
-          }
-        break;
-        case sides::blue:
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
-            side_select = false;
-            autoSideFile = fopen("/usd/autoside.txt","w");
-            if(autoSideFile != NULL){
-              fprintf(autoSideFile, "blue");
-              fclose(autoSideFile);
-            }
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-            side = sides::red;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
-            side = sides::red;
-            menu_update();
-          }
-        break;
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B) || master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
+        side = static_cast<sides>(!static_cast<int>(side));
+        menu_update();
+      }
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
+        side_select = false;
+        autoSideFile = fopen("/usd/autoside.txt","w");
+        if(autoSideFile != NULL){
+          fprintf(autoSideFile, "%d",static_cast<int>(side));
+          fclose(autoSideFile);
+        }
       }
     }
     else{
-      switch(cur_auto){
-        case autos::auto1:
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-            cur_auto  = autos::auto2;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
-            cur_auto  = autos::auto3;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
-            auto_set = true;
-            autoFile = fopen("/usd/auto.txt","w");
-            if(autoFile != NULL){
-              fprintf(autoFile, "auto1");
-              fclose(autoFile);
-            }
-            done = true;
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
-        break;
-        case autos::auto2:
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-            cur_auto  = autos::auto3;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
-            cur_auto  = autos::auto1;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
-            auto_set = true;
-            autoFile = fopen("/usd/auto.txt","w");
-            if(autoFile != NULL){
-              fprintf(autoFile, "auto2");
-              fclose(autoFile);
-            }
-            done = true;
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
-        break;
-        case autos::auto3:
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
-            cur_auto  = autos::auto1;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
-            cur_auto  = autos::auto2;
-            menu_update();
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
-              auto_set = true;
-              autoFile = fopen("/usd/auto.txt","w");
-              if(autoFile != NULL){
-                fprintf(autoFile, "auto3");
-                fclose(autoFile);
-              }
-              done = true;
-          }
-          if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
-        break;
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
+        auto_increase();
+        menu_update();
+      }
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_X)){
+        auto_decrease();
+        menu_update();
+      }
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) side_select = true;
+      if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
+        auto_set = true;
+        autoFile = fopen("/usd/auto.txt","w");
+        //char name[80]  = auto_names[static_cast<int>(cur_auto)];
+        if(autoFile != NULL){
+          fprintf(autoFile, "%d", static_cast<int>(cur_auto));
+          fclose(autoFile);
+        }
+        done = true;
       }
     }
   }

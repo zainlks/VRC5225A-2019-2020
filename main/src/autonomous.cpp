@@ -752,28 +752,32 @@ void autonomous() {
   switch(side) {
     case sides::blue:
       switch(cur_auto) {
-        case autos::auto1:
+        case auto1:
           blueLeft();
         break;
-        case autos::auto2:
-          // blue9();
-          redFourFirst();
+        case auto2:
+          blue9();
         break;
-        case autos::auto3:
+        case auto3:
+          blueFourFirst();
+        break;
+        case auto4:
           skills();
-
         break;
       }
     break;
     case sides::red:
       switch(cur_auto) {
-        case autos::auto1:
+        case auto1:
           redProtect();
         break;
-        case autos::auto2:
+        case auto2:
           red9();
         break;
-        case autos::auto3:
+        case auto3:
+          redFourFirst();
+        break;
+        case auto4:
           skills();
         break;
       }

@@ -40,6 +40,7 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();
+
 			 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
 

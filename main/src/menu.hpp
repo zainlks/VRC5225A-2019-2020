@@ -19,15 +19,18 @@ enum class sides {red, blue};
 
 const string side_colour[]{"red", "blue"};
 
-enum class autos{
+enum autos{
   auto1,
   auto2,
-  auto3
+  auto3,
+  auto4,
+  num_of_ele
 };
 
 const string auto_names[] = {
   "protected    ",
   "unprotected  ",
+  "four first   ",
   "skills       "
 };
 
@@ -39,6 +42,8 @@ void menu();
 void menu_init();
 void menu_update();
 void autos_page();
+void auto_increase();
+void auto_decrease();
 
 // extern screens pages;
 // extern sides side;
