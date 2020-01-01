@@ -75,7 +75,6 @@ void blueFourFirst() {
   intakeR.move(-15);
   delay(50);
   tracking.LSLineup(true, true, 1500);
-
   angler.move_absolute(ANGLER_TOP-1000, 135);
   while(angler.get_position()<ANGLER_TOP-1100) delay(1);
   // angler.move_absolute(ANGLER_TOP-800,80);
@@ -94,8 +93,8 @@ void blueFourFirst() {
 }
 
 void blue9() {
-  angler.move_absolute(1700, 200); // flipout
-  fBar.move_absolute(300, 200); // flipout
+  angler.move_absolute(1700, 200);
+  fBar.move_absolute(300, 200);
   while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
@@ -342,7 +341,6 @@ void redFourFirst() {
   intakeR.move(-15);
   delay(50);
   tracking.LSLineup(true, true, 1500);
-
   angler.move_absolute(ANGLER_TOP-1000, 135);
   while(angler.get_position()<ANGLER_TOP-1100) delay(1);
   // angler.move_absolute(ANGLER_TOP-800,80);
