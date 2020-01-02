@@ -3,6 +3,7 @@
 
 Tracking tracking;
 
+bool stuck = false;
 bool trackingReset = false;
 bool speedLimit = 0;
 int offset = 0;
@@ -195,6 +196,7 @@ void move_to_target(void* params){
   bool cubeLineUp = moveParams.cubeLineUp;
   bool brakeOn = moveParams.brakeOn;
   bool inDrive = moveParams.inDrive;
+  int timeout = moveParams.timeout;
   log("%d | Started move to target: (%f, %f, %f)", pros::millis(), target_x, target_y, rad_to_deg(target_a));
   double max_power_a = 127.0, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 25;
@@ -395,22 +397,34 @@ void move_to_target(void* params){
       tracking.moveComplete = true;
       moveStopTask();
       break;
+    }else if(timeout!=0 && millis()>timeout){
+      move_drive(0,0,0);
+      intakeL.move(0);
+      intakeR.move(0);
+      tracking.stuck = true;
+      printf("Its a trap! (Got Stuck)\n");
+      log("Got Stuck\n");
+      tracking.moveComplete=true;
+      moveStopTask();
+      break;
     }
     delay(1);
   }
 }
 
-void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
+void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive, int timeout) {
   if(!tracking.moveComplete) moveStopTask();
   if(moveTask != nullptr) moveTask = nullptr;
-  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive, timeout};
   tracking.driveError = 0;
   tracking.moveComplete = false;
   move_to_target(nullptr);
 }
-void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
+
+
+void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive, int timeout) {
   if(moveTask != nullptr) moveTask = nullptr;
-  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive, timeout};
   tracking.driveError = 0;
   tracking.moveComplete = false;
   moveStartTask();

@@ -93,8 +93,8 @@ void blueFourFirst() {
 }
 
 void blue9() {
-  angler.move_absolute(1700, 200);
-  fBar.move_absolute(300, 200);
+  angler.move_absolute(1700, 200); // flipout
+  fBar.move_absolute(300, 200); // flipout
   while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
@@ -102,7 +102,7 @@ void blue9() {
   intakeR.move(10);
   fBar.move_absolute(1,200);
   angler.move_absolute(1700, 200);
-  move_to_target_async(0,20,0,false,85,false,true);
+  move_to_target_async(0,20,0,false,85,false,true,false,3000);
   tracking.waitForDistance(17);
   intakeOn();
   tracking.waitForComplete();
