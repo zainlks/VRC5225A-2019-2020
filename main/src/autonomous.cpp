@@ -93,8 +93,8 @@ void blueFourFirst() {
 }
 
 void blue9() {
-  angler.move_absolute(1700, 200); // flipout
-  fBar.move_absolute(300, 200); // flipout
+  angler.move_absolute(1700, 200);
+  fBar.move_absolute(300, 200);
   while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
@@ -102,7 +102,7 @@ void blue9() {
   intakeR.move(10);
   fBar.move_absolute(1,200);
   angler.move_absolute(1700, 200);
-  move_to_target_async(0,20,0,false,85,false,true,false,3000);
+  move_to_target_async(0,20,0,false,85,false,true);
   tracking.waitForDistance(17);
   intakeOn();
   tracking.waitForComplete();
@@ -784,6 +784,11 @@ void autonomous() {
     break;
 
   }
+  // tracking.turn_to_angle(deg_to_rad(225));
+  // tracking.move_xy(10, y);
+  //move_to_target_sync(10,10,0,)
+
+
   // move_to_target_sync(-32,13.5, deg_to_rad(-135),false,127);
   // tracking.LSLineupSkills(true,false, 1500);
   // delay(5000);

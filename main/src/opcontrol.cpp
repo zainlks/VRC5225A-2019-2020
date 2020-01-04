@@ -60,6 +60,7 @@ void opcontrol() {
 				  intakeR.move(10);
 				  fBar.move_absolute(1,200);
 				  delay(50);
+
 				}
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
 				 fBar_height += 150;
