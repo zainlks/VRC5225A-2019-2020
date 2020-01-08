@@ -7,6 +7,7 @@
 #include "controller.hpp"
 #include "logging.hpp"
 #include "menu.hpp"
+
 using namespace pros;
 int startNum = 0;
 
@@ -30,6 +31,11 @@ void opcontrol() {
 		setDriveState(driveStates::Driver);
 		// Task driveUpdate(driveHandle);
 		master.clear();
+
+
+
+
+
 		//angler.move_absolute(1800, 100);
 	  while (true){
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
@@ -40,8 +46,7 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();
-
-			 // printf("%d | %d\n",green.obj.height, green.obj.width);
+			 log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
 
 			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());

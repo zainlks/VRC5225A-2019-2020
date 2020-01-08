@@ -4,6 +4,7 @@
 #include "vision.hpp"
 #include "angler.hpp"
 #include "controller.hpp"
+#include "gui.hpp"
 #include <iostream>
 #include <cmath>
 #include <memory>
