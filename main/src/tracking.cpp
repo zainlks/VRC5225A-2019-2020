@@ -275,6 +275,7 @@ void move_to_target(void* params){
       tracking.power_a = map_set(fabs(error_a),deg_to_rad(0.5), M_PI,12.0*sgn(error_a),127.0*sgn(error_a),
                         deg_to_rad(5), sgn(error_a)*20.0,
                         deg_to_rad(20),sgn(error_a)*50.0,
+                        deg_to_rad(25),sgn(error_a)*70.0,
                         deg_to_rad(45),sgn(error_a)*85.0,
                         deg_to_rad(60), sgn(error_a)*110.0,
                         deg_to_rad(90),sgn(error_a)*120.0,
@@ -418,16 +419,10 @@ void move_to_target_async(double target_x, double target_y, double target_a, boo
 
 
 void Tracking::trackingInput() {
-  if(!speedLimit) {
     tracking.power_a = master.get_analog(JOY_TURN);
     tracking.power_x = master.get_analog(JOY_STRAFE);
     tracking.power_y = master.get_analog(JOY_FORWARD);
-  }
-  else {
-    tracking.power_a = 35*sgn(master.get_analog(JOY_TURN));
-    tracking.power_x = 35*sgn(master.get_analog(JOY_STRAFE));
-    tracking.power_y = 35*sgn(master.get_analog(JOY_FORWARD));
-  }
+
 
   if (fabs(tracking.power_a) < 7){
     tracking.power_a = 0;
@@ -521,11 +516,22 @@ void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
   double error_a;
   double kP_a = 137;
   double power_a;
-  double min_power_a = 12, max_power_a = 55.0;
+  double min_power_a = 12, max_power_a = 127.0;
   tracking.target_a = target_a;
   while(true){
-    error_a = fmod(target_a - tracking.global_angle, 2*M_PI);
-    power_a = error_a*kP_a;
+    error_a = target_a - tracking.global_angle;
+    if(fabs(error_a)>deg_to_rad(0.5)){
+      tracking.power_a = map_set(fabs(error_a),deg_to_rad(0.5), M_PI,12.0*sgn(error_a),127.0*sgn(error_a),
+                        deg_to_rad(5), sgn(error_a)*20.0,
+                        deg_to_rad(20),sgn(error_a)*50.0,
+                        deg_to_rad(45),sgn(error_a)*85.0,
+                        deg_to_rad(60), sgn(error_a)*110.0,
+                        deg_to_rad(90),sgn(error_a)*120.0,
+                        M_PI,sgn(error_a)*127.0);
+    }
+    else {
+      tracking.power_a = 0;
+    }
     if (fabs(power_a) > max_power_a){
       power_a = sgn(power_a)*max_power_a;
     }
@@ -539,10 +545,10 @@ void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
       }
     }
     if(debug) log("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
-    move_drive(0, 0, power_a);
+    move_drive(0, 0, tracking.power_a);
     if (fabs(error_a) <= deg_to_rad(0.5)){
       brake();
-      if(brakeOn)delay(300);
+      if(brakeOn)delay(100);
       move_drive(0, 0, 0);
       //delay(500);
       printf("TURN TO TARGET to %f ended\n", rad_to_deg(target_a));
@@ -647,6 +653,8 @@ void Tracking::LSLineupSkills(bool hold, bool intake_deposit, int timeoutTime, i
     // delay(500);
     move_drive(55,0,0);
     delay(350);
+    // move_drive(-55,0,0);
+    // delay(100);
     move_drive(0,60,0);
     delay(100);
   }
@@ -655,6 +663,8 @@ void Tracking::LSLineupSkills(bool hold, bool intake_deposit, int timeoutTime, i
     // delay(500);
     move_drive(-55,0,0);
     delay(350);
+    // move_drive(55,0,0);
+    // delay(100);
     move_drive(0,60,0);
     delay(100);
   }
