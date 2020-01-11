@@ -72,10 +72,12 @@ void anglerHandle() {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         printf("start| %d", millis());
+        fBar.move_absolute(550,100);
         angler.move_absolute(ANGLER_MID, 100);
         intakeR.move(30);
         intakeL.move(-30);
         while (angler.get_position() < ANGLER_MID -50)delay(1);
+        setfBarState(fBarStates::Mid);
         printf("end| %d", millis());
         setAnglerState(anglerStates::Push);
       }
@@ -120,9 +122,9 @@ void anglerHandle() {
             tracking.reset();
             updateStartTask();
             log("%d | global angle: %d, xcoord: %d, ycoord: %d", pros::millis(), tracking.global_angle, tracking.xcoord, tracking.ycoord);
-            move_to_target_sync(0, -10.0, 0, false, 80, false, false, true);
+            // move_to_target_sync(0, -10.0, 0, false, 80, false, false, true);
             setDriveState(driveStates::Driver);
-            angler.move_absolute(1,200);
+            // angler.move_absolute(1,200);
             log("done back");
             stateCheck++;
         }

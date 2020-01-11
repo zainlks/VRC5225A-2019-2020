@@ -45,32 +45,36 @@ void fBarHandle() {
       }
       if(master.get_digital_new_press(UP_CUBE_HEIGHT)) {
         fBar.move_absolute(towerHeights[0], 100);
-        angler.move_absolute(600, 50);
+        // angler.move_absolute(600, 50);
         setfBarState(fBarStates::Tower);
-        cubeHeightCounter++;
+        cubeHeightCounter = 1;
       }
       break;
     case fBarStates::Tower:
-    if(master.get_digital_new_press(UP_CUBE_HEIGHT)) {
-      fBar.move_absolute(towerHeights[cubeHeightCounter], 100);
-      cubeHeightCounter++;
-    }
-    if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
-      fBar.move_absolute(towerHeights[cubeHeightCounter], 100);
-      cubeHeightCounter--;
-    }
-    if(master.get_digital_new_press(FBAR_DOWN)) {
-      fBar.move_absolute(1, 120);
-      while(fBar.get_position()>towerHeights[1]) delay(1);
-      setDriveState(driveStates::Auto);
-      tracking.reset();
-      move_to_target_sync(0,2,0, false);
-      tracking.reset();
-      while(fBar.get_position()>50) delay(1);
-      cubeHeightCounter = 0;
-      setfBarState(fBarStates::Idle);
-      setDriveState(driveStates::Driver);
-    }
+      if(master.get_digital_new_press(UP_CUBE_HEIGHT)) {
+          printf("pressed!\n");
+          fBar.move_absolute(towerHeights[cubeHeightCounter], 100);
+          printf("pos is: %d\n", towerHeights[cubeHeightCounter]);
+          printf("i am here now\n");
+          cubeHeightCounter++;
+      }
+      if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
+        fBar.move_absolute(towerHeights[cubeHeightCounter], 100);
+        cubeHeightCounter--;
+      }
+      if(master.get_digital_new_press(FBAR_DOWN)) {
+        fBar.move_absolute(1, 120);
+        while(fBar.get_position()>towerHeights[1]) delay(1);
+        // setDriveState(driveStates::Auto);
+        // tracking.reset();
+        // move_to_target_sync(0,2,0, false);
+        // tracking.reset();
+        while(fBar.get_position()>50) delay(1);
+        cubeHeightCounter = 0;
+        setfBarState(fBarStates::Idle);
+        // setDriveState(driveStates::Driver);
+      }
+    break;
     case fBarStates::Top:
       if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(15);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){

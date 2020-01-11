@@ -15,19 +15,20 @@
 
 
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	// pros::lcd::initialize();
+	// pros::lcd::set_text(1, "Hello PROS User!");
 	// Task controllerUpdate(printTemp);
 	fBarCal();
 	anglerCal();
 	// log_init();
 	menu_init();
-	// gui_init();
+	gui_init();
 	front_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	front_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	back_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	fBar.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+	angler.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	// delay(6000);
 	updateStartTask();
 

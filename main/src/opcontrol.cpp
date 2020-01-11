@@ -7,6 +7,7 @@
 #include "controller.hpp"
 #include "logging.hpp"
 #include "menu.hpp"
+#include "gui.hpp"
 
 using namespace pros;
 int startNum = 0;
@@ -45,6 +46,7 @@ void opcontrol() {
 			 // printf("global angle is: %f\n",rad_to_deg(tracking.global_angle));
 			 anglerHandle();
 			 fBarHandle();
+			 gui_handle();
 			 green.update();
 			 log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
@@ -56,6 +58,7 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
+			printf("angler position: %f\n", fBar.get_position());
 
 				if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
 					fBar.move_absolute(300, 200);
@@ -95,21 +98,21 @@ void opcontrol() {
 				 }
 			 }
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
-				 if(fBar.get_position()>200)
-				 {
-					 intakeL.move(127);
-					 intakeR.move(-127);
-					 while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-					 intakeL.tare_position();
-					 while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-					 intakeL.move(-8);
-					 intakeR.move(8);
-					 intakeReverse = true;
-					 updateStopTask();
-					 tracking.reset();
-				   updateStartTask(true);
-				 }
-				 else {
+				 // if(fBar.get_position()>200)
+				 // {
+					//  intakeL.move(127);
+					//  intakeR.move(-127);
+					//  while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					//  intakeL.tare_position();
+					//  while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					//  intakeL.move(-8);
+					//  intakeR.move(8);
+					//  intakeReverse = true;
+					//  updateStopTask();
+					//  tracking.reset();
+				 //   updateStartTask(true);
+				 // }
+				 // else {
 					 if(fabs(intakeL.get_actual_velocity())>10)
 					 {
 						 intakeL.move(-5);
@@ -121,7 +124,6 @@ void opcontrol() {
 						 intakeR.move(-127);
 					 }
 				 }
-			 }
 			 if(intakeReverse && fabs(tracking.ycoord)>3) {
 				 intakeL.move(-127);
 				 intakeR.move(127);
