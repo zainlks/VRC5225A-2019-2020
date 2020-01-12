@@ -21,3 +21,4 @@ void gui_init();
 void gui_handle();
 lv_res_t liftTestButtonClicked(lv_obj_t* button);
 lv_res_t resetClicked(lv_obj_t* button);
+lv_res_t MotorClicked(lv_obj_t* button);
