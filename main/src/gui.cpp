@@ -26,6 +26,9 @@ lv_obj_t * posXValue;
 lv_obj_t * posY;
 lv_obj_t * posYValue;
 
+lv_obj_t * angle;
+lv_obj_t * angleValue;
+
 lv_obj_t * fbarPos;
 lv_obj_t * fbarPosValue;
 
@@ -34,6 +37,20 @@ lv_obj_t * anglerPosValue;
 
 lv_obj_t * motorResets;
 lv_obj_t * motorResetsLable;
+
+// Motor Temps
+lv_obj_t * fBarTemp;
+lv_obj_t * fBarTempValue;
+
+lv_obj_t * anglerTemp;
+lv_obj_t * anglerTempValue;
+
+lv_obj_t * intakeLTemp;
+lv_obj_t * intakeLTempValue;
+
+lv_obj_t * intakeRTemp;
+lv_obj_t * intakeRTempValue;
+
 
 char stringToPrint[30];
 
@@ -51,6 +68,7 @@ void gui_init() {
   lv_obj_t *autoTab = lv_tabview_add_tab(tabview, "Autos");
   lv_obj_t *testingTab = lv_tabview_add_tab(tabview, "Testing");
 
+  // posTab
   leftEncoder = lv_label_create(posTab, NULL);
   lv_label_set_align(leftEncoder, LV_LABEL_ALIGN_LEFT);
   lv_label_set_text(leftEncoder, "Left Enc:");
@@ -102,6 +120,16 @@ void gui_init() {
   lv_label_set_text(posYValue, "0");
   lv_obj_align(posYValue, posXValue, LV_ALIGN_OUT_TOP_MID, 2, 50);
 
+  angle = lv_label_create(posTab, NULL);
+  lv_label_set_align(angle, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(angle, "A:");
+  lv_obj_align(angle, posY, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
+  angleValue = lv_label_create(posTab, NULL);
+  lv_label_set_align(angleValue, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(angleValue, "0");
+  lv_obj_align(angleValue, posYValue, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
   resetEncoders = lv_btn_create(posTab, NULL);
   lv_btn_set_action(resetEncoders, LV_BTN_ACTION_LONG_PR, resetClicked);
   lv_obj_align(resetEncoders, NULL, LV_ALIGN_CENTER, 150, -40);
@@ -137,13 +165,48 @@ void gui_init() {
   lv_label_set_text(motorResetsLable, "Motor Reset");
 
 
+  //Temp Tab
 
-  titleLabel = lv_label_create(motorTemp, NULL);
-  lv_label_set_align(titleLabel, LV_LABEL_ALIGN_LEFT);
-  lv_label_set_text(titleLabel, "The PiLons Menu");
-  lv_obj_set_pos(titleLabel, 10,0);
+  fBarTemp = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(fBarTemp, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(fBarTemp, "4-Bar:");
+  lv_obj_set_pos(fBarTemp, 0,0);
+  lv_obj_align(fBarTemp, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 
+  fBarTempValue = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(fBarTempValue, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(fBarTempValue, "0");
+  lv_obj_set_pos(fBarTempValue, 85,20);
 
+  anglerTemp = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(anglerTemp, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(anglerTemp, "Angler:");
+  lv_obj_align(anglerTemp, fBarTemp, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
+  anglerTempValue = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(anglerTempValue, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(anglerTempValue, "0");
+  lv_obj_align(anglerTempValue, fBarTempValue, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
+  intakeLTemp = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(intakeLTemp, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(intakeLTemp, "Left Intake:");
+  lv_obj_align(intakeLTemp, anglerTemp, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
+  intakeLTempValue = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(intakeLTempValue, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(intakeLTempValue, "0");
+  lv_obj_align(intakeLTempValue, anglerTempValue, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
+  intakeRTemp = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(intakeRTemp, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(intakeRTemp, "Left Intake:");
+  lv_obj_align(intakeRTemp, intakeLTemp, LV_ALIGN_OUT_TOP_MID, 2, 50);
+
+  intakeRTempValue = lv_label_create(motorTemp, NULL);
+  lv_label_set_align(intakeRTempValue, LV_LABEL_ALIGN_LEFT);
+  lv_label_set_text(intakeRTempValue, "0");
+  lv_obj_align(intakeRTempValue, intakeLTempValue, LV_ALIGN_OUT_TOP_MID, 2, 50);
 
 
   liftTestButton = lv_btn_create(testingTab, NULL);
@@ -167,10 +230,21 @@ void gui_handle() {
   lv_label_set_text(posXValue,stringToPrint);
   sprintf(stringToPrint,"%f",tracking.ycoord);
   lv_label_set_text(posYValue,stringToPrint);
+  sprintf(stringToPrint,"%f",rad_to_deg(tracking.global_angle));
+  lv_label_set_text(angleValue,stringToPrint);
   sprintf(stringToPrint,"%d",static_cast<int>(fBar.get_position()));
   lv_label_set_text(fbarPosValue,stringToPrint);
   sprintf(stringToPrint,"%d",static_cast<int>(angler.get_position()));
   lv_label_set_text(anglerPosValue,stringToPrint);
+  //Temps
+  sprintf(stringToPrint,"%d",static_cast<int>(fBar.get_temperature()));
+  lv_label_set_text(fBarTempValue,stringToPrint);
+  sprintf(stringToPrint,"%d",static_cast<int>(angler.get_temperature()));
+  lv_label_set_text(anglerTempValue,stringToPrint);
+  sprintf(stringToPrint,"%d",static_cast<int>(intakeL.get_temperature()));
+  lv_label_set_text(intakeLTempValue,stringToPrint);
+  sprintf(stringToPrint,"%d",static_cast<int>(intakeR.get_temperature()));
+  lv_label_set_text(intakeRTempValue,stringToPrint);
 }
 
 lv_res_t resetClicked(lv_obj_t* button) {
