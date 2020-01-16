@@ -71,7 +71,7 @@ void clear_line(int line) {
 
 
 void update (void* param){
-   double distance_LR = 14.7135; double distance_B = 7.25;
+   double distance_LR = 14.490972; double distance_B = 7.25;
    double radiusR = 0;
    double radiusB = 0;
    double h = 0;
@@ -199,6 +199,7 @@ void move_to_target(void* params){
   double max_power_a = 127.0, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 25;
   double scale;
+  double power_total;
 
   double last_power_a = max_power_a, last_power_x = max_power_xy, last_power_y = max_power_xy;
   double integral_a = 0.0, integral_d = 0.0;
@@ -321,7 +322,13 @@ void move_to_target(void* params){
         tracking.power_a = tracking.power_a*scale;
       }
     }
-
+   // if(fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y)>127) {
+   //   power_total = fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y);
+   //   tracking.power_a = tracking.power_a/power_total * max_power_xy;
+   //   tracking.power_x = tracking.power_x/power_total * max_power_xy;
+   //   tracking.power_y = tracking.power_y/power_total * max_power_xy;
+   //
+   // }
 //setting min power if a, x, and y are not within target
     // if(fabs(tracking.power_a) < min_power_a){
     //   if (fabs(error_a) > deg_to_rad(0.5)){

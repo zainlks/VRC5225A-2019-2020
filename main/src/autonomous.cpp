@@ -32,7 +32,7 @@ void intakeTask(void *param) {
 }
 
 void blueFourFirst() {
-  angler.move_absolute(1700, 200);
+  //angler.move_absolute(1700, 200);
   fBar.move_absolute(300, 200);
   while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
@@ -40,39 +40,41 @@ void blueFourFirst() {
   intakeL.move(-10);
   intakeR.move(10);
   fBar.move_absolute(1,200);
-  angler.move_absolute(1700, 200);
+  // angler.move_absolute(1700, 200);
   intakeOn();
-  move_drive(0, 90, 0); //80
+  move_drive(0, 127, 0); //80
   while(tracking.ycoord<9)delay(1);
-  move_to_target_async(0, 38, 0, false, 80); //60
+  move_to_target_async(0, 38, 0, false, 127); //60
   tracking.waitForDistance(18);
-  move_to_target_sync(0, 39, 0, false, 70); //50
+  move_to_target_sync(0, 39, 0, false, 127); //50
   tracking.waitForComplete();
   delay(70);
-  move_drive(70,0,0);
-  while(tracking.xcoord<4) delay(1);
+  move_drive(0,-70,0);
+  while(tracking.ycoord>36.5) delay(1);
   // move_to_target_sync(7.5, 39, 0, false, 127);
-  move_to_target_sync(7.5, 45, 0,false);
+  move_to_target_sync(7.5, 46, 0,false);
   delay(70);
   move_to_target_async(0, 39, 0,false,127);
   tracking.waitForDistance(2.5); //80
   move_to_target_sync(23.5, 2, 0, false,127);
   move_to_target_async(23.5, 38.5, 0,false,90);
   tracking.waitForDistance(17);
-  move_to_target_sync(23.5, 38.5, 0, false, 55);
+  move_to_target_sync(23.5, 38.5, 0, false, 127);
   move_to_target_async(-6,11.5, deg_to_rad(-135),false,127);
   tracking.waitForDistance(12);
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
   angler.move_absolute(ANGLER_MID-1800, 150);
+  fBar.move_absolute(650,100);
   tracking.waitForComplete();
   brake();
   delay(75);
   move_drive(0,0,0);
   // angler.move_absolute(ANGLER_TOP-2000, 100);
-  intakeL.move(15);
-  intakeR.move(-15);
+  return;
+  intakeL.move(25);
+  intakeR.move(-25);
   delay(50);
   tracking.LSLineup(true, true, 1500);
   angler.move_absolute(ANGLER_TOP-1000, 135);
@@ -864,43 +866,48 @@ void autonomous() {
   orange.sig_num = 2;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-  // switch(side) {
-  //   case sides::blue:
-  //     switch(cur_auto) {
-  //       case auto1:
-  //         blueLeft();
-  //       break;
-  //       case auto2:
-  //         blue9();
-  //       break;
-  //       case auto3:
-  //         blueFourFirst();
-  //       break;
-  //       case auto4:
-  //         skills();
-  //       break;
-  //     }
-  //   break;
-  //   case sides::red:
-  //     switch(cur_auto) {
-  //       case auto1:
-  //         redProtect();
-  //       break;
-  //       case auto2:
-  //         red9();
-  //       break;
-  //       case auto3:
-  //         redFourFirst();
-  //       break;
-  //       case auto4:
-  //         skills();
-  //       break;
-  //     }
-  //   break;
-  //
-  // }
+  switch(side) {
+    case sides::blue:
+      switch(cur_auto) {
+        case auto1:
+          blueLeft();
+        break;
+        case auto2:
+          blue9();
+        break;
+        case auto3:
+          blueFourFirst();
+        break;
+        case auto4:
+          skills();
+        break;
+      }
+    break;
+    case sides::red:
+      switch(cur_auto) {
+        case auto1:
+          redProtect();
+        break;
+        case auto2:
+          red9();
+        break;
+        case auto3:
+          redFourFirst();
+        break;
+        case auto4:
+          skills();
+        break;
+      }
+    break;
 
-  newSkills();
+  }
+
+
+  // tracking.turn_to_angle(deg_to_rad(90));
+  // delay(500);
+  // printf("%f", deg_to_rad(tracking.global_angle));
+
+  // newSkills();
 
   // tracking.turn_to_angle(deg_to_rad(225));
   // tracking.move_xy(10, y);
