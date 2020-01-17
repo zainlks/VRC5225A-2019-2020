@@ -46,6 +46,7 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 green.update();
+			 gui_handle();
 			 log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
 

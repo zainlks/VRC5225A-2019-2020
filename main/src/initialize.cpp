@@ -22,7 +22,7 @@ void initialize() {
 	anglerCal();
 	// log_init();
 	menu_init();
-	// gui_init();
+	gui_init();
 	front_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	front_R.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	back_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
