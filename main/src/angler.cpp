@@ -87,6 +87,7 @@ void anglerHandle() {
       // }
     break;
     case anglerStates::Push:
+      if(fBar.get_position()>525) fBar.move(30);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID+200, 100);
         intakeR.move(-25);
