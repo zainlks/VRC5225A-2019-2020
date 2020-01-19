@@ -123,8 +123,9 @@ void anglerHandle() {
             tracking.reset();
             updateStartTask();
             log("%d | global angle: %d, xcoord: %d, ycoord: %d", pros::millis(), tracking.global_angle, tracking.xcoord, tracking.ycoord);
-            // move_to_target_sync(0, -10.0, 0, false, 80, false, false, true);
-            setDriveState(driveStates::Driver);
+
+            move_to_target_sync(0, -10.0, 0, false, 80, false, false, true);
+           setDriveState(driveStates::Driver);
             // angler.move_absolute(1,200);
             log("done back");
             stateCheck++;
@@ -198,6 +199,7 @@ void anglerHandle() {
           //intakeL.move(5)
           printf("start angle, %d", millis());
           angler.move_absolute(ANGLER_TOP, 100);
+          fBar.move(10);
           stateCheck = 0;
           while (angler.get_position() < ANGLER_MID -50)delay(1);
           printf("end| %d", millis());

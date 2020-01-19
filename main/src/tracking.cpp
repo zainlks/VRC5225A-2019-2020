@@ -308,27 +308,27 @@ void move_to_target(void* params){
       tracking.power_a = sgn(tracking.power_a)*max_power_a;
     }
     // need to scale x and y powers
-    if (fabs(tracking.power_x) > max_power_xy || fabs(tracking.power_y) > max_power_xy){
-      if (fabs(tracking.power_x) > fabs(tracking.power_y)){
-        scale = max_power_xy/fabs(tracking.power_x);
-        tracking.power_x = max_power_xy *sgn(tracking.power_x);
-        tracking.power_y = tracking.power_y *scale;
-        tracking.power_a = tracking.power_a*scale;
-      }
-      else {
-        scale = max_power_xy/fabs(tracking.power_y);
-        tracking.power_y = max_power_xy *sgn(tracking.power_y);
-        tracking.power_x = tracking.power_x *scale;
-        tracking.power_a = tracking.power_a*scale;
-      }
-    }
-   // if(fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y)>127) {
-   //   power_total = fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y);
-   //   tracking.power_a = tracking.power_a/power_total * max_power_xy;
-   //   tracking.power_x = tracking.power_x/power_total * max_power_xy;
-   //   tracking.power_y = tracking.power_y/power_total * max_power_xy;
-   //
-   // }
+    // if (fabs(tracking.power_x) > max_power_xy || fabs(tracking.power_y) > max_power_xy){
+    //   if (fabs(tracking.power_x) > fabs(tracking.power_y)){
+    //     scale = max_power_xy/fabs(tracking.power_x);
+    //     tracking.power_x = max_power_xy *sgn(tracking.power_x);
+    //     tracking.power_y = tracking.power_y *scale;
+    //     tracking.power_a = tracking.power_a*scale;
+    //   }
+    //   else {
+    //     scale = max_power_xy/fabs(tracking.power_y);
+    //     tracking.power_y = max_power_xy *sgn(tracking.power_y);
+    //     tracking.power_x = tracking.power_x *scale;
+    //     tracking.power_a = tracking.power_a*scale;
+    //   }
+    // }
+   if(fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y)>127) {
+     power_total = fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y);
+     tracking.power_a = tracking.power_a/power_total * max_power_xy;
+     tracking.power_x = tracking.power_x/power_total * max_power_xy;
+     tracking.power_y = tracking.power_y/power_total * max_power_xy;
+
+   }
 //setting min power if a, x, and y are not within target
     // if(fabs(tracking.power_a) < min_power_a){
     //   if (fabs(error_a) > deg_to_rad(0.5)){

@@ -30,6 +30,7 @@ void fBarCal()
   delay(100);
   fBar.tare_position();
   fBar.move(-13);
+  // fBar.move(0);
   setfBarState(fBarStates::Idle);
 }
 
@@ -64,6 +65,7 @@ void fBarHandle() {
       }
       if(master.get_digital_new_press(FBAR_DOWN)) {
         fBar.move_absolute(1, 120);
+        angler.move_absolute(1, 200);
         while(fBar.get_position()>towerHeights[1]) delay(1);
         // setDriveState(driveStates::Auto);
         // tracking.reset();
@@ -84,6 +86,7 @@ void fBarHandle() {
         setfBarState(fBarStates::Idle);
       }
       if(master.get_digital_new_press(FBAR_DOWN)){
+        angler.move_absolute(1, 200);
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
       }
@@ -121,6 +124,7 @@ void fBarHandle() {
     case fBarStates::Mid:
       if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(15);
       if(master.get_digital_new_press(FBAR_DOWN)){
+        angler.move_absolute(1, 200);
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
       }
