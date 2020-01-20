@@ -78,7 +78,7 @@ void fBarHandle() {
       }
     break;
     case fBarStates::Top:
-      if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(15);
+      if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(8);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){
         fBar.move_absolute(1, 200);
         angler.move_absolute(1, 200);
@@ -122,7 +122,7 @@ void fBarHandle() {
       // }
       break;
     case fBarStates::Mid:
-      if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(15);
+      if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(8);
       if(master.get_digital_new_press(FBAR_DOWN)){
         angler.move_absolute(1, 200);
         fBar.move_absolute(1, 200);
