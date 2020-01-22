@@ -2,8 +2,8 @@
 ADIEncoder leftencoder (1, 2, true);
 ADIEncoder rightencoder (5, 6, false);
 ADIEncoder backencoder (3, 4, true);
-ADIAnalogIn leftLs(7);
-ADIAnalogIn rightLs(8);
+ADIAnalogIn topLs(7);
+ADIAnalogIn bottomLs(8);
 Vision vision(5);
 Motor intakeR(17,false), intakeL(2,false);
 Motor angler(4,false);

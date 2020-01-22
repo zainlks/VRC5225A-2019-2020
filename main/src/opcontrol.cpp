@@ -21,11 +21,15 @@ void opcontrol() {
 		double kP = 1.2;
 		uint32_t stoptime = 0;
 		uint32_t LTimer = millis();
+		uint32_t nineCubeTime = 0;
+		bool nineCubeSafety = false;
 		bool intk_stop = false;
 		double fBar_height = 0;
 		green.sig_num = 1;
 		orange.sig_num = 2;
 		bool intakeReverse = false;
+		bool nineCube = false;
+
 		double cur_coord;
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
@@ -58,8 +62,18 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
-			printf("angler position: %f\n", fBar.get_position());
-
+			if(intakeR.get_actual_velocity() > 50 && topLs.get_value() < 500 && bottomLs.get_value() > 2500){
+				if(!nineCubeSafety){
+					nineCubeTime = millis();
+					nineCubeSafety = true;
+				}
+				if(nineCubeSafety && nineCubeTime + 200 < millis()){
+					intakeR.move(15);
+					intakeL.move(-15);
+					nineCubeSafety = false;
+				}
+			}
+			printf("top: %d\n", bottomLs.get_value());
 				if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
 					fBar.move_absolute(300, 200);
 				  while(fBar.get_position() < 295 ){delay(1);}
@@ -76,9 +90,12 @@ void opcontrol() {
 				 master.print(2,0, "Height is: %f", fBar_height);
 			}
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-				fBar_height -= 150;
-				fBar.move_absolute(fBar_height, 80);
-				 master.print(2, 0,"Height is: %f", fBar_height);
+				// fBar_height -= 150;
+				// fBar.move_absolute(fBar_height, 80);
+				//  master.print(2, 0,"Height is: %f", fBar_height);
+				angler.move_absolute(3500, 200);
+				while(angler.get_position() < 3400)delay(1);
+				angler.move(20);
 			 }
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
@@ -98,21 +115,21 @@ void opcontrol() {
 				 }
 			 }
 			 if(master.get_digital_new_press(INTK_OUT_BUTTON)) {
-				 // if(fBar.get_position()>200)
-				 // {
-					//  intakeL.move(127);
-					//  intakeR.move(-127);
-					//  while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-					//  intakeL.tare_position();
-					//  while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-					//  intakeL.move(-8);
-					//  intakeR.move(8);
-					//  intakeReverse = true;
-					//  updateStopTask();
-					//  tracking.reset();
-				 //   updateStartTask(true);
-				 // }
-				 // else {
+				 if(fBar.get_position()>200)
+				 {
+					 intakeL.move(127);
+					 intakeR.move(-127);
+					 while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 intakeL.tare_position();
+					 while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 intakeL.move(-8);
+					 intakeR.move(8);
+					 intakeReverse = true;
+					 updateStopTask();
+					 tracking.reset();
+				   updateStartTask(true);
+				 }
+				 else {
 					 if(fabs(intakeL.get_actual_velocity())>10)
 					 {
 						 intakeL.move(-5);
@@ -124,12 +141,12 @@ void opcontrol() {
 						 intakeR.move(-127);
 					 }
 				 }
-			 if(intakeReverse && fabs(tracking.ycoord)>3) {
-				 intakeL.move(-127);
-				 intakeR.move(127);
-				 intakeReverse = false;
-			 }
-
+			 		if(intakeReverse && fabs(tracking.ycoord)>3) {
+				 		intakeL.move(-127);
+				 		intakeR.move(127);
+				 		intakeReverse = false;
+			 		}
+		 	}
 			 // tracking.move_to_target(0, 10, 0);
 			 // green.update();
 			 // printf("center: %d\n",green.obj.x_middle_coord);

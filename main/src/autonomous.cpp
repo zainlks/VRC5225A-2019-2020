@@ -95,6 +95,8 @@ void blueFourFirst() {
 }
 
 void blue9() {
+  uint32_t nineCubeTime = 0;
+  bool nineCubeSafety = false;
   //angler.move_absolute(1700, 200);
   fBar.move_absolute(300, 200);
   while(fBar.get_position() < 295 ){delay(1);}
@@ -119,7 +121,7 @@ void blue9() {
   while(fBar.get_position()<towerHeights[0]) delay(1);
   brake();
 
-  move_to_target_sync(0, 23.5, 0, false, 75);
+  move_to_target_sync(0, 22, 0, false, 75);
   //delay(100);
   // return;
   // tracking.waitForDistance(0.75);
@@ -145,12 +147,24 @@ void blue9() {
   tracking.waitForComplete();
   delay(70);
   move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
-  tracking.waitForDistance(12);
-  intakeL.move(-15);
+  delay(50);
+  while(true){
+    if(!nineCubeSafety && topLs.get_value() < 500 && bottomLs.get_value() > 2500){
+      nineCubeTime = millis();
+      nineCubeSafety = true;
+    }
+    if(nineCubeSafety && nineCubeTime + 200 < millis()) break;
+    if(tracking.driveError - 5 < 1)break;
+    delay(1);
+    printf("top: %d, b: %d", topLs.get_value(), bottomLs.get_value());
+  }
   intakeR.move(15);
-  tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 110);
+  intakeL.move(-15);
+  angler.move_absolute(3500, 200);
+  // tracking.waitForDistance(7);
+  //angler.move_absolute(ANGLER_MID-1800, 110);
   fBar.move_absolute(650,100);
+
   tracking.waitForComplete();
   brake();
   delay(75);
@@ -163,7 +177,7 @@ void blue9() {
   intakeL.move(27);
   intakeR.move(-27);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
-  fBar.move(10);
+  fBar.move(5);
   // intakeL.move(-10);
   // intakeR.move(10);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
@@ -830,7 +844,7 @@ void newSkills() {
 
   intakeL.move(80);
   intakeR.move(-80);
-  while(rightLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
   intakeL.tare_position();
   while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
   intakeL.move(-8);
