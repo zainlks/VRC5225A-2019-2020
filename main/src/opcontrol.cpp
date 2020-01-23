@@ -23,12 +23,13 @@ void opcontrol() {
 		uint32_t LTimer = millis();
 		uint32_t nineCubeTime = 0;
 		bool nineCubeSafety = false;
+		bool nineCube = false;
 		bool intk_stop = false;
 		double fBar_height = 0;
 		green.sig_num = 1;
 		orange.sig_num = 2;
 		bool intakeReverse = false;
-		bool nineCube = false;
+
 
 		double cur_coord;
 		//tracking.setAngleHold(0);
@@ -62,7 +63,7 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
-			if(intakeR.get_actual_velocity() > 50 && topLs.get_value() < 500 && bottomLs.get_value() > 2500){
+			if(intakeR.get_actual_velocity() > 50 && topLs.get_value() < 500 && bottomLs.get_value() > 2500 && angler.get_position() < 400){
 				if(!nineCubeSafety){
 					nineCubeTime = millis();
 					nineCubeSafety = true;
@@ -71,7 +72,16 @@ void opcontrol() {
 					intakeR.move(15);
 					intakeL.move(-15);
 					nineCubeSafety = false;
+					nineCube = true;
+					angler.move_absolute(3500, 200);
 				}
+
+
+			}
+			if(nineCube && master.get_digital_new_press(INTK_IN_BUTTON)){
+				nineCube = false;
+				intakeOn();
+				angler.move_absolute(1,200);
 			}
 			printf("top: %d\n", bottomLs.get_value());
 				if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
