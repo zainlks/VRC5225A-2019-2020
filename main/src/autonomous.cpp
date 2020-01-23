@@ -918,7 +918,7 @@ void newSkills() {
   updateStopTask();
   tracking.global_angle = deg_to_rad(-45);
   updateStartTask(false);
-  angler.move_absolute(1700, 200);
+  angler.move_absolute(1, 200);
   fBar.move_absolute(300, 200);
   while(fBar.get_position() < 295 ){delay(1);}
   delay(100);
@@ -932,7 +932,7 @@ void newSkills() {
   intakeReverse();
   delay(800);
   fBar.move_absolute(1,200);
-  angler.move_absolute(1700, 200);
+  angler.move_absolute(1, 200);
   move_to_target_sync(0,2.5,0,false);
   intakeOn();
   move_drive(0, 90, 0); //80
@@ -968,7 +968,7 @@ void newSkills() {
   tracking.waitForDistance(5);
   intakeOn();
   fBar.move_absolute(1,200);
-  angler.move_absolute(1700,200);
+  angler.move_absolute(1,200);
   tracking.waitForComplete();
   while(fBar.get_position()>200) delay(1);
   move_to_target_sync(0,48,0,false);

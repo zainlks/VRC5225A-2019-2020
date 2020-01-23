@@ -54,7 +54,7 @@ void opcontrol() {
 			 gui_handle();
 			 green.update();
 			 log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
-			 // printf("%d | %d | %d\n", leftencoder.get_value(), rightencoder.get_value(), backencoder.get_value());
+			 printf("%d | %d \n", topLs.get_value(), bottomLs.get_value());
 
 			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
 			//  for(int x = 0; x < 50; x++){
@@ -63,21 +63,21 @@ void opcontrol() {
 			// 	printf("%d \n", x);
 			// 	delay(500);
 			// }
-			if(intakeR.get_actual_velocity() > 50 && topLs.get_value() < 500 && bottomLs.get_value() > 2500 && angler.get_position() < 400){
-				if(!nineCubeSafety){
-					nineCubeTime = millis();
-					nineCubeSafety = true;
-				}
-				if(nineCubeSafety && nineCubeTime + 200 < millis()){
-					intakeR.move(15);
-					intakeL.move(-15);
-					nineCubeSafety = false;
-					nineCube = true;
-					angler.move_absolute(3500, 200);
-				}
-
-
-			}
+			// if(intakeR.get_actual_velocity() > 50 && topLs.get_value() < 500 && bottomLs.get_value() > 2500 && angler.get_position() < 400){
+			// 	if(!nineCubeSafety){
+			// 		nineCubeTime = millis();
+			// 		nineCubeSafety = true;
+			// 	}
+			// 	if(nineCubeSafety && nineCubeTime + 200 < millis()){
+			// 		intakeR.move(15);
+			// 		intakeL.move(-15);
+			// 		nineCubeSafety = false;
+			// 		nineCube = true;
+			// 		angler.move_absolute(3500, 200);
+			// 	}
+			//
+			//
+			// }
 			if(nineCube && master.get_digital_new_press(INTK_IN_BUTTON)){
 				nineCube = false;
 				intakeOn();
@@ -91,6 +91,7 @@ void opcontrol() {
 				  intakeL.move(-10);
 				  intakeR.move(10);
 				  fBar.move_absolute(1,200);
+					setfBarState(fBarStates::Idle);
 				  delay(50);
 
 				}
@@ -99,14 +100,6 @@ void opcontrol() {
 				 fBar.move_absolute(fBar_height, 80);
 				 master.print(2,0, "Height is: %f", fBar_height);
 			}
-			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-				// fBar_height -= 150;
-				// fBar.move_absolute(fBar_height, 80);
-				//  master.print(2, 0,"Height is: %f", fBar_height);
-				angler.move_absolute(3500, 200);
-				while(angler.get_position() < 3400)delay(1);
-				angler.move(20);
-			 }
 			if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) menu();
 			 if(master.get_digital_new_press(SPEED_LIMIT))
 			 {
@@ -131,7 +124,7 @@ void opcontrol() {
 					 intakeR.move(-127);
 					 while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
 					 intakeL.tare_position();
-					 while(fabs(intakeL.get_position())<650 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 while(fabs(intakeL.get_position())<800 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
 					 intakeL.move(-8);
 					 intakeR.move(8);
 					 intakeReverse = true;
@@ -151,12 +144,12 @@ void opcontrol() {
 						 intakeR.move(-127);
 					 }
 				 }
-			 		if(intakeReverse && fabs(tracking.ycoord)>3) {
-				 		intakeL.move(-127);
-				 		intakeR.move(127);
-				 		intakeReverse = false;
-			 		}
 		 	}
+			if(intakeReverse && (fabs(tracking.ycoord)>3 || fabs(tracking.xcoord)>3)) {
+				intakeL.move(-127);
+				intakeR.move(127);
+				intakeReverse = false;
+			}
 			 // tracking.move_to_target(0, 10, 0);
 			 // green.update();
 			 // printf("center: %d\n",green.obj.x_middle_coord);

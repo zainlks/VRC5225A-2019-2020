@@ -81,10 +81,33 @@ void anglerHandle() {
         printf("end| %d", millis());
         setAnglerState(anglerStates::Push);
       }
+      if(topLs.get_value() < 500 && bottomLs.get_value() < 2500) {
+        intakeR.move(15);
+				intakeL.move(-15);
+				angler.move_absolute(3500, 200);
+        setAnglerState(anglerStates::DriveAround);
+      }
       // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
       //   angler.move_absolute(750, 200);
       //   setAnglerState(anglerStates::Push);
       // }
+    break;
+    case anglerStates::DriveAround:
+    if(master.get_digital_new_press(DROPOFF_BUTTON)){
+      printf("start| %d", millis());
+      fBar.move_absolute(550,100);
+      angler.move_absolute(ANGLER_MID, 100);
+      intakeR.move(30);
+      intakeL.move(-30);
+      while (angler.get_position() < ANGLER_MID -50)delay(1);
+      setfBarState(fBarStates::Mid);
+      printf("end| %d", millis());
+      setAnglerState(anglerStates::Push);
+    }
+    if(master.get_digital_new_press(ANGLER_DOWN)){
+      angler.move_absolute(1, 200);
+      setAnglerState(anglerStates::Idle);
+    }
     break;
     case anglerStates::Push:
       if(fBar.get_position()>525) fBar.move(30);
