@@ -121,9 +121,9 @@ void opcontrol() {
 				 {
 					 intakeL.move(127);
 					 intakeR.move(-127);
-					 while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)&& !master.get_digital_new_press(INTK_IN_BUTTON)&& !master.get_digital_new_press(INTK_OUT_BUTTON))delay(1);
 					 intakeL.tare_position();
-					 while(fabs(intakeL.get_position())<800 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+					 while(fabs(intakeL.get_position())<900 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10) && !master.get_digital_new_press(INTK_IN_BUTTON)&& !master.get_digital_new_press(INTK_OUT_BUTTON)) delay(1);
 					 intakeL.move(-8);
 					 intakeR.move(8);
 					 intakeReverse = true;

@@ -730,7 +730,9 @@ void skills() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 120);
+  //angler.move_absolute(ANGLER_MID-1800, 120);
+  angler.move_absolute(3500, 200);
+  fBar.move_absolute(650,100);
   tracking.waitForComplete();
   brake();
   delay(75);
@@ -742,11 +744,18 @@ void skills() {
   move_drive(0,60,0);
   delay(300);
   tracking.LSLineup(true, false);
+  while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  fBar.move(5);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
   delay(100);
   updateStopTask();
   tracking.ycoord = 9;
   tracking.xcoord = -31.5;
   updateStartTask(false);
+
+
+
+
   while(!resetDone) delay(1);
   intakeL.move(25);
   intakeR.move(-25);
@@ -875,7 +884,9 @@ void skills() {
   intakeL.move(-15);
   intakeR.move(15);
   tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 100);
+  //angler.move_absolute(ANGLER_MID-1800, 100);
+  angler.move_absolute(3500, 200);
+  fBar.move_absolute(650,100);
   tracking.waitForComplete();
   brake();
   delay(75);
@@ -884,12 +895,18 @@ void skills() {
   move_drive(0,60,0);
   delay(300);
   tracking.LSLineup();
+  while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  fBar.move(5);
+  while(angler.get_position()<ANGLER_TOP-50) delay(1);
+  delay(100);
   intakeL.move(25);
   intakeR.move(-25);
   delay(100);
   updateStopTask();
   tracking.reset();
   updateStartTask();
+
+
   angler.move_absolute(ANGLER_TOP, 100);
   while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   intakeL.move(-10);

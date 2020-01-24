@@ -59,6 +59,8 @@ void fBarHandle() {
     if(master.get_digital_new_press(FBAR_DOWN)){
       fBar.move_absolute(1, 200);
       setfBarState(fBarStates::Idle);
+      angler.move_absolute(1, 200);
+      setAnglerState(anglerStates::Idle);
     }
     break;
     case fBarStates::Tower:
@@ -84,6 +86,7 @@ void fBarHandle() {
         while(fBar.get_position()>50) delay(1);
         cubeHeightCounter = 0;
         setfBarState(fBarStates::Idle);
+        setAnglerState(anglerStates::Idle);
         // setDriveState(driveStates::Driver);
       }
     break;
@@ -99,6 +102,8 @@ void fBarHandle() {
         angler.move_absolute(1, 200);
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
       }
       break;
     case fBarStates::Mid:
@@ -107,6 +112,8 @@ void fBarHandle() {
         angler.move_absolute(1, 200);
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
       }
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){
         fBar.move_absolute(FBAR_TOP-50, 150);
@@ -115,6 +122,8 @@ void fBarHandle() {
       if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
+        angler.move_absolute(1, 200);
+        setAnglerState(anglerStates::Idle);
       }
       break;
   }
