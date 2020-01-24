@@ -83,7 +83,6 @@ void opcontrol() {
 				intakeOn();
 				angler.move_absolute(1,200);
 			}
-			printf("top: %d\n", bottomLs.get_value());
 				if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
 					fBar.move_absolute(300, 200);
 				  while(fBar.get_position() < 295 ){delay(1);}

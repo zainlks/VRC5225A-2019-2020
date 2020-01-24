@@ -151,11 +151,11 @@ void blue9() {
   move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
   delay(50);
   while(true){
-    if(!nineCubeSafety && topLs.get_value() < 500 && bottomLs.get_value() > 2500){
+    if(!nineCubeSafety && topLs.get_value() < 500 && bottomLs.get_value() > 2000){
       nineCubeTime = millis();
       nineCubeSafety = true;
     }
-    if(nineCubeSafety && (topLs.get_value() > 500 || bottomLs.get_value() < 2500)){
+    if(nineCubeSafety && (topLs.get_value() > 500 || bottomLs.get_value() < 700)){
       nineCubeSafety = false;
     }
     if(nineCubeSafety && nineCubeTime + 200 < millis()) break;
@@ -178,7 +178,7 @@ void blue9() {
       outtakeState = true;
       printf ("%d| outtakes", millis());
     }
-    if (outtakeState && bottomLs.get_value() < 2000){
+    if (outtakeState && bottomLs.get_value() < 700){
       intakeL.tare_position();
       while(fabs(intakeL.get_position()) < 150 ) delay(1);
       printf("%d| stopped outtaking", millis());
@@ -289,7 +289,7 @@ void blueLeft(){
   fBar.move_absolute(towerHeights[2] + 400, 200);
   while(fBar.get_position()<towerHeights[2] + 200)delay(1);
   tracking.waitForComplete();
-  move_to_target_sync(0, 22,0, false, 60);
+  move_to_target_sync(0, 24,0, false, 60);
   fBar.move_absolute(towerHeights[1]- 700, 100);
   move_to_target_async(0, 20,0, false);
   while(fBar.get_position()>towerHeights[1]-550)delay(1);
@@ -363,7 +363,7 @@ void blueLeft(){
       outtakeState = true;
       printf ("%d| outtakes", millis());
     }
-    if (outtakeState && bottomLs.get_value() < 2000){
+    if (outtakeState && bottomLs.get_value() < 1000){
       intakeR.move(15);
       intakeL.move(-15);
       printf ("%d| light sensor covered", millis());
@@ -513,19 +513,19 @@ void red9() {
   move_to_target_sync(23, 2, 0, false,127);
   move_drive(0, 80, 0); //80
   while(tracking.ycoord<9)delay(1);
-  move_to_target_async(23, 40, 0, false, 90); //60
+  move_to_target_async(23, 40, 0, false, 80); //60
   tracking.waitForDistance(15);
-  move_to_target_sync(23, 40, 0, false, 80); //50
+  move_to_target_sync(23, 40, 0, false, 70); //50
   tracking.waitForComplete();
   delay(70);
-  move_to_target_async(30,11.5, deg_to_rad(135),false,127);
+  move_to_target_async(30, 11.5, deg_to_rad(135), false, 127);
   delay(50);
   while(true){
-    if(!nineCubeSafety && topLs.get_value() < 500 && bottomLs.get_value() > 2500){
+    if(!nineCubeSafety && topLs.get_value() < 500 && bottomLs.get_value() > 2000){
       nineCubeTime = millis();
       nineCubeSafety = true;
     }
-    if(nineCubeSafety && (topLs.get_value() > 500 || bottomLs.get_value() < 2500)){
+    if(nineCubeSafety && (topLs.get_value() > 500 || bottomLs.get_value() < 700)){
       nineCubeSafety = false;
     }
     if(nineCubeSafety && nineCubeTime + 200 < millis()) break;
@@ -617,7 +617,7 @@ void redProtect(){
   fBar.move_absolute(towerHeights[2] + 400, 200);
   while(fBar.get_position()<towerHeights[2] + 200)delay(1);
   tracking.waitForComplete();
-  move_to_target_sync(0, 22, 0, false, 60);
+  move_to_target_sync(0, 24, 0, false, 60);
   fBar.move_absolute(towerHeights[1]- 700, 100);
   move_to_target_async(0, 20, 0, false);
   while(fBar.get_position()>towerHeights[1]-550)delay(1);
