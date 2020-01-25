@@ -921,6 +921,8 @@ void skills() {
   move_to_target_sync(41.5, -10, M_PI/2,false, 60);
   intakeReverse();
   delay(800);
+  move_drive(0,-60,0);
+  delay(100);
   return;
 
 
