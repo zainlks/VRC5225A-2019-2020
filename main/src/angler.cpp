@@ -8,6 +8,7 @@ int anglerStateChangeTime = 0;
 int stateCheck = 0;
 uint32_t timer = 0;
 bool dropOffHold = false;
+uint32_t shitTimer = pros::millis();
 void setAnglerState(anglerStates state) {
   log("Going from %d", anglerState);
 	anglerStateLast = anglerState;
@@ -73,7 +74,7 @@ void anglerHandle() {
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         printf("start| %d", millis());
         fBar.move_absolute(550,100);
-        angler.move_absolute(ANGLER_MID, 100);
+        angler.move_absolute(ANGLER_MID, 145);
         intakeR.move(30);
         intakeL.move(-30);
         while (angler.get_position() < ANGLER_MID -50)delay(1);
@@ -96,7 +97,7 @@ void anglerHandle() {
     if(master.get_digital_new_press(DROPOFF_BUTTON)){
       printf("start| %d", millis());
       fBar.move_absolute(550,100);
-      angler.move_absolute(ANGLER_MID, 100);
+      angler.move_absolute(ANGLER_MID, 145);
       intakeR.move(30);
       intakeL.move(-30);
       while (angler.get_position() < ANGLER_MID -50)delay(1);
@@ -113,9 +114,9 @@ void anglerHandle() {
       if(fBar.get_position()>525) fBar.move(30);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID+200, 100);
-        intakeR.move(-25);
-        intakeL.move(25);
-        delay(50);
+        intakeR.move(-35);
+        intakeL.move(35);
+        delay(60);
         setAnglerState(anglerStates::Mid);
       }
       if(master.get_digital_new_press(ANGLER_DOWN)){
@@ -141,6 +142,7 @@ void anglerHandle() {
       if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
         if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0)
         {
+          printf("time is:%d", millis() - shitTimer);
             setDriveState(driveStates::Auto);
             updateStopTask();
             tracking.reset();
@@ -220,26 +222,35 @@ void anglerHandle() {
           intakeL.move(7 * intakeL.get_direction());
           intakeR.move(7 * intakeR.get_direction());
           //intakeL.move(5)
+          shitTimer = pros::millis();
           printf("start angle, %d", millis());
-          angler.move_absolute(ANGLER_TOP, 100);
+          angler.move_absolute(ANGLER_TOP, 160);
           fBar.move(10);
           stateCheck = 0;
           while (angler.get_position() < ANGLER_MID -50)delay(1);
           printf("end| %d", millis());
-          setAnglerState(anglerStates::Top);
+          setAnglerState(anglerStates::BetweenTop);
         }
         if(fabs(intakeL.get_position())>800)
         {
           intakeL.move(7 * intakeL.get_direction());
           intakeR.move(7 * intakeR.get_direction());
-          angler.move_absolute(ANGLER_TOP, 75);
+          shitTimer = pros::millis();
+          angler.move_absolute(ANGLER_TOP, 200);
           stateCheck = 0;
-          setAnglerState(anglerStates::Top);
+          setAnglerState(anglerStates::BetweenTop);
         }
         if(master.get_digital_new_press(ANGLER_DOWN)){
           angler.move_absolute(1, 200);
           setAnglerState(anglerStates::Idle);
         }
+    break;
+    case anglerStates::BetweenTop:
+      if(angler.get_position()>ANGLER_TOP-800)
+      {
+        angler.move_absolute(ANGLER_TOP, 75);
+        setAnglerState(anglerStates::Top);
+      }
     break;
   }
 }

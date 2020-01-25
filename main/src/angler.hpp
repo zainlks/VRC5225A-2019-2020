@@ -21,6 +21,7 @@ enum class anglerStates {
   DriveAround,
   Push,
   CubeOutLast,
+  BetweenTop,
   CubeOutFirst,
   Top
 };
