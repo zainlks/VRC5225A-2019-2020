@@ -100,8 +100,8 @@ void blue9() {
   bool outtakeState = false;
   uint32_t outtakeTime = 0;
   //angler.move_absolute(1700, 200);
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
   intakeL.move(-10);
@@ -259,8 +259,8 @@ void blueSweep() {
 void blueLeft(){
   bool outtakeState = false;
   uint32_t outtakeTime = 0;
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
   delay(100);
 
   intakeL.move(-15);
@@ -470,8 +470,8 @@ void red9() {
   bool outtakeState = false;
   uint32_t outtakeTime = 0;
   //angler.move_absolute(1700, 200);
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
   intakeL.move(-10);
@@ -687,8 +687,8 @@ void skills() {
   bool outtakeState = false;
   uint32_t outtakeTime = 0;
   //angler.move_absolute(1700, 200);
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
   intakeL.move(-10);
@@ -854,7 +854,16 @@ void skills() {
   fBar.move_absolute(1, 200);
   tracking.waitForComplete();
   while(fBar.get_position()>50) delay(1);
-  move_to_target_sync(-21, 51.5, 0,false,60);
+  uint32_t cubeTimer = millis();
+  move_to_target_async(-21, 51.5, 0,false,60);
+  while(!tracking.moveComplete) {
+
+    if(millis()-cubeTimer>1200) {
+      tracking.moveComplete = true;
+      moveStopTask();
+    }
+  }
+  tracking.waitForComplete();
   delay(200);
   move_drive(0, -60, 0);
   while(tracking.ycoord>43) delay(1);
@@ -919,7 +928,8 @@ void skills() {
   fBar.move_absolute(FBAR_TOP, 150);
   while(fBar.get_position() < FBAR_TOP) delay(1);
   move_to_target_sync(41.5, -10, M_PI/2,false, 60);
-  intakeReverse();
+  intakeL.move(127);
+  intakeR.move(-127);
   delay(800);
   move_drive(0,-60,0);
   delay(100);

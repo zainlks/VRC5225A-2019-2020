@@ -84,8 +84,8 @@ void opcontrol() {
 				angler.move_absolute(1,200);
 			}
 				if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
-					fBar.move_absolute(300, 200);
-				  while(fBar.get_position() < 295 ){delay(1);}
+					fBar.move_absolute(400, 200);
+				  while(fBar.get_position() < 395 ){delay(1);}
 				  delay(100);
 				  intakeL.move(-10);
 				  intakeR.move(10);
