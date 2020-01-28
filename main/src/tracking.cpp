@@ -10,6 +10,8 @@ int updateCount = 0;
 pros::Task *moveTask = nullptr;
 pros::Task *updateTask = nullptr;
 bool resetDone = false;
+void* labelPointer = nullptr;
+void* gotoPointers[10];
 moveTargetParams moveParams;
 //test without extra angle thing
 //test which way negative mode turns
@@ -207,7 +209,10 @@ void move_to_target(void* params){
   double error_a, error_x, error_y, error_d, errorLocalx, errorLocaly;
   double difference_a;
   double kP_a = 140, kP_d = 14;
-  double kI_a = 0.01, kI_d = 0.015;   // kI_a = 0.01, kI_d = 0.0022;
+  double kI_a = 0.01, kI_d = 0.015;
+  double maxVel = 0.0;  // kI_a = 0.01, kI_d = 0.0022;
+  int cycleCount = 0;
+  tracking.safety = false;
   unsigned long last_time = millis();
 
   error_a =tracking.target_a - tracking.global_angle;
@@ -358,7 +363,10 @@ void move_to_target(void* params){
     else{
       tracking.power_y = 0;
     }
-
+    if(fabs(tracking.velocityL + tracking.velocityR)/2 > maxVel)
+    {
+      maxVel = fabs(tracking.velocityL + tracking.velocityR)/2;
+    }
 
     if(debug) log("%d| pow_x: %f, pow_y: %f, pow: %f\n", millis(), tracking.power_x, tracking.power_y, tracking.power_a);
     move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
@@ -366,6 +374,20 @@ void move_to_target(void* params){
     if(tracking.power_y != 0) last_power_y = tracking.power_y;
     if(tracking.power_a != 0) last_power_a = tracking.power_a;
     last_time = millis();
+    // printf("%f\n",(fabs(tracking.velocityL) + fabs(tracking.velocityR))/2);
+    if(((fabs(tracking.velocityL) + fabs(tracking.velocityR))/2) < 0.007 && fabs(maxVel > 0.007) && error_d > 1.2){
+      cycleCount++;
+      if(cycleCount>120)
+      {
+        brake();
+        move_drive(0, 0, 0);
+        tracking.safety = true;
+        tracking.moveComplete = true;
+        moveStopTask();
+        break;
+      }
+    }
+    else cycleCount = 0;
     if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
       if(cubeLineUp){
         printf("I'm doing a cube line up\n");

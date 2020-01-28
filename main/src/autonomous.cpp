@@ -95,6 +95,7 @@ void blueFourFirst() {
 }
 
 void blue9() {
+  gotoPointers[0] = &&dropOff;
   uint32_t nineCubeTime = 0;
   bool nineCubeSafety = false;
   bool outtakeState = false;
@@ -143,75 +144,51 @@ void blue9() {
   move_to_target_sync(-24, 2, 0, false,127);
   move_drive(0, 80, 0); //80
   while(tracking.ycoord<9)delay(1);
-  move_to_target_async(-24, 40, 0, false, 90); //60
+  move_to_target_async(-24, 40, 0, false, 127); //60
   tracking.waitForDistance(15);
-  move_to_target_sync(-24, 40, 0, false, 80); //50
+  move_to_target_sync(-24, 40, 0, false, 85); //50
   tracking.waitForComplete();
-  delay(70);
-  move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
-  delay(50);
-  while(true){
-    if(!nineCubeSafety && topLs.get_value() < 500 && bottomLs.get_value() > 2000){
-      nineCubeTime = millis();
-      nineCubeSafety = true;
-    }
-    if(nineCubeSafety && (topLs.get_value() > 500 || bottomLs.get_value() < 700)){
-      nineCubeSafety = false;
-    }
-    if(nineCubeSafety && nineCubeTime + 200 < millis()) break;
-    if(tracking.driveError - 5 < 1)break;
-    delay(1);
-    printf("top: %d, b: %d", topLs.get_value(), bottomLs.get_value());
-  }
+  while(topLs.get_value() > 500 && bottomLs.get_value() > 2500) delay(1);
+  delay(100);
   intakeR.move(15);
   intakeL.move(-15);
-  angler.move_absolute(3500, 200);
+  if(tracking.safety) goto dropOff;
+  dropOff:
+  move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
+  intakeR.move(15);
+  intakeL.move(-15);
+  angler.move_absolute(ANGLER_MID, 160);
   // tracking.waitForDistance(7);
   //angler.move_absolute(ANGLER_MID-1800, 110);
   fBar.move_absolute(650,100);
   outtakeTime = millis();
-  while (true){
-    if ((millis() - outtakeTime) > 100)
-    {
-      intakeR.move(-5);
-      intakeL.move(5);
-      outtakeState = true;
-      printf ("%d| outtakes", millis());
-    }
-    if (outtakeState && bottomLs.get_value() < 700){
-      intakeL.tare_position();
-      while(fabs(intakeL.get_position()) < 150 ) delay(1);
-      printf("%d| stopped outtaking", millis());
-      intakeR.move(15);
-      intakeL.move(-15);
-      printf ("%d| light sensor covered", millis());
-    }
-    if (tracking.moveComplete) break;
-    delay(2);
-  }
   tracking.waitForComplete();
-  brake();
-  delay(75);
   move_drive(0,0,0);
   fBar.move(30);
   // angler.move_absolute(ANGLER_TOP-2000, 100);
-  delay(50);
-  tracking.LSLineup(true, true, 1500);
-  angler.move_absolute(ANGLER_TOP, 130);
-  intakeL.move(27);
-  intakeR.move(-27);
-  while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
-  fBar.move(5);
-  // intakeL.move(-10);
-  // intakeR.move(10);
-  while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  delay(100);
-  // fBar.move_absolute(600,200);
-  // while(fBar.get_position()<300)delay(1);
-  updateStopTask();
-  tracking.reset();
-  updateStartTask();
-  move_to_target_sync(0,-10, 0,false);
+    tracking.LSLineup(true, true, 1500);
+    angler.move_absolute(ANGLER_TOP, 160);
+    intakeL.move(27);
+    intakeR.move(-27);
+    while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+    fBar.move(5);
+    // intakeL.move(-10);
+    // intakeR.move(10);
+    while(angler.get_position()<ANGLER_TOP-800) delay(1);
+    angler.move_absolute(ANGLER_TOP, 75);
+    while(angler.get_position()<ANGLER_TOP-50) delay(1);
+    angler.move_absolute(ANGLER_TOP, 100);
+    delay(50);
+    // fBar.move_absolute(600,200);
+    // while(fBar.get_position()<300)delay(1);
+    updateStopTask();
+    tracking.reset();
+    updateStartTask();
+    move_drive(0,-75,0);
+    while(fabs(tracking.ycoord)<10) delay (1);
+    move_drive(0,0,0);
+    end:
+    delay(1);
 }
 
 void blueSweep() {
@@ -1100,6 +1077,7 @@ void autonomous() {
     break;
 
   }
+
 
 
   // intakeOn();
