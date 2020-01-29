@@ -325,6 +325,8 @@ void blueLeft(){
   move_to_target_sync(4, 46, (M_PI/4),false);
   move_drive(0,-65,0);
   delay(300);
+  move_to_target_sync(32.5, 47.5, M_PI/4,false);
+  delay(50);
   move_to_target_sync(14, 20, (3*M_PI/4),false, 127);
   dropOff:
   move_to_target_async(23.5, 17, (3*M_PI/4),false, 127);
