@@ -126,9 +126,9 @@ void blueFourFirst() {
     while(angler.get_position()<ANGLER_TOP-300) delay(1);
     angler.move_absolute(ANGLER_TOP,160);
     while(angler.get_position()<ANGLER_TOP-50) delay(1);
-    angler.move_absolute(ANGLER_TOP, 100);
+    angler.move_absolute(ANGLER_TOP, 145);
     while(angler.get_position()<ANGLER_TOP-10) delay(1);
-    delay(100);
+    delay(200);
     // fBar.move_absolute(600,200);
     // while(fBar.get_position()<300)delay(1);
     updateStopTask();
