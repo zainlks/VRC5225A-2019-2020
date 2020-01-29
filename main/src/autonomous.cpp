@@ -33,65 +33,112 @@ void intakeTask(void *param) {
 
 void blueFourFirst() {
   //angler.move_absolute(1700, 200);
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
+  // gotoPointers[0] = &&dropOff;x
+  uint32_t nineCubeTime = 0;
+  bool nineCubeSafety = false;
+  bool outtakeState = false;
+  uint32_t outtakeTime = 0;
+  int lsFilter = 0;
+
+  //angler.move_absolute(1700, 200);
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
   delay(100);
   master.print(1,0,"%d",millis()-autotimer);
   intakeL.move(-10);
   intakeR.move(10);
   fBar.move_absolute(1,200);
-  // angler.move_absolute(1700, 200);
-  intakeOn();
-  move_drive(0, 127, 0); //80
-  while(tracking.ycoord<9)delay(1);
-  move_to_target_async(0, 38, 0, false, 90); //60
-  tracking.waitForDistance(18);
-  move_to_target_sync(0, 39, 0, false, 90); //50
-  tracking.waitForComplete();
-  delay(70);
-  // move_drive(-30,-70,0);
-  // while(tracking.ycoord>36.5) delay(1);
-   move_to_target_sync(7.5, 39, 0, false, 127);
-  move_to_target_sync(7.5, 46, 0,false);
-  delay(70);
-  move_to_target_async(0, 39, 0,false,127);
-  tracking.waitForDistance(2.5); //80
-  move_to_target_sync(23.5, 2, 0, false,127);
-  move_to_target_async(23.5, 38.5, 0,false,90);
+  //angler.move_absolute(1700, 200);
+  move_to_target_async(0,20,0,false,90,false,true);
   tracking.waitForDistance(17);
-  move_to_target_sync(23.5, 38.5, 0, false, 127);
-  move_to_target_async(-6,11.5, deg_to_rad(-135),false,127);
-  tracking.waitForDistance(12);
-  intakeL.move(-15);
-  intakeR.move(15);
-  tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 150);
-  fBar.move_absolute(650,100);
+  intakeOn();
   tracking.waitForComplete();
+  move_to_target_sync(0,23.5,0,false,80,false,true);
   brake();
-  delay(75);
-  move_drive(0,0,0);
-  // angler.move_absolute(ANGLER_TOP-2000, 100);
-  return;
-  intakeL.move(25);
-  intakeR.move(-25);
   delay(50);
-  tracking.LSLineup(true, true, 1500);
-  angler.move_absolute(ANGLER_TOP-1000, 135);
-  while(angler.get_position()<ANGLER_TOP-1100) delay(1);
-  // angler.move_absolute(ANGLER_TOP-800,80);
-  // while(angler.get_position()<ANGLER_TOP-1000) delay(1);
-  angler.move_absolute(ANGLER_TOP,110);
-  while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
-  intakeL.move(-10);
-  intakeR.move(10);
-  while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  // fBar.move_absolute(600,200);
-  // while(fBar.get_position()<300)delay(1);
-  updateStopTask();
-  tracking.reset();
-  updateStartTask();
-  move_to_target_sync(0,-10, 0,false);
+  move_drive(0,0,0);
+  fBar.move_absolute(towerHeights[0]+ 50, 200);
+
+  move_to_target_sync(0,18.5,0,false,127);
+  //angler.move_absolute(400, 200);
+  while(fBar.get_position()<towerHeights[0]) delay(1);
+  brake();
+
+  move_to_target_async(0, 22, 0, false, 127);
+  tracking.waitForDistance(1);
+  //delay(100);
+  // return;
+  // tracking.waitForDistance(0.75);
+  fBar.move(-127);
+  tracking.waitForComplete();
+  // tracking.waitForComplete();
+  brake();
+  delay(50);
+  move_drive(0,0,0);
+  while(fBar.get_position() > 1000) delay(1);
+  move_to_target_async(0, 30.5, 0, false);
+  while(fBar.get_position() > 300) delay(1);
+  fBar.move(-13);
+  delay(100);
+  // delay(100);
+  move_to_target_async(-7.5, 45.5, -M_PI/4,false);
+  tracking.waitForDistance(4);
+  angler.move_absolute(3200,200);
+  while(angler.get_position()<3000)delay(1);
+  tracking.waitForComplete();
+  move_to_target_async(-9.5,50.5,-3*M_PI/4,false);
+  tracking.waitForDistance(2.5);
+  angler.move_absolute(1,200);
+  tracking.waitForComplete();
+  while(angler.get_position()<300)delay(1);
+  delay(50);
+  move_to_target_sync(-13.5,43.5,-3*M_PI/4,false);
+  move_to_target_sync(-22.5,37,-M_PI,false);
+  move_to_target_async(-22.5,12,-M_PI,false);
+  while((topLs.get_value() > 500 || bottomLs.get_value() > 2500) && !tracking.moveComplete) delay(1);
+  intakeR.move(20);
+  intakeL.move(-20);
+  tracking.waitForComplete();
+  // return;xx
+  move_to_target_async(-28.5,15.5, deg_to_rad(-135),false,127);
+  uint32_t LSTimer = millis();
+  angler.move_absolute(ANGLER_MID, 120);
+  fBar.move_absolute(650,100);
+  while((topLs.get_value() > 500 || bottomLs.get_value() > 2500) && millis()-LSTimer<800) delay(1);
+  intakeR.move(20);
+  intakeL.move(-20);
+  // tracking.waitForDistance(7);
+  //angler.move_absolute(ANGLER_MID-1800, 110);
+  outtakeTime = millis();
+  tracking.waitForComplete();
+  move_drive(0,0,0);
+  fBar.move(30);
+  // angler.move_absolute(ANGLER_TOP-2000, 100);
+    tracking.LSLineup(true, true, 1500);
+    angler.move_absolute(ANGLER_TOP, 160);
+    intakeL.move(35);
+    intakeR.move(-35);
+    delay(50);
+    while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+    fBar.move(5);
+    while(angler.get_position()<ANGLER_TOP-800) delay(1);
+    angler.move_absolute(ANGLER_TOP, 85);
+    while(angler.get_position()<ANGLER_TOP-300) delay(1);
+    angler.move_absolute(ANGLER_TOP,160);
+    while(angler.get_position()<ANGLER_TOP-50) delay(1);
+    angler.move_absolute(ANGLER_TOP, 100);
+    while(angler.get_position()<ANGLER_TOP-10) delay(1);
+    delay(100);
+    // fBar.move_absolute(600,200);
+    // while(fBar.get_position()<300)delay(1);
+    updateStopTask();
+    tracking.reset();
+    updateStartTask();
+    move_drive(0,-75,0);
+    while(fabs(tracking.ycoord)<10) delay (1);
+    move_drive(0,0,0);
+    end:
+    delay(1);
 }
 
 void blue9() {
@@ -121,22 +168,27 @@ void blue9() {
   move_drive(0,0,0);
   fBar.move_absolute(towerHeights[0]+ 50, 200);
 
-  move_drive(0, -40, 0);
+  move_to_target_sync(0,18.5,0,false,127);
   //angler.move_absolute(400, 200);
   while(fBar.get_position()<towerHeights[0]) delay(1);
   brake();
 
-  move_to_target_sync(0, 22, 0, false, 75);
+  move_to_target_async(0, 22, 0, false, 127);
+  tracking.waitForDistance(1);
   //delay(100);
   // return;
   // tracking.waitForDistance(0.75);
-  fBar.move_absolute(1, 200);
+  printf("grfajhsgdkasgdklashdjkdshfkasdhjsd\n");
+  fBar.move(-127);
+  tracking.waitForComplete();
   // tracking.waitForComplete();
   brake();
   delay(50);
   move_drive(0,0,0);
   while(fBar.get_position() > 1000) delay(1);
-  move_to_target_sync(0, 30.5, 0, false);
+  move_to_target_async(0, 30.5, 0, false);
+  while(fBar.get_position() > 300) delay(1);
+  fBar.move(-13);
   delay(100);
   // delay(100);
   //move_to_target_sync(-4, 30.5, 0,false);
@@ -148,25 +200,19 @@ void blue9() {
   while(tracking.ycoord<9)delay(1);
   move_to_target_async(-24, 40, 0, false, 115); //60
   tracking.waitForDistance(15);
-  move_to_target_sync(-24, 40, 0, false, 70); //50
+  move_to_target_sync(-24, 42.5, 0, false, 70); //50
   tracking.waitForComplete();
-  while(lsFilter <20){
-    if(topLs.get_value() < 500 || bottomLs.get_value() < 2500)lsFilter ++;
-    else lsFilter = 0;
-  }
-  //while(topLs.get_value() > 500 && bottomLs.get_value() > 2500) delay(1);
-  delay(100);
-  intakeR.move(15);
-  intakeL.move(-15);
   if(tracking.safety) goto dropOff;
   dropOff:
   move_to_target_async(-30,11.5, deg_to_rad(-135),false,127);
-  intakeR.move(15);
-  intakeL.move(-15);
+  uint32_t LSTimer = millis();
   angler.move_absolute(ANGLER_MID, 160);
+  fBar.move_absolute(650,100);
+  while((topLs.get_value() > 500 || bottomLs.get_value() > 2500) && millis()-LSTimer<800) delay(1);
+  intakeR.move(20);
+  intakeL.move(-20);
   // tracking.waitForDistance(7);
   //angler.move_absolute(ANGLER_MID-1800, 110);
-  fBar.move_absolute(650,100);
   outtakeTime = millis();
   tracking.waitForComplete();
   move_drive(0,0,0);
@@ -174,15 +220,19 @@ void blue9() {
   // angler.move_absolute(ANGLER_TOP-2000, 100);
     tracking.LSLineup(true, true, 1500);
     angler.move_absolute(ANGLER_TOP, 160);
-    intakeL.move(27);
-    intakeR.move(-27);
+    intakeL.move(35);
+    intakeR.move(-35);
+    delay(50);
     while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
     fBar.move(5);
     while(angler.get_position()<ANGLER_TOP-800) delay(1);
-    angler.move_absolute(ANGLER_TOP, 75);
+    angler.move_absolute(ANGLER_TOP, 85);
+    while(angler.get_position()<ANGLER_TOP-300) delay(1);
+    angler.move_absolute(ANGLER_TOP,160);
     while(angler.get_position()<ANGLER_TOP-50) delay(1);
     angler.move_absolute(ANGLER_TOP, 100);
-    delay(50);
+    while(angler.get_position()<ANGLER_TOP-10) delay(1);
+    delay(100);
     // fBar.move_absolute(600,200);
     // while(fBar.get_position()<300)delay(1);
     updateStopTask();

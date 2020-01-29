@@ -73,7 +73,7 @@ void anglerHandle() {
     case anglerStates::Idle:
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         printf("start| %d", millis());
-        fBar.move_absolute(550,100);
+        fBar.move_absolute(780,100);
         angler.move_absolute(ANGLER_MID, 145);
         intakeR.move(30);
         intakeL.move(-30);

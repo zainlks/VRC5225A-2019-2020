@@ -202,7 +202,7 @@ void move_to_target(void* params){
   double min_power_a = 12, min_power_xy = 25;
   double scale;
   double power_total;
-
+  uint32_t maxCheck = millis();
   double last_power_a = max_power_a, last_power_x = max_power_xy, last_power_y = max_power_xy;
   double integral_a = 0.0, integral_d = 0.0;
 
@@ -363,7 +363,7 @@ void move_to_target(void* params){
     else{
       tracking.power_y = 0;
     }
-    if(fabs(tracking.velocityL + tracking.velocityR)/2 > maxVel)
+    if(fabs(tracking.velocityL + tracking.velocityR)/2 > maxVel && millis()-maxCheck>75)
     {
       maxVel = fabs(tracking.velocityL + tracking.velocityR)/2;
     }
@@ -375,14 +375,15 @@ void move_to_target(void* params){
     if(tracking.power_a != 0) last_power_a = tracking.power_a;
     last_time = millis();
     // printf("%f\n",(fabs(tracking.velocityL) + fabs(tracking.velocityR))/2);
-    if(((fabs(tracking.velocityL) + fabs(tracking.velocityR))/2) < 0.007 && fabs(maxVel > 0.007) && error_d > 1.2){
+    if(((fabs(tracking.velocityL) + fabs(tracking.velocityR))/2) < 0.007 && fabs(tracking.velocityB)<0.0005 && fabs(maxVel > 0.007) && error_d > 1.25){
       cycleCount++;
-      if(cycleCount>120)
+      if(cycleCount>60)
       {
         brake();
         move_drive(0, 0, 0);
         tracking.safety = true;
         tracking.moveComplete = true;
+        log("Movement to (%f, %f, %f) saftied\n",tracking.target_x,tracking.target_y, rad_to_deg(tracking.target_a));
         moveStopTask();
         break;
       }
