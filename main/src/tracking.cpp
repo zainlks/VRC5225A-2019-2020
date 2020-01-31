@@ -19,6 +19,14 @@ moveTargetParams moveParams;
 //decrease angle threshold
 //tune PID after adding intake stuff
 //classes and cleaning code
+
+double operator "" _deg(long double degree){
+  return degree/180 *M_PI;
+}
+double operator "" _rad(long double radians){
+  return radians/M_PI *180;
+}
+
 void moveStartTask() {
   moveTask = new Task(move_to_target);
 }

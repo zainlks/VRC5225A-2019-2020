@@ -72,3 +72,6 @@ public:
 };
 
 extern Tracking tracking;
+
+double operator "" _deg(long double degree);
+double operator "" _rad(long double radians); 
