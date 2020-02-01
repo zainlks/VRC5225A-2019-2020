@@ -1,14 +1,4 @@
-#include "main.h"
-#include "tracking.hpp"
-#include "vision.hpp"
-#include "fBar.hpp"
-#include "angler.hpp"
-#include "drive.hpp"
-#include "config.hpp"
-#include "controller.hpp"
-#include "menu.hpp"
-using namespace pros;
-uint32_t autotimer;
+#include "autonomous.hpp"
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -31,7 +21,8 @@ void intakeTask(void *param) {
 
 }
 
-void blueFourFirst() {
+
+void blue10() {
   //angler.move_absolute(1700, 200);
   // gotoPointers[0] = &&dropOff;x
   uint32_t nineCubeTime = 0;
@@ -245,49 +236,7 @@ void blue9() {
     delay(1);
 }
 
-void blueSweep() {
-  intakeOn();
-  move_to_target_sync(0, 40, 0, false, 45);
-  move_to_target_sync(4, 44, deg_to_rad(30), false, 45);
-  move_to_target_sync(12, 47, deg_to_rad(110), false, 45);
-  move_to_target_sync(17, 51, deg_to_rad(150), false, 45);
-  move_to_target_sync(19,45, deg_to_rad(150), false, 45);
-  move_to_target_sync(21, 20, deg_to_rad(180), false, 45);
-  move_to_target_sync(-10, 9.75, deg_to_rad(-135), false, 127);
-  //tracking.waitForDistance(12);
-
-  return;
-
-
-
-
-
-
-
-  move_to_target_async(-31.75,9.75, deg_to_rad(-135),false,127);
-  tracking.waitForDistance(12);
-  intakeL.move(-15);
-  intakeR.move(15);
-  tracking.waitForDistance(7);
-  angler.move_absolute(ANGLER_MID-1800, 200);
-  tracking.waitForComplete();
-  brake();
-  delay(75);
-  move_drive(0,0,0);
-  angler.move_absolute(ANGLER_TOP-1000, 100);
-  intakeL.move(15);
-  intakeR.move(-15);
-  delay(50);
-  tracking.LSLineup();
-  angler.move_absolute(ANGLER_TOP, 120);
-  while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
-  intakeL.move(-10);
-  intakeR.move(10);
-  while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  move_to_target_sync(-26,14, deg_to_rad(-135));
-}
-
-void blueLeft(){
+void blueProtect(){
   gotoPointers[0] = &&dropOff;
   bool outtakeState = false;
   uint32_t outtakeTime = 0;
@@ -377,7 +326,7 @@ void blueLeft(){
   delay(1);
 }
 
-void redFourFirst() {
+void red10() {
   uint32_t nineCubeTime = 0;
   bool nineCubeSafety = false;
   bool outtakeState = false;
@@ -1048,179 +997,3 @@ void newSkills() {
 
 
 }
-
-void autonomous() {
-  setDriveState(driveStates::Auto);
-  updateStopTask();
-  tracking.reset();
-  updateStartTask();
-  delay(1);
-  while(resetDone == false) delay(1);
-  // intakeL.move(127);
-  green.sig_num = 1;
-  orange.sig_num = 2;
-  autotimer = pros::millis();
-  log("global angle:%f",tracking.global_angle);
-  switch(side) {
-    case sides::blue:
-      switch(cur_auto) {
-        case auto1:
-          blueLeft();
-        break;
-        case auto2:
-          blue9();
-        break;
-        case auto3:
-          blueFourFirst();
-        break;
-        case auto4:
-          skills();
-        break;
-      }
-    break;
-    case sides::red:
-      switch(cur_auto) {
-        case auto1:
-          redProtect();
-        break;
-        case auto2:
-          red9();
-        break;
-        case auto3:
-          redFourFirst();
-        break;
-        case auto4:
-          skills();
-        break;
-      }
-    break;
-
-  }
-
-
-
-  // intakeOn();
-  // fBar.move_absolute(towerHeights[2], 200);
-  // while(fBar.get_position()<towerHeights[2]-200)delay(1);
-  // move_to_target_sync(0, 11.5,0, false, 60);
-  // fBar.move_absolute(towerHeights[1]- 500, 150);
-  // move_to_target_sync(0, 9.5,0, false);
-  // while(fBar.get_position()>towerHeights[1]-350)delay(1);
-  // fBar.move_absolute(towerHeights[0]- 500, 200);
-  // move_to_target_sync(0, 11.5,0,false);
-  // while(fBar.get_position()>towerHeights[0]-400)delay(1);
-  // delay(50);
-  // fBar.move_absolute(1, 200);
-  // move_to_target_async(0, 15,0,false);
-  // while(fBar.get_position()>50)delay(1);
-  // fBar.move(-13);
-  // tracking.waitForComplete();
-
-
-
-  // angler.move_absolute(2000,200);
-  // tracking.waitForComplete();
-  // move_drive(0,17,0);
-  // while(fBar.get_position() < (towerHeights[2]-50)){delay(2);}
-  //
-  // move_to_target_sync(0, 23.5, 0,false,127);
-  // fBar.move_absolute(1, 120);
-  // while(fBar.get_position()>towerHeights[1]) delay(1);
-  // move_to_target_sync(0,25.5,0, false);
-  // while(fBar.get_position()>50) delay(1);
-  // move_to_target_sync(0, 30.5, 0, false);
-  // tracking.turn_to_angle(deg_to_rad(90));
-  // delay(500);
-  // printf("%f", deg_to_rad(tracking.global_angle));
-
-  // newSkills();
-
-  // tracking.turn_to_angle(deg_to_rad(225));
-  // tracking.move_xy(10, y);
-  //move_to_target_sync(10,10,0,)
-
-
-  // move_to_target_sync(-32,13.5, deg_to_rad(-135),false,127);
-  // tracking.LSLineupSkills(true,false, 1500);
-  // delay(5000);
-  // updateStopTask();
-  // tracking.ycoord=0;
-  // tracking.xcoord = 0;
-  // updateStartTask(false);
-  // delay(50);
-  // move_to_target_sync(10, 10, 0,true);
-  // delay(200);
-  // move_to_target_sync(0, 0, M_PI/2,false,127);
-  // delay(200);
-  // printf("global angle is: %f\n", rad_to_deg(tracking.global_angle));
-  // delay(500);
-  // move_to_target_sync(0, 0, 0,false,127);
-  // delay(200);
-  // printf("global angle is: %f\n", rad_to_deg(tracking.global_angle));
-  // blue9();
-  //blueLeft();
-  log("autotime is %d\n", autotimer-pros::millis());
-  master.clear();
-  delay(50);
-  master.print(2,0,"%d",millis()-autotimer);
-
-}
-
-
-
-
-
-
-
-//
-// move_to_target_sync(0,23.5,0,false,75,false,true);
-// brake();
-// delay(100);
-// move_drive(0,0,0);
-// fBar.move_absolute(towerHeights[1]-300, 200);
-// move_drive(0, -30, 0);
-// angler.move_absolute(400, 200);
-// while(fBar.get_position()<towerHeights[1]- 350 || angler.get_position()>1600) delay(1);
-// move_to_target_async(0, 25.25, 0, false, 75);
-// tracking.waitForDistance(0.75);
-// fBar.move_absolute(1, 200);
-// tracking.waitForComplete();
-// brake();
-// delay(100);
-// move_drive(0,0,0);
-// while(fBar.get_position() > 1000) delay(1);
-// move_to_target_async(0, 30.5, 0, false);
-// angler.move_absolute(1700, 200);
-// tracking.waitForComplete();
-// fBar.move(-10);
-// move_drive(0, -100, 0); //80
-// while(tracking.ycoord>18)delay(1);
-// move_to_target_sync(25.5, 2, 0, false,127);
-// move_drive(0, 80, 0); //80
-// while(tracking.ycoord<9)delay(1);
-// move_to_target_async(25.5, 45, 0, false, 70); //60
-// tracking.waitForDistance(18);
-// move_to_target_sync(25.5, 45, 0, false, 60); //50
-// tracking.waitForComplete();
-// delay(70);
-// move_to_target_async(31.75,9.75, deg_to_rad(135),false,127);
-// tracking.waitForDistance(12);
-// intakeL.move(-15);
-// intakeR.move(15);
-// tracking.waitForDistance(7);
-// angler.move_absolute(ANGLER_MID-1800, 200);
-// tracking.waitForComplete();
-// brake()
-// delay(75);
-// move_drive(0,0,0);
-// angler.move_absolute(ANGLER_TOP-1000, 100);
-// intakeL.move(15);
-// intakeR.move(-15);
-// delay(50);
-// tracking.LSLineup();
-// angler.move_absolute(ANGLER_TOP, 120);
-// while((intakeL.get_actual_velocity()>1 || intakeR.get_actual_velocity()>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
-// intakeL.move(-10);
-// intakeR.move(10);
-// while(angler.get_position()<ANGLER_TOP-50) delay(1);
-// move_to_target_sync(26,14, deg_to_rad(135));
