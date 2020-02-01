@@ -93,7 +93,7 @@ void blueFourFirst() {
   while(angler.get_position()<300)delay(1);
   delay(50);
   move_to_target_sync(-13.5,43.5,-3*M_PI/4,false);
-  move_to_target_sync(-22.5,37,-M_PI,false);
+  move_to_target_sync(-22.5,37,-180.0_deg,false);
   move_to_target_async(-22.5,12,-M_PI,false);
   while((topLs.get_value() > 500 || bottomLs.get_value() > 2500) && !tracking.moveComplete) delay(1);
   intakeR.move(20);
@@ -325,9 +325,7 @@ void blueLeft(){
   move_to_target_sync(4, 46, (M_PI/4),false);
   move_drive(0,-65,0);
   delay(300);
-  move_to_target_sync(32.5, 47.5, M_PI/4,false);
-  delay(50);
-  move_to_target_sync(14, 20, (3*M_PI/4),false, 127);
+  move_to_target_sync(13, 28, 135.0_deg,false, 127);
   dropOff:
   move_to_target_async(23.5, 17, (3*M_PI/4),false, 127);
   tracking.waitForDistance(6);
@@ -356,9 +354,8 @@ void blueLeft(){
   move_drive(0,0,0);
   fBar.move(30);
   // angler.move_absolute(ANGLER_TOP-2000, 100);
-  delay(50);
+  while(angler.get_position() < 3100)delay(1);
   tracking.LSLineup(true, true, 1500);
-
   angler.move_absolute(ANGLER_TOP, 160);
   intakeL.move(27);
   intakeR.move(-27);
@@ -408,7 +405,7 @@ void redFourFirst() {
 
   move_to_target_sync(0,18.5,0,false,127);
   //angler.move_absolute(400, 200);
-  while(fBar.get_position()<towerHeights[0]) delay(1);
+  while(fBar.get_position()<towerHeights[0]-50) delay(1);
   brake();
 
   move_to_target_async(0, 22, 0, false, 127);
@@ -433,7 +430,7 @@ void redFourFirst() {
   angler.move_absolute(3200,200);
   while(angler.get_position()<3000)delay(1);
   tracking.waitForComplete();
-  move_to_target_async(9.5,50.5,3*M_PI/4,false);
+  move_to_target_async(9,50,3*M_PI/4,false);
   tracking.waitForDistance(2.5);
   angler.move_absolute(1,200);
   tracking.waitForComplete();
@@ -591,59 +588,50 @@ void red9() {
 
 void redProtect(){
 
+  gotoPointers[0] = &&dropOff;
   bool outtakeState = false;
   uint32_t outtakeTime = 0;
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
   delay(100);
 
   intakeL.move(-15);
   intakeR.move(15);
   fBar.move_absolute(1,200);
   //delay(50);
-  while(fBar.get_position()> 50) {delay(1);};
+  while(fBar.get_position()> 50) {delay(1);}
   fBar.move(-25);
   master.print(1,0,"%d",millis()-autotimer);
   move_to_target_async(0, 16, 0, false, 50,false,true);
   intakeOn();
-  // tracking.waitForDistance(12);
-  // fBar.move_absolute(towerHeights[2], 200);
-  // while(fBar.get_position()<towerHeights[2]-200)delay(1);
-  // tracking.waitForComplete();
-  // move_to_target_sync(0, 22,0, false, 60);
-  // fBar.move_absolute(towerHeights[1]- 500, 150);
-  // move_to_target_sync(0, 20,0, false);
-  // while(fBar.get_position()>towerHeights[1]-350)delay(1);
-  // fBar.move_absolute(towerHeights[0]- 500, 200);
-  // move_to_target_sync(0, 22,0,false);
-  // while(fBar.get_position()>towerHeights[0]-400)delay(1);
-  // delay(50);
-  // fBar.move_absolute(1, 200);
   tracking.waitForDistance(12);
+
   fBar.move_absolute(towerHeights[2] + 400, 200);
+  while(fBar.get_position()<towerHeights[2] +100) delay(1);
+  fBar.move_absolute(towerHeights[2] + 400, 100);
   while(fBar.get_position()<towerHeights[2] + 200)delay(1);
+  delay(50);
   tracking.waitForComplete();
-  move_to_target_sync(0, 24, 0, false, 60);
+  move_to_target_sync(0, 24,0, false, 60);
   fBar.move_absolute(towerHeights[1]- 700, 100);
-  move_to_target_async(0, 20, 0, false);
+  move_to_target_async(0, 20,0, false);
   while(fBar.get_position()>towerHeights[1]-550)delay(1);
   fBar.move_absolute(towerHeights[0]- 500, 100);
-  move_to_target_async(0, 22, 0,false);
+  move_to_target_async(0, 22,0,false);
   while(fBar.get_position()>towerHeights[0]-350)delay(1);
   delay(50);
   fBar.move_absolute(1, 200);
   while(fBar.get_position()> 1000)delay(1);
-
-  move_to_target_sync(-4, 46, deg_to_rad(-45), false);
+  move_to_target_sync(-4, 46, -45.0_deg,false);
   move_drive(0,-65,0);
   delay(300);
-  move_to_target_sync(-14, 28, deg_to_rad(-135), false, 127);
-  move_to_target_async(-23.5, 17, deg_to_rad(-135), false, 80);
+  move_to_target_sync(-13, 28, -135.0_deg,false, 127);
+  dropOff:
+  move_to_target_async(-23.5, 17, (-3*M_PI/4),false, 127);
   tracking.waitForDistance(6);
   angler.move_absolute(3500, 200);
   fBar.move_absolute(650,100);
   outtakeTime = millis();
-
   while (true){
     if ((millis() - outtakeTime) > 500)
     {
@@ -652,7 +640,7 @@ void redProtect(){
       outtakeState = true;
       printf ("%d| outtakes", millis());
     }
-    if (outtakeState && bottomLs.get_value() < 2000){
+    if (outtakeState && bottomLs.get_value() < 1000){
       intakeR.move(15);
       intakeL.move(-15);
       printf ("%d| light sensor covered", millis());
@@ -666,26 +654,27 @@ void redProtect(){
   move_drive(0,0,0);
   fBar.move(30);
   // angler.move_absolute(ANGLER_TOP-2000, 100);
-  delay(50);
-
+  while(angler.get_position() < 3100)delay(1);
   tracking.LSLineup(true, true, 1500);
-  angler.move_absolute(ANGLER_TOP, 130);
-  intakeL.move(20);
-  intakeR.move(-20);
+  angler.move_absolute(ANGLER_TOP, 160);
+  intakeL.move(27);
+  intakeR.move(-27);
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   fBar.move(5);
-  // intakeL.move(-10);
-  // intakeR.move(10);
+  while(angler.get_position()<ANGLER_TOP-800) delay(1);
+  angler.move_absolute(ANGLER_TOP, 80);
   while(angler.get_position()<ANGLER_TOP-50) delay(1);
-  delay(100);
-  // fBar.move_absolute(600,200);
-  // while(fBar.get_position()<300)delay(1);
+  angler.move_absolute(ANGLER_TOP, 100);
+  delay(50);
+
   updateStopTask();
   tracking.reset();
   updateStartTask();
-  move_to_target_sync(0, -10, 0, false, 127, false, false);
-
-  return;
+  move_drive(0,-75,0);
+  while(fabs(tracking.ycoord)<10) delay (1);
+  move_drive(0,0,0);
+  end:
+  delay(1);
 }
 
 void skills() {
