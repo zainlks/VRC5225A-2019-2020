@@ -26,7 +26,7 @@ void fBarCal()
   while (fabs(fBar.get_actual_velocity()) > 15 && (success = (millis() < timeout_time)))
 	{
 		delay(10);
-	}
+  }
   delay(100);
   fBar.tare_position();
   fBar.move(-13);
