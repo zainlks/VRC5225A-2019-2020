@@ -71,6 +71,7 @@ void dropOff(void *param) {
 void anglerHandle() {
   switch(anglerState) {
     case anglerStates::Idle:
+      if(angler.get_position()<65) angler.move(-10);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         printf("start| %d", millis());
         fBar.move_absolute(780,100);
@@ -87,6 +88,14 @@ void anglerHandle() {
 				intakeL.move(-15);
 				angler.move_absolute(3500, 200);
         setAnglerState(anglerStates::DriveAround);
+      }
+      if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
+        angler.move(127);
+        fBar.move_absolute(650,100);
+        intakeR.move(-35);
+				intakeL.move(35);
+        setfBarState(fBarStates::Top);
+        setAnglerState(anglerStates::Top);
       }
       // if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
       //   angler.move_absolute(750, 200);
@@ -140,7 +149,7 @@ void anglerHandle() {
         }
       }
       if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
-        if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0)
+        if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0 && anglerStateLast!=anglerStates::Idle)
         {
           printf("time is:%d", millis() - shitTimer);
             setDriveState(driveStates::Auto);
@@ -156,7 +165,15 @@ void anglerHandle() {
             stateCheck++;
         }
       if(master.get_digital_new_press(ANGLER_DOWN)){
-        angler.move_absolute(1, 200);
+        angler.move(-127);
+        fBar.move_absolute(1, 200);
+        setfBarState(fBarStates::Idle);
+        setAnglerState(anglerStates::Idle);
+      }
+      if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)){
+        angler.move(-127);
+        fBar.move_absolute(1, 200);
+        setfBarState(fBarStates::Idle);
         setAnglerState(anglerStates::Idle);
       }
       if(master.get_digital_new_press(DROPOFF_BUTTON)){

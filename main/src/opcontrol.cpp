@@ -34,14 +34,50 @@ void opcontrol() {
 		double cur_coord;
 		//tracking.setAngleHold(0);
 		int lastTime = 0;
-		setDriveState(driveStates::Driver);
+		setDriveState(driveStates::Auto);
 		// Task driveUpdate(driveHandle);
 		master.clear();
 
 
 
+		if(pros::competition::is_connected() && !pros::competition::is_disabled() && cur_auto == auto4) {
+			updateStopTask();
+			tracking.reset();
+			updateStartTask();
+			bool outtakeState = false;
+		  uint32_t outtakeTime = 0;
+			fBar.move_absolute(400, 200);
+		  while(fBar.get_position() < 395 ){delay(1);}
+		  delay(100);
 
+		  intakeL.move(-15);
+		  intakeR.move(15);
+		  fBar.move_absolute(1,200);
+		  //delay(50);
+		  while(fBar.get_position()> 50) {delay(1);}
+		  fBar.move(-25);
+			move_to_target_async(0, 16, 0, false, 50,false,true);
+		  intakeOn();
+		  tracking.waitForDistance(12);
 
+		  fBar.move_absolute(towerHeights[2] + 400, 200);
+		  while(fBar.get_position()<towerHeights[2] +100) delay(1);
+		  fBar.move_absolute(towerHeights[2] + 400, 100);
+		  while(fBar.get_position()<towerHeights[2] + 200)delay(1);
+		  delay(50);
+		  tracking.waitForComplete();
+		  move_to_target_sync(0, 24,0, false, 60);
+		  fBar.move_absolute(towerHeights[1]- 700, 100);
+		  move_to_target_async(0, 20,0, false);
+		  while(fBar.get_position()>towerHeights[1]-550)delay(1);
+		  fBar.move_absolute(towerHeights[0]- 500, 100);
+		  move_to_target_async(0, 22,0,false);
+		  while(fBar.get_position()>towerHeights[0]-350)delay(1);
+		  delay(50);
+		  fBar.move_absolute(1, 200);
+		  while(fBar.get_position()> 1000)delay(1);
+		}
+		setDriveState(driveStates::Driver);
 		//angler.move_absolute(1800, 100);
 	  while (true){
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}

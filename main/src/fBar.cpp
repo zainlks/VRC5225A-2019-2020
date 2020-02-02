@@ -71,10 +71,6 @@ void fBarHandle() {
           printf("i am here now\n");
           cubeHeightCounter++;
       }
-      if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
-        fBar.move_absolute(towerHeights[cubeHeightCounter], 100);
-        cubeHeightCounter--;
-      }
       if(master.get_digital_new_press(FBAR_DOWN)) {
         fBar.move_absolute(1, 120);
         angler.move_absolute(1, 200);
