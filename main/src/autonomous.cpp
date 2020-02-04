@@ -935,87 +935,113 @@ void skills() {
 }
 
 void newSkills() {
-  angler.move_absolute(1, 200);
-  fBar.move_absolute(300, 200);
-  while(fBar.get_position() < 295 ){delay(1);}
-  delay(50);
-  fBar.move_absolute(1, 200);
-  intakeOn();
-  move_drive(0, 127, 0); //80
-  while(tracking.ycoord<9)delay(1);
-  move_to_target_async(0, 36, 0, false, 90); //60
-  tracking.waitForDistance(18);
-  move_to_target_sync(0, 36, 0, false, 70); //50
-  tracking.waitForComplete();
-  delay(70);
-  move_drive(70,0,0);
-  while(tracking.xcoord<5) delay(1);
-  move_to_target_sync(7.5, 43, 0, false, 127);
-  delay(50);
-  move_to_target_async(7.5, 38 , 0, false, 127);
-  fBar.move_absolute(FBAR_MID, 200);
-  while(fBar.get_position()<FBAR_MID-50) delay(1);
-  tracking.waitForComplete();
-  move_to_target_sync(9, 44, 0,false);
-  //9 44
-  intakeL.move(80);
-  intakeR.move(-80);
-  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-  intakeL.tare_position();
-  while(fabs(intakeL.get_position())<900) delay(1);
-  intakeL.move(-8);
-  intakeR.move(8);
-  move_to_target_async(-7.5, 27, -M_PI/2);
-  tracking.waitForDistance(12);
-  intakeOn();
-  fBar.move_absolute(FBAR_MID+800, 200);
-  tracking.waitForComplete();
-  tracking.LSLineup(true,false);
-  delay(100);
-  updateStopTask();
-  tracking.ycoord = tracking.ycoord;
-  tracking.xcoord = -16;
-  tracking.global_angle = -M_PI/2;
-  updateStartTask(false);
-  move_to_target_async(-7.5, 27, -M_PI/2,false,50);
-  tracking.waitForDistance(1);
-  fBar.move_absolute(FBAR_MID+400, 200);
-  intakeL.move(80);
-  intakeR.move(-80);
-  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-  intakeL.tare_position();
-  while(fabs(intakeL.get_position())<900) delay(1);
-  intakeL.move(-8);
-  intakeR.move(8);
-  fBar.move_absolute(FBAR_MID+600, 200);
-  while(fBar.get_position()<FBAR_MID+550) delay(1);
-  move_to_target_async(-4, 38.5, deg_to_rad(15),false,127);
-  tracking.waitForDistance(4);
-  fBar.move_absolute(1, 200);
-  intakeOn();
-  tracking.waitForComplete();
-  while(fBar.get_position()>50) delay(1);
-  move_to_target_sync(-2.5, 49.5,deg_to_rad(15),false,65);
-  delay(50);
-  move_to_target_sync(-6, 49.5,0,false,127);
-  move_to_target_sync(-6, 63.5,0,false,127);
-  move_to_target_sync(-3, 70,0,false,127);
-  move_to_target_async(0, 110.0,0,false,90);
-  while(topLs.get_value() > 500 || bottomLs.get_value() > 2500) delay(1);
-  intakeR.move(20);
-  intakeL.move(-20);
-  angler.move_absolute(3500, 200);
-  tracking.waitForComplete();
-  move_to_target_async(-4,112,-M_PI/4,false);
+//   int LsCheck =0;
+//   angler.move_absolute(1, 200);
+//   fBar.move_absolute(300, 200);
+//   while(fBar.get_position() < 295 ){delay(1);}
+//   delay(50);
+//   fBar.move_absolute(1, 200);
+//   intakeOn();
+//   move_drive(0, 127, 0); //80
+//   while(tracking.ycoord<9)delay(1);
+//   move_to_target_async(0, 36, 0, false, 90); //60
+//   tracking.waitForDistance(18);
+//   move_to_target_sync(0, 36, 0, false, 70); //50
+//   tracking.waitForComplete();
+//   delay(70);
+//   move_drive(70,0,0);
+//   while(tracking.xcoord<5) delay(1);
+//   move_to_target_sync(10, 43, 0, false, 127);
+//   delay(50);
+//   move_to_target_async(10, 36 , 0, false, 127);
+//   fBar.move_absolute(FBAR_MID+100, 200);
+//   while(fBar.get_position()<FBAR_MID) delay(1);
+//   tracking.waitForComplete();
+//   // move_to_target_sync(9, 43, 0,false);
+//   move_drive(0, 75, 0);
+// while(tracking.ycoord<41) delay(1);
+//   brake();
+//   delay(50);
+//   //9 44
+//   intakeL.move(80);
+//   intakeR.move(-80);
+//   while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+//   intakeL.tare_position();
+//   // while(fabs(intakeL.get_position())<450) delay(1);
+//   //
+//   // intakeL.move(60);
+//   // intakeR.move(-60);
+//   while(fabs(intakeL.get_position())<900) delay(1);
+//   intakeL.move(-8);
+//   intakeR.move(8);
+//
+//   move_to_target_async(-7.5, 27, -M_PI/2,false);
+//   tracking.waitForDistance(12);
+//   intakeOn();
+//   fBar.move_absolute(FBAR_MID+800, 200);
+//   // delay(750);
+//   // intakeL.move(-8);
+//   // intakeR.move(8);
+//   tracking.waitForComplete();
+//   move_drive(0, 75, 0);
+//   delay(100);
+//   tracking.LSLineup(true,false);
+//   delay(100);
+//   updateStopTask();
+//   tracking.ycoord = tracking.ycoord;
+//   tracking.xcoord = -18;
+//   tracking.global_angle = -M_PI/2;
+//   updateStartTask(false);
+//   // move_to_target_async(-6.5, 27, -M_PI/2,false,30);
+//   move_drive(0, -55, 0);
+//   while(tracking.xcoord < -8)delay(1);
+//   tracking.waitForDistance(1);
+//   fBar.move_absolute(FBAR_MID+350, 200);
+//   while(tracking.xcoord < -7)delay(1);
+//   brake();
+//   delay(50);
+//   intakeL.move(80);
+//   intakeR.move(-80);
+//   while(bottomLs.get_value()>2700) delay(1);
+//   intakeL.tare_position();
+//   while(fabs(intakeL.get_position())<900) delay(1);
+//   intakeL.move(-8);
+//   intakeR.move(8);
+//   fBar.move_absolute(FBAR_MID+600, 200);
+//   while(fBar.get_position()<FBAR_MID+550) delay(1);
+//   move_to_target_async(-2, 38.5, deg_to_rad(15),false,100);
+//   tracking.waitForDistance(4);
+//   fBar.move_absolute(1, 200);
+//   intakeOn();
+//   tracking.waitForComplete();
+//   while(fBar.get_position()>50) delay(1);
+//   move_to_target_sync(-2.5, 49.5,deg_to_rad(15),false,65);
+//   delay(50);
+//   move_to_target_sync(-5, 49.5,0,false,127);
+//   move_to_target_sync(-5, 63.5,0,false,127);
+//   move_to_target_sync(-3, 70,0,false,127);
+//   move_to_target_async(0, 110.0,0,false,90);
+//   while(topLs.get_value() > 500 || bottomLs.get_value() > 2500) {
+//     if(bottomLs.get_value() > 2500 && tracking.moveComplete) LsCheck++;
+//     else LsCheck = 0;
+//     if (LsCheck >= 40) break;
+//     delay(1);
+//   }
+//   intakeR.move(20);
+//   intakeL.move(-20);
+//   angler.move_absolute(3500, 200);
+//   tracking.waitForComplete();
+//   move_to_target_async(-4,112,-M_PI/4,false);
   angler.move_absolute(ANGLER_MID, 150);
   fBar.move_absolute(650, 200);
-  tracking.waitForComplete();
-  fBar.move(30);
+//   tracking.waitForComplete();
+  while(fBar.get_position()< 550)delay(1);
+  fBar.move(5);
   tracking.LSLineup(true, true, 1500);
   updateStopTask();
   tracking.xcoord=0;
   tracking.ycoord=0;
-  tracking.global_angle = tracking.global_angle;
+  tracking.global_angle = -45.0_deg;
   updateStartTask(false);
   angler.move_absolute(ANGLER_TOP, 130);
   intakeL.move(35);
@@ -1037,25 +1063,39 @@ void newSkills() {
   while(tracking.ycoord>-10) delay(1);
   move_drive(0,0,0);
   fBar.move_absolute(1,200);
+  // intakeOn();
+  // move_to_target_async(21.5,-28,-M_PI,false,65);
+  // while(angler.get_position()>50)delay(1);
+  // fBar.move_absolute(1,200);
+  // move_to_target_sync(21.5,-40,-M_PI,false,55);
+  // move_to_target_sync(13,-23,-M_PI/2,false);
+  // fBar.move_absolute(FBAR_MID+200,200);
+  // while(fBar.get_position() < FBAR_MID+100) delay(1);
+  // move_to_target_sync(5,-23,-M_PI/2,false,70);
+  // intakeReverse();
+  // delay(800);
+  // move_to_target_async(23.5, -7.5, M_PI/2,false);
+  // tracking.waitForDistance(6);
+  // intakeOn();
+  // fBar.move_absolute(1,200);
+  // tracking.waitForComplete();
+  move_to_target_sync(15, -3, M_PI/2,false,127);
   intakeOn();
-  move_to_target_sync(21.5,-28,-M_PI,false,65);
+  move_to_target_sync(25, -8.5, 90.0_deg,false);
+  move_to_target_sync(36, -8.5, M_PI/2,false,80);
   while(angler.get_position()>50)delay(1);
-  move_to_target_sync(21.5,-40,-M_PI,false,55);
-  move_to_target_sync(13,-23,-M_PI/2,false);
-  fBar.move_absolute(FBAR_MID+200,200);
-  while(fBar.get_position() < FBAR_MID) delay(1);
-  move_to_target_sync(5,-23,-M_PI/2,false,75);
-  intakeReverse();
-  delay(800);
-  move_to_target_async(23.5, -7.5, M_PI/2,false);
-  tracking.waitForDistance(6);
-  intakeOn();
-  fBar.move_absolute(1,200);
-  tracking.waitForComplete();
-  move_to_target_sync(36, -7.5, M_PI/2,false,65);
-  move_to_target_async(25, -7.5, M_PI/2,false);
+
+  move_to_target_async(25, -8.5, M_PI/2,false,127,false,true);
   tracking.waitForDistance(5);
   fBar.move_absolute(FBAR_TOP,200);
+  while(fBar.get_position() < FBAR_TOP -300)delay(2);
+  move_to_target_sync(36, -8.5, 90.0_deg,false, 50);
+  // move_drive(0, 75, 0);
+  // while(tracking.xcoord < 40)delay(1);
+  // brake();
+  move_to_target_sync(41, -8.5, 90.0_deg,false);
+  delay(50);
+
   return;
   // move_to_target_sync(7.5, 45, 0,false);
   // delay(70);
@@ -1186,6 +1226,18 @@ void autonomous() {
     break;
 
   }
+  // fBar.move_absolute(FBAR_MID+100, 200);
+  // while(fBar.get_position()<FBAR_MID) delay(1);
+  // intakeL.move(80);
+  // intakeR.move(-80);
+  // while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+  // intakeL.tare_position();
+  // while(fabs(intakeL.get_position())<450) delay(1);
+  // // intakeL.move(60);
+  // // intakeR.move(-60);
+  // // while(fabs(intakeL.get_position())<900) delay(1);
+  // intakeL.move(-8);
+  // intakeR.move(8);
 
 
 
