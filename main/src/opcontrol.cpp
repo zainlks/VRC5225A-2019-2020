@@ -40,7 +40,7 @@ void opcontrol() {
 
 
 
-		if(pros::competition::is_connected() && !pros::competition::is_disabled() && cur_auto == auto4) {
+		if(pros::competition::is_connected() && !pros::competition::is_disabled() && cur_auto ==  auto4 && false == true) {
 			updateStopTask();
 			tracking.reset();
 			updateStartTask();

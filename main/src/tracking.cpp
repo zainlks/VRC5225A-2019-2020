@@ -627,6 +627,7 @@ void Tracking::flattenAgainstWall(bool forward,bool hold) {
 }
 void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int speed) {
   bool left = false, right = false;
+  int leftCount = 0,rightCount = 0;
   uint32_t startTime = pros::millis();
   int thresh;
   switch(side){
@@ -641,26 +642,35 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int spe
   move_drive(0, speed, 0);
   delay(300);
   while(!left && !right && (millis()-startTime)<timeoutTime) {
-    if(velocityL==0)  left = true;
-    if(velocityR==0) right = true;
+    if(velocityL==0) leftCount++;
+    else leftCount = 0;
+    if(velocityR==0) rightCount++;
+    else rightCount = 0;
+    if(leftCount>=60) left = true;
+    if(rightCount>=60) right = true;
   }
   if(intake_deposit) {
   intakeL.move(20);
   intakeR.move(-20);
   }
   if(left) {
-    move_drive_side(25, 40);
+    if(speed>0)move_drive_side(25, 40);
+    else move_drive_side(-25, -40);
     delay(50);
   }
   if(right) {
-    move_drive_side(40,25);
+    if(speed>0)move_drive_side(40,25);
+    else move_drive_side(-40,-25);
     delay(50);
   }
   while((!left || !right) && (millis()-startTime)<timeoutTime) {
-    if(velocityL<0.000002)  left = true;
-    if(velocityR<0.000002) right = true;
+    if(fabs(velocityL)<0.000002)  left = true;
+    if(fabs(velocityR)<0.000002) right = true;
   }
-  if(hold) move_drive(0,20,0);
+  if(hold){
+    if(speed>0)move_drive(0,20,0);
+    else move_drive(0,-20,0);
+  }
   else move_drive(0,0,0);
 }
 void Tracking::LSLineupSkills(bool hold, bool intake_deposit, int timeoutTime, int speed) {
