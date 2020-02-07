@@ -383,7 +383,7 @@ void move_to_target(void* params){
     if(tracking.power_a != 0) last_power_a = tracking.power_a;
     last_time = millis();
     // printf("%f\n",(fabs(tracking.velocityL) + fabs(tracking.velocityR))/2);
-    if(((fabs(tracking.velocityL) + fabs(tracking.velocityR))/2) < 0.007 && fabs(tracking.velocityB)<0.0005 && fabs(maxVel > 0.007) && error_d > 1.25){
+    if(((fabs(tracking.velocityL) + fabs(tracking.velocityR))/2) < 0.007 && fabs(tracking.velocityB)<0.0005 && fabs(maxVel > 0.009) && error_d > 1.25){
       cycleCount++;
       if(cycleCount>60)
       {
@@ -492,7 +492,7 @@ void Tracking::trackingInput() {
 }
 
 void Tracking::waitForDistance(double distance) {
-  while( (fabs(driveError) - distance) > 1 || driveError == 0 ) delay(1);
+  while( ((fabs(driveError) - distance) > 1 || driveError == 0) && !tracking.moveComplete ) delay(1);
 }
 void Tracking::waitForComplete() {
   while(!moveComplete) delay(1);
