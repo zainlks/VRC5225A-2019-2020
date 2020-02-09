@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "config.hpp"
-#include "vision.hpp"
+
 #include "fBar.hpp"
 #include "drive.hpp"
 #include "controller.hpp"
@@ -15,6 +15,7 @@ using namespace std;
 using namespace pros;
 constexpr double ANGLER_TOP = 8000;
 constexpr double ANGLER_MID = 4000;
+
 enum class anglerStates {
   Idle,
   Mid,
@@ -25,6 +26,15 @@ enum class anglerStates {
   CubeOutFirst,
   Top
 };
+
+class Angler: public pros::Motor {
+public:
+  using Motor::Motor;
+
+};
+
+extern Angler angler;
+
 void intakeOn();
 void intakeReverse();
 void startDropOff();

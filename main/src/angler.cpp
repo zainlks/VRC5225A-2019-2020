@@ -1,7 +1,7 @@
 #include "angler.hpp"
+Angler angler(4,false);
 
 pros::Task *dropOffTask = nullptr;
-
 anglerStates anglerState = anglerStates::Idle;
 anglerStates anglerStateLast = anglerState;
 int anglerStateChangeTime = 0;
@@ -76,8 +76,8 @@ void anglerHandle() {
         printf("start| %d", millis());
         fBar.move_absolute(780,100);
         angler.move_absolute(ANGLER_MID, 145);
-        intakeR.move(30);
-        intakeL.move(-30);
+        intakeR.move(40);
+        intakeL.move(-40);
         while (angler.get_position() < ANGLER_MID -50)delay(1);
         setfBarState(fBarStates::Mid);
         printf("end| %d", millis());
@@ -120,7 +120,8 @@ void anglerHandle() {
     }
     break;
     case anglerStates::Push:
-      if(fBar.get_position()>525) fBar.move(30);
+      if(fBar.get_position()>650  && fBar.get_position() < 750) fBar.move(30);
+      if(fBar.get_position()>750) fBar.move(0);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID+200, 100);
         intakeR.move(-35);
@@ -182,7 +183,9 @@ void anglerHandle() {
       }
     break;
     case anglerStates::Mid:
-      if((fabs(intakeL.get_actual_velocity())<20 || fabs(intakeR.get_actual_velocity())<20) && anglerStateLast == anglerStates::Push)
+    if(fBar.get_position()>650  && fBar.get_position() < 750) fBar.move(30);
+    if(fBar.get_position()>750) fBar.move(0);
+      if((fabs(intakeL.get_actual_velocity())<5 || fabs(intakeR.get_actual_velocity())<5) && anglerStateLast == anglerStates::Push)
       {
         intakeL.move(0);
         intakeR.move(0);

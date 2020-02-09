@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "config.hpp"
-#include "vision.hpp"
+
 #include "fBar.hpp"
 #include "tracking.hpp"
 #include <iostream>

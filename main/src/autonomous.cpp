@@ -1,6 +1,6 @@
 #include "main.h"
 #include "tracking.hpp"
-#include "vision.hpp"
+
 #include "fBar.hpp"
 #include "angler.hpp"
 #include "drive.hpp"
@@ -1272,8 +1272,6 @@ void autonomous() {
   delay(1);
   while(resetDone == false) delay(1);
   // intakeL.move(127);
-  green.sig_num = 1;
-  orange.sig_num = 2;
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
   switch(side) {

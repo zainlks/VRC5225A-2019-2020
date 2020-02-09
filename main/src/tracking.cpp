@@ -108,8 +108,6 @@ void update (void* param){
 
  while (true) {
 //amount encoders moved (radians)
-   green.update();
-   orange.update();
 	 newleft = leftencoder.get_value() / 360.0* (2.75*M_PI);
 	 newright = rightencoder.get_value() / 360.0* (2.75*M_PI);
 	 newback = backencoder.get_value() / 360.0* (2.77*M_PI);
@@ -397,30 +395,7 @@ void move_to_target(void* params){
       }
     }
     else cycleCount = 0;
-    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_d) < 2 && cubeLineUp){
-      if(cubeLineUp){
-        printf("I'm doing a cube line up\n");
-        green.linedUp = false;
-        while(!green.linedUp || (fabs(error_a) >= deg_to_rad(0.5)) || (fabs(error_y) >= 0.5 )) {
-          error_y =tracking.target_y - tracking.ycoord;
-          error_a = fmod(tracking.target_a - tracking.global_angle, 2*M_PI);
-          green.update();
-          green.lineMiddle(0.8,tracking.target_y,tracking.target_a);
-          move_drive(tracking.power_x, tracking.power_y, tracking.power_a);
-        }
-        offset =tracking.target_x - tracking.xcoord;
-        move_drive(0, 0, 0);
-        difference_a = 0;
-        log("Movement to (%f, %f, %f) en ded\n",tracking.target_x,tracking.target_y, rad_to_deg(tracking.target_a));
-        log("X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-        master.print(0, 3, "X : %f, Y : %f, A : %f", tracking.xcoord, tracking.ycoord, rad_to_deg(tracking.global_angle));
-        master.print(0, 5,"Movement to (%f, %f, %f) ended\n",tracking.target_x,tracking.target_y, rad_to_deg(tracking.target_a));
-        tracking.moveComplete = true;
-        moveStopTask();
-        break;
-        }
-    }
-    else if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_x)<=0.5 && fabs(error_y)<=0.5 && !cubeLineUp){
+    if (fabs(error_a) <= deg_to_rad(0.5) && fabs(error_x)<=0.5 && fabs(error_y)<=0.5 && !cubeLineUp){
       difference_a = 0;
       brake();
       if(brakeOn) {

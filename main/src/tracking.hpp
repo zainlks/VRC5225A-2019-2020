@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "config.hpp"
-#include "vision.hpp"
+
 #include "controller.hpp"
 #include "menu.hpp"
 #include "util.hpp"

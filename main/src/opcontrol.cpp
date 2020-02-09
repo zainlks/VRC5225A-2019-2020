@@ -1,6 +1,6 @@
 #include "main.h"
 #include "tracking.hpp"
-#include "vision.hpp"
+
 #include "fBar.hpp"
 #include "angler.hpp"
 #include "drive.hpp"
@@ -26,8 +26,6 @@ void opcontrol() {
 		bool nineCube = false;
 		bool intk_stop = false;
 		double fBar_height = 0;
-		green.sig_num = 1;
-		orange.sig_num = 2;
 		bool intakeReverse = false;
 
 
@@ -88,7 +86,6 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 gui_handle();
-			 green.update();
 			 log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d \n", topLs.get_value(), bottomLs.get_value());
 
