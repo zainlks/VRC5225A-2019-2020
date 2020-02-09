@@ -9,6 +9,24 @@ int stateCheck = 0;
 uint32_t timer = 0;
 bool dropOffHold = false;
 uint32_t shitTimer = pros::millis();
+
+double Angler::getTarget() {
+  return this->target;
+}
+// int32_t Angler::move_absolute(double target, int32_t velocity ) {
+//   this->target = target;
+//   this->velocityCap = velocity;
+//   return 0;
+// }
+
+void anglerMovement(void *param) {
+  while(true) {
+    if(fabs(angler.get_position()-angler.getTarget())<20) {
+
+    }
+  }
+}
+
 void setAnglerState(anglerStates state) {
   log("Going from %d", anglerState);
 	anglerStateLast = anglerState;
@@ -74,8 +92,8 @@ void anglerHandle() {
       if(angler.get_position()<65) angler.move(-10);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         printf("start| %d", millis());
-        fBar.move_absolute(780,100);
         angler.move_absolute(ANGLER_MID, 145);
+        fBar.move_absolute(780,100);
         intakeR.move(40);
         intakeL.move(-40);
         while (angler.get_position() < ANGLER_MID -50)delay(1);
@@ -183,8 +201,10 @@ void anglerHandle() {
       }
     break;
     case anglerStates::Mid:
-    if(fBar.get_position()>650  && fBar.get_position() < 750) fBar.move(30);
-    if(fBar.get_position()>750) fBar.move(0);
+    if(fBar.get_target_position()<1000){
+      if(fBar.get_position()>650  && fBar.get_position() < 750) fBar.move(30);
+      if(fBar.get_position()>750) fBar.move(0);
+    }
       if((fabs(intakeL.get_actual_velocity())<5 || fabs(intakeR.get_actual_velocity())<5) && anglerStateLast == anglerStates::Push)
       {
         intakeL.move(0);

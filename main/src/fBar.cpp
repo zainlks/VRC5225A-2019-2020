@@ -40,7 +40,8 @@ void fBarHandle() {
       if(fBar.get_position()<20 && !gui_running) fBar.move(-13);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
         fBar.move_absolute(FBAR_MID-50, 200);
-        angler.move_absolute(ANGLER_MID-2700, 150);
+        printf("hi\n");
+        // angler.move_absolute(ANGLER_MID-2700, 150);
         setAnglerState(anglerStates::Mid);
         setfBarState(fBarStates::Mid);
       }

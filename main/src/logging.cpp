@@ -40,10 +40,10 @@ void log(const char * format, ...){
 
 void log_task(void *params) {
   if(logGraphFile == NULL) return;
-  // printf("%d\n", graphParams.entry1 );
+  printf("%d,%f,%f\n", graphParams.entry1,graphParams.entry2,graphParams.entry3 );
   fprintf(logGraphFile,"%d,%d,%f,%f,%f,%f,%f\n",millis(),graphParams.entry1,graphParams.entry2,graphParams.entry3,graphParams.entry4,graphParams.entry5,graphParams.entry6);
   fclose(logGraphFile);
-  while ((logGraphFile = fopen("/usd/graph.csv","a")) == NULL) pros::delay(3);
+  while ((logGraphFile = fopen("/usd/graph.csv","a")) == NULL) pros::delay(1);
   log_done = true;
   logStopTask();
 }

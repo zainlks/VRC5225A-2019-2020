@@ -30,7 +30,11 @@ enum class anglerStates {
 class Angler: public pros::Motor {
 public:
   using Motor::Motor;
-
+  // int32_t move_absolute( double position, int32_t velocity );
+  double getTarget();
+private:
+  double target;
+  int32_t velocityCap;
 };
 
 extern Angler angler;
