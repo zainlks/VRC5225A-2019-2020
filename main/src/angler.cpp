@@ -13,11 +13,11 @@ uint32_t shitTimer = pros::millis();
 double Angler::getTarget() {
   return this->target;
 }
-// int32_t Angler::move_absolute(double target, int32_t velocity ) {
-//   this->target = target;
-//   this->velocityCap = velocity;
-//   return 0;
-// }
+int32_t Angler::move_absolute(double target, int32_t velocity ) {
+  this->target = target;
+  this->velocityCap = velocity;
+  return 0;
+}
 
 void anglerMovement(void *param) {
   while(true) {
