@@ -1,6 +1,5 @@
 #include "angler.hpp"
 Angler angler(4,false);
-
 pros::Task *dropOffTask = nullptr;
 anglerStates anglerState = anglerStates::Idle;
 anglerStates anglerStateLast = anglerState;
@@ -18,12 +17,38 @@ int32_t Angler::move_absolute(double target, int32_t velocity ) {
   this->velocityCap = velocity;
   return 0;
 }
+int32_t Angler::getMaxVelocity() {
+  return this->velocityCap;
+}
 
 void anglerMovement(void *param) {
+  double kP = 0.1;
+  double kI = 0.005;
+  double error;
+  double integral = 0;
+  uint32_t lastTime = millis();
   while(true) {
-    if(fabs(angler.get_position()-angler.getTarget())<20) {
-
+    if(fabs(angler.getTarget()-angler.get_position())<75) {
+      if(angler.getTarget()-angler.get_position()>35) angler.move(25);
+      else angler.move(0);
     }
+    else {
+      error = angler.getTarget() - angler.get_position();
+      if(fabs(error)<1400) kP = 0.28;
+      else if(fabs(error)<800) kP = 0.07;
+      else kP = 0.1;
+      if(fabs(error) <= 150) {
+        integral += error * (millis()-lastTime);
+      }
+      else integral = 0;
+
+      angler.speed = ((error*kP + integral*kI)*angler.getMaxVelocity()/200)/angler.getMaxVelocity()*127;
+      angler.move(angler.speed);
+      printf("speed is:%f error is: %f integral is: %f\n",angler.speed, error, integral);
+      log_graph(0,angler.speed,error,integral);
+    }
+    lastTime = millis();
+    delay(1);
   }
 }
 
@@ -184,7 +209,7 @@ void anglerHandle() {
             stateCheck++;
         }
       if(master.get_digital_new_press(ANGLER_DOWN)){
-        angler.move(-127);
+        angler.move_absolute(1,200);
         fBar.move_absolute(1, 200);
         setfBarState(fBarStates::Idle);
         setAnglerState(anglerStates::Idle);

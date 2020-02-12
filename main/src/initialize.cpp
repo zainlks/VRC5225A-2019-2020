@@ -20,7 +20,7 @@ void initialize() {
 	// Task controllerUpdate(printTemp);
 	fBarCal();
 	anglerCal();
-	// log_init();
+	log_init();
 	gui_init();
 	menu_init();
 	front_L.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
@@ -31,7 +31,8 @@ void initialize() {
 	angler.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	// delay(6000);
 	updateStartTask();
-
+	angler.move_absolute(1,200);
+	Task anglerMoveTask(anglerMovement);
 	Task driveUpdate(driveHandle);
 }
 
