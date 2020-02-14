@@ -1264,6 +1264,17 @@ void newSkills() {
 
 }
 
+void skills2() {
+  updateStopTask();
+  tracking.ycoord = 9;
+  tracking.xcoord = 32;
+  tracking.global_angle = 0;
+  updateStartTask(false);
+  delay(1);
+  move_to_target_sync(25,35.5, -M_PI/2);
+  move_to_target_sync(17.5, 35.5, -M_PI/2);
+}
+
 void autonomous() {
   setDriveState(driveStates::Auto);
   updateStopTask();
@@ -1274,41 +1285,43 @@ void autonomous() {
   // intakeL.move(127);
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-  switch(side) {
-    case sides::blue:
-      switch(cur_auto) {
-        case auto1:
-          blueLeft();
-        break;
-        case auto2:
-          blue9();
-        break;
-        case auto3:
-          blueFourFirst();
-        break;
-        case auto4:
-          newSkills();
-        break;
-      }
-    break;
-    case sides::red:
-      switch(cur_auto) {
-        case auto1:
-          redProtect();
-        break;
-        case auto2:
-          red9();
-        break;
-        case auto3:
-          redFourFirst();
-        break;
-        case auto4:
-          newSkills();
-        break;
-      }
-    break;
+  // switch(side) {
+  //   case sides::blue:
+  //     switch(cur_auto) {
+  //       case auto1:
+  //         blueLeft();
+  //       break;
+  //       case auto2:
+  //         blue9();
+  //       break;
+  //       case auto3:
+  //         blueFourFirst();
+  //       break;
+  //       case auto4:
+  //         newSkills();
+  //       break;
+  //     }
+  //   break;
+  //   case sides::red:
+  //     switch(cur_auto) {
+  //       case auto1:
+  //         redProtect();
+  //       break;
+  //       case auto2:
+  //         red9();
+  //       break;
+  //       case auto3:
+  //         redFourFirst();
+  //       break;
+  //       case auto4:
+  //         newSkills();
+  //       break;
+  //     }
+  //   break;
+  // }
 
-  }
+  skills2();
+
   // fBar.move_absolute(FBAR_MID+100, 200);
   // while(fBar.get_position()<FBAR_MID) delay(1);
   // intakeL.move(80);

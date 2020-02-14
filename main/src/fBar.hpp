@@ -11,9 +11,9 @@
 #include <vector>
 using namespace std;
 using namespace pros;
-const int towerHeights[3] = {1850,2830,3160};
-constexpr double FBAR_TOP = 4105;
-constexpr double FBAR_MID = 3000;
+const int towerHeights[3] = {1850/2,2830/2,3160/2};
+constexpr double FBAR_TOP = 4105/2;
+constexpr double FBAR_MID = 3000/2;
 enum class fBarStates {
   Idle,
   Mid,
