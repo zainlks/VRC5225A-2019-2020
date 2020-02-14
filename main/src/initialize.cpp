@@ -31,8 +31,6 @@ void initialize() {
 	angler.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 	// delay(6000);
 	updateStartTask();
-	angler.move_absolute(1,200);
-	Task anglerMoveTask(anglerMovement);
 	Task driveUpdate(driveHandle);
 }
 

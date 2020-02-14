@@ -27,25 +27,11 @@ enum class anglerStates {
   Top
 };
 
-class Angler: public pros::Motor {
-public:
-  using Motor::Motor;
-  int32_t move_absolute( double position, int32_t velocity );
-  double getTarget();
-  int32_t getMaxVelocity();
-  double speed;
-private:
-  double target;
-  int32_t velocityCap;
-};
-
-extern Angler angler;
 
 void intakeOn();
 void intakeReverse();
 void startDropOff();
 void stopDropOff();
-void anglerMovement(void *param);
 void dropOff(void *param);
 void setAnglerState(anglerStates state);
 void anglerCal();
