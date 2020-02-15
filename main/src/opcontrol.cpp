@@ -77,6 +77,13 @@ void opcontrol() {
 		}
 		setDriveState(driveStates::Driver);
 		//angler.move_absolute(1800, 100);
+		while(true)
+			printf("pitch %f\n" gyro.get_pitch())
+			printf("roll %f\n" gyro.get_roll())
+			printf("yaw %f\n" gyro.get_yaw())
+
+
+
 	  while (true){
 			 //if(startNum == 0 && angler.get_position()>1750) {anglerCal(); startNum++;}
 			 //printf("angler: %f\n", angler.get_position());
