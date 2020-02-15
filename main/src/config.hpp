@@ -15,4 +15,3 @@ extern Motor fBar;
 extern Motor angler;
 extern Motor front_L, front_R, back_L, back_R;
 extern Controller master;
-extern Imu gyro;

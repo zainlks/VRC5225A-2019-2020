@@ -1266,13 +1266,48 @@ void newSkills() {
 
 void skills2() {
   updateStopTask();
-  tracking.ycoord = 9;
-  tracking.xcoord = 32;
-  tracking.global_angle = 0;
+  tracking.ycoord = 9.5;
+  tracking.xcoord = 31.5;
+  tracking.global_angle = M_PI/2;
   updateStartTask(false);
   delay(1);
-  move_to_target_sync(25,35.5, -M_PI/2);
-  move_to_target_sync(17.5, 35.5, -M_PI/2);
+  intakeOn();
+  move_to_target_async(40,23.5, M_PI/2,false,127);
+  tracking.waitForDistance(1.5);
+  move_to_target_sync(57,23.5, M_PI/2,false,127);
+  tracking.waitForComplete();
+  move_to_target_async(44,23.5, M_PI/2,false,127);
+  fBar.move_absolute(FBAR_TOP, 200);
+  tracking.waitForComplete();
+  while(fBar.get_position()<FBAR_TOP-10) delay(1);
+  move_drive(0,0,0);
+  move_to_target_sync(57.5,23.5, M_PI/2,false,45);
+
+  intakeL.move(80);
+  intakeR.move(-80);
+  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+  intakeL.tare_position();
+  while(fabs(intakeL.get_position())<900) delay(1);
+  intakeL.move(-8);
+  intakeR.move(8);
+  move_to_target_async(28,13,-M_PI/4,false,127);
+  tracking.waitForDistance(3);
+  fBar.move_absolute(FBAR_MID, 100);
+  intakeOn();
+  tracking.waitForComplete();
+  move_to_target_async(15, 24, -M_PI/4,false,127);
+  tracking.waitForDistance(15);
+  fBar.move_absolute(FBAR_MID, 100);
+  intakeOn();
+  tracking.waitForComplete();
+  intakeL.move(80);
+  intakeR.move(-80);
+  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+  intakeL.tare_position();
+  while(fabs(intakeL.get_position())<900) delay(1);
+  intakeL.move(-8);
+  intakeR.move(8);
+
 }
 
 void autonomous() {

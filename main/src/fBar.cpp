@@ -37,7 +37,7 @@ void fBarCal()
 void fBarHandle() {
   switch(fBarState) {
     case fBarStates::Idle:
-      if(fBar.get_position()<20 && !gui_running) fBar.move(-13);
+      if(fBar.get_position()<20 && !gui_running) fBar.move(-20);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
         fBar.move_absolute(FBAR_MID-50, 200);
         printf("hi\n");
