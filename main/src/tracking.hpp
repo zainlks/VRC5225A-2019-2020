@@ -61,13 +61,13 @@ public:
   void waitForDistance(double distance);
   void waitForComplete();
   void trackingInput();
-  void setAngleHold(double angle);
+  //void setAngleHold(double angle);
   void turn_to_target(double target_x, double target_y, bool debug = false, bool brakeOn = true);
   void turn_to_angle(double target_a, bool debug = false, bool brakeOn = true);
   void flattenAgainstWall(bool forward, bool hold = true);
   void LSLineup(bool hold = true, bool intake_deposit = true, int timeoutTime = 5000, int speed = 65);
   void LSLineupSkills(bool hold = true, bool intake_deposit = true, int timeoutTime = 5000, int speed = 65);
-  void straightLift(double height);
+  //void straightLift(double height);
   void static move_xy(double distance, direction direct, bool brakeon = true, bool debug = false);
 };
 

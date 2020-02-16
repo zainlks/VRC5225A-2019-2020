@@ -473,9 +473,9 @@ void Tracking::waitForComplete() {
   while(!moveComplete) delay(1);
 }
 
-void Tracking::setAngleHold(double angle) {
-  holdAngle = angle;
-}
+// void Tracking::setAngleHold(double angle) {
+//   holdAngle = angle;
+// }
 void pointToAngle(void *param) {
     double angle_hold = deg_to_rad(tracking.holdAngle);
     while(true){
