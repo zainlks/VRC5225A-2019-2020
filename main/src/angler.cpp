@@ -150,17 +150,20 @@ void anglerHandle() {
           intakeR.move(40);
         }
       }
-      if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
+      // if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
         if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0 && anglerStateLast!=anglerStates::Idle)
         {
+          angler.move(0);
           printf("time is:%d", millis() - shitTimer);
             setDriveState(driveStates::Auto);
             updateStopTask();
             tracking.reset();
             updateStartTask();
             log("%d | global angle: %d, xcoord: %d, ycoord: %d", pros::millis(), tracking.global_angle, tracking.xcoord, tracking.ycoord);
-
-            move_to_target_sync(0, -10.0, 0, false, 80, false, false, true);
+            fBar.move_absolute(750,200);
+            delay(350);
+            move_drive(0,-35,0);
+            while(tracking.ycoord>-10 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y))<15) delay(1);
            setDriveState(driveStates::Driver);
             // angler.move_absolute(1,200);
             log("done back");
@@ -247,7 +250,7 @@ void anglerHandle() {
           //intakeL.move(5)
           shitTimer = pros::millis();
           printf("start angle, %d", millis());
-          angler.move_absolute(ANGLER_TOP, 160);
+          angler.move_absolute(ANGLER_TOP, 140);
           fBar.move(10);
           stateCheck = 0;
           while (angler.get_position() < ANGLER_MID -50)delay(1);
@@ -269,9 +272,9 @@ void anglerHandle() {
         }
     break;
     case anglerStates::BetweenTop:
-      if(angler.get_position()>ANGLER_TOP-800)
+      if(angler.get_position()>ANGLER_TOP-1100)
       {
-        angler.move_absolute(ANGLER_TOP, 75);
+        angler.move(90);
         setAnglerState(anglerStates::Top);
       }
     break;

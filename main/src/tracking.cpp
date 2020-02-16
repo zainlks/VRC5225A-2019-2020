@@ -203,6 +203,7 @@ void move_to_target(void* params){
   bool cubeLineUp = moveParams.cubeLineUp;
   bool brakeOn = moveParams.brakeOn;
   bool inDrive = moveParams.inDrive;
+  bool skills = moveParams.skills;
   log("%d | Started move to target: (%f, %f, %f)", pros::millis(),tracking.target_x,tracking.target_y, rad_to_deg(tracking.target_a));
   double max_power_a = 127.0, max_power_xy = moveParams.max_xy;
   double min_power_a = 12, min_power_xy = 25;
@@ -297,13 +298,14 @@ void move_to_target(void* params){
       tracking.power_a = 0;
     }
 
-    power_d = map_set(fabs(error_d),0.5,200.0,15.0,127.0,
-                      10.0,127.0,
-                      15.0,127.0,
-                      18.0, 127.0,
-                      25.0,127.0,
-                      200.0,127.0);
+    // power_d = map_set(fabs(error_d),0.5,200.0,15.0,127.0,
+    //                   10.0,127.0,
+    //                   15.0,127.0,
+    //                   18.0, 127.0,
+    //                   25.0,127.0,
+    //                   200.0,127.0);
 
+    // power_d = error_d*kP_d
     if (error_x >= 0){
       tracking.power_x = error_d*cos(difference_a)*kP_d;
       tracking.power_y = error_d*sin(difference_a)*kP_d;
@@ -319,27 +321,34 @@ void move_to_target(void* params){
       tracking.power_a = sgn(tracking.power_a)*max_power_a;
     }
     // need to scale x and y powers
-    // if (fabs(tracking.power_x) > max_power_xy || fabs(tracking.power_y) > max_power_xy){
-    //   if (fabs(tracking.power_x) > fabs(tracking.power_y)){
-    //     scale = max_power_xy/fabs(tracking.power_x);
-    //     tracking.power_x = max_power_xy *sgn(tracking.power_x);
-    //     tracking.power_y = tracking.power_y *scale;
-    //     tracking.power_a = tracking.power_a*scale;
-    //   }
-    //   else {
-    //     scale = max_power_xy/fabs(tracking.power_y);
-    //     tracking.power_y = max_power_xy *sgn(tracking.power_y);
-    //     tracking.power_x = tracking.power_x *scale;
-    //     tracking.power_a = tracking.power_a*scale;
-    //   }
-    // }
-   if(fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y)>127) {
-     power_total = fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y);
-     tracking.power_a = tracking.power_a/power_total * max_power_xy;
-     tracking.power_x = tracking.power_x/power_total * max_power_xy;
-     tracking.power_y = tracking.power_y/power_total * max_power_xy;
 
-   }
+    if(skills)
+    {
+      if (fabs(tracking.power_x) > max_power_xy || fabs(tracking.power_y) > max_power_xy){
+        if (fabs(tracking.power_x) > fabs(tracking.power_y)){
+          scale = max_power_xy/fabs(tracking.power_x);
+          tracking.power_x = max_power_xy *sgn(tracking.power_x);
+          tracking.power_y = tracking.power_y *scale;
+          tracking.power_a = tracking.power_a*scale;
+        }
+        else {
+          scale = max_power_xy/fabs(tracking.power_y);
+          tracking.power_y = max_power_xy *sgn(tracking.power_y);
+          tracking.power_x = tracking.power_x *scale;
+          tracking.power_a = tracking.power_a*scale;
+        }
+      }
+    }
+    else {
+     if(fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y)>max_power_xy) {
+           power_total = fabs(tracking.power_a)+fabs(tracking.power_x)+fabs(tracking.power_y);
+           tracking.power_a = tracking.power_a/power_total * max_power_xy;
+           tracking.power_x = tracking.power_x/power_total * max_power_xy;
+           tracking.power_y = tracking.power_y/power_total * max_power_xy;
+
+         }
+     }
+
 //setting min power if a, x, and y are not within target
     // if(fabs(tracking.power_a) < min_power_a){
     //   if (fabs(error_a) > deg_to_rad(0.5)){
@@ -414,17 +423,18 @@ void move_to_target(void* params){
   }
 }
 
-void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
+void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool skills, bool cubeLineUp, bool debug, bool inDrive) {
   if(!tracking.moveComplete) moveStopTask();
   if(moveTask != nullptr) moveTask = nullptr;
-  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, skills, cubeLineUp, debug, inDrive};
   tracking.driveError = 0;
   tracking.moveComplete = false;
   move_to_target(nullptr);
 }
-void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy, bool cubeLineUp,  bool debug, bool inDrive) {
+void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn, double max_xy,bool skills, bool cubeLineUp,  bool debug, bool inDrive) {
+  if(!tracking.moveComplete) moveStopTask();
   if(moveTask != nullptr) moveTask = nullptr;
-  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, cubeLineUp, debug, inDrive};
+  moveParams = {target_x, target_y, target_a, brakeOn, max_xy, skills, cubeLineUp, debug, inDrive};
   tracking.driveError = 0;
   tracking.moveComplete = false;
   moveStartTask();
@@ -535,7 +545,7 @@ void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
     error_a = target_a - tracking.global_angle;
     if(fabs(error_a)>deg_to_rad(0.5)){
       tracking.power_a = map_set(fabs(error_a),deg_to_rad(0.5), M_PI,12.0*sgn(error_a),127.0*sgn(error_a),
-                        deg_to_rad(5), sgn(error_a)*20.0,
+                        deg_to_rad(5), sgn(error_a)*30.0,
                         deg_to_rad(20),sgn(error_a)*50.0,
                         deg_to_rad(45),sgn(error_a)*85.0,
                         deg_to_rad(60), sgn(error_a)*110.0,
@@ -559,7 +569,7 @@ void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
     }
     if(debug) log("%d| pow: %f, error: %f\n", millis(), power_a, error_a);
     move_drive(0, 0, tracking.power_a);
-    if (fabs(error_a) <= deg_to_rad(0.5)){
+    if (fabs(error_a) <= deg_to_rad(1)){
       brake();
       if(brakeOn)delay(100);
       move_drive(0, 0, 0);
@@ -616,7 +626,7 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int spe
   }
   move_drive(0, speed, 0);
   delay(300);
-  while(!left && !right && (millis()-startTime)<timeoutTime) {
+  while(!left && !right && ((millis()-startTime)<timeoutTime)) {
     if(velocityL==0) leftCount++;
     else leftCount = 0;
     if(velocityR==0) rightCount++;
@@ -638,9 +648,9 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int spe
     else move_drive_side(-40,-25);
     delay(50);
   }
-  while((!left || !right) && (millis()-startTime)<timeoutTime) {
-    if(fabs(velocityL)<0.000002)  left = true;
-    if(fabs(velocityR)<0.000002) right = true;
+  while((!left || !right) && ((millis()-startTime)<timeoutTime)) {
+    if(fabs(velocityL)==0.0)  left = true;
+    if(fabs(velocityR)==0.0) right = true;
   }
   if(hold){
     if(speed>0)move_drive(0,20,0);

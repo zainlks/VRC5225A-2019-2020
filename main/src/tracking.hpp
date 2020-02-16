@@ -33,6 +33,7 @@ struct moveTargetParams {
   double target_a;
   bool brakeOn = true;
   double max_xy = 127;
+  bool skills = false;
   bool cubeLineUp = false;
   bool debug = false;
   bool inDrive = false;
@@ -49,8 +50,8 @@ void moveStopTask();
 void updateStartTask(bool reset = true);
 void updateStopTask();
 void move_to_target(void* params);
-void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool cubeLineUp = false,  bool debug = false, bool inDrive = false);
-void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool cubeLineUp = false,  bool debug = false, bool inDrive = false);
+void move_to_target_sync(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool skills = false, bool cubeLineUp = false,  bool debug = false, bool inDrive = false);
+void move_to_target_async(double target_x, double target_y, double target_a, bool brakeOn = true, double max_xy = 127, bool skills = false, bool cubeLineUp = false,  bool debug = false, bool inDrive = false);
 
 
 class Tracking {

@@ -84,6 +84,15 @@ void opcontrol() {
 
 			 // printf("global angle is: %f\n",rad_to_deg(tracking.global_angle));
 			 // printf("x:%f y:%f, a:%f \n",tracking.xcoord,tracking.ycoord,rad_to_deg(tracking.global_angle));
+			 if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_R1)) {
+				 updateStopTask();
+				 tracking.reset();
+				 updateStartTask();
+				 setDriveState(driveStates::Auto);
+				 if(side == sides::blue) tracking.turn_to_angle(deg_to_rad(10),false,false);
+				 else if(side == sides::red) tracking.turn_to_angle(deg_to_rad(-10),false,false);
+				 setDriveState(driveStates::Driver);
+			 }
 			 anglerHandle();
 			 fBarHandle();
 			 gui_handle();
