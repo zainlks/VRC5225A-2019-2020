@@ -8,8 +8,6 @@ uint32_t timer = 0;
 bool dropOffHold = false;
 uint32_t shitTimer = pros::millis();
 
-
-
 void setAnglerState(anglerStates state) {
   log("Going from %d", anglerState);
 	anglerStateLast = anglerState;
