@@ -318,7 +318,7 @@ void blueLeft(){
   while(fBar.get_position()> 50) {delay(1);}
   fBar.move(-25);
   master.print(1,0,"%d",millis()-autotimer);
-  move_to_target_async(0, 16, 0, false, 50,false,true);
+  move_to_target_async(0, 16, 0, false, 50);
   intakeOn();
   tracking.waitForDistance(12);
 
@@ -1353,11 +1353,11 @@ void skills2() {
   printf("stuck B\n");
   delay(50);
   intakeOn();
-  move_to_target_async(25.5,52.3,0,false,127);
+  move_to_target_async(24.5,52.3,0,false,127);
   tracking.waitForDistance(1.2);
   move_to_target_async(20.5, 121, 0,false,127);
   tracking.waitForDistance(55);
-  move_to_target_async(25.5, 121, 0,false,127);
+  move_to_target_async(25.5, 121, 0,false,90);
   int LsCheck = 0;
   while(topLs.get_value() > 500 || bottomLs.get_value() > 2500) {
     if(bottomLs.get_value() > 2500 && tracking.moveComplete) LsCheck++;
@@ -1372,12 +1372,16 @@ void skills2() {
   tracking.waitForComplete();
 
   move_to_target_sync(18.5, 124, -M_PI/4,false,127,true);
-  tracking.LSLineup(true,true,1400);
+  tracking.LSLineup(true,false,1400);
   delay(50);
   move_to_target_sync(tracking.xcoord+1,tracking.ycoord-1,-M_PI/4,false,55);
-  intakeL.move(20);
-  intakeR.move(-20);
+  intakeL.move(30);
+  intakeR.move(-30);
+  delay(100);
   angler.move_absolute(ANGLER_TOP, 120);
+  while(fabs(intakeL.get_actual_velocity()) < 0.007) delay(1);
+  intakeL.move(-8);
+  intakeR.move(8);
   while(angler.get_position()<ANGLER_TOP-5) delay(1);
   move_drive(0,-60,0);
   while(tracking.xcoord<26) delay(1);
@@ -1393,22 +1397,15 @@ void skills2() {
   updateStartTask(false);
   fBar.move_absolute(1, 200);
   intakeOn();
-  move_to_target_sync(49, 95, -M_PI,false,127);
-  fBar.move_absolute(FBAR_MID,200);
-  while(fBar.get_position()<FBAR_MID-1000) delay(1);
-  move_to_target_sync(47, 87, -3*M_PI/4,false,127,true);
-  intakeL.move(127);
-  intakeR.move(-127);
-  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
-  intakeL.tare_position();
-  while(fabs(intakeL.get_position())<900) delay(1);
-  intakeL.move(-8);
-  intakeR.move(8);
+  move_to_target_async(49, 95, -M_PI,false,127);
+  tracking.waitForDistance(1.5);
   fBar.move_absolute(FBAR_MID+200, 200);
-  delay(50);
-  intakeOn();
-  move_to_target_sync(20, 108,-M_PI/2, false, 127, true);
-  tracking.LSLineup(true,false,1300);
+  tracking.waitForComplete();
+
+  move_to_target_async(10, 108,-M_PI/2, false, 127, true);
+  fBar.move_absolute(FBAR_MID+200, 200);
+  tracking.waitForComplete();
+  tracking.LSLineup(true,false,1500,70);
   delay(75);
   updateStopTask();
   tracking.xcoord = 9.5;
@@ -1416,8 +1413,8 @@ void skills2() {
   tracking.global_angle = -M_PI/2;
   updateStartTask(false);
   delay(75);
-  move_to_target_async(19.5, 108, -M_PI/2, false, 45);
-  tracking.waitForDistance(0.5);
+  move_to_target_async(20.5, 108, -M_PI/2, false, 45);
+  tracking.waitForDistance(0.2);
   intakeL.move(127);
   intakeR.move(-127);
   while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
@@ -1425,14 +1422,14 @@ void skills2() {
   while(fabs(intakeL.get_position())<900) delay(1);
   intakeL.move(-8);
   intakeR.move(8);
-  fBar.move_absolute(FBAR_MID+100, 200);
+  fBar.move_absolute(FBAR_MID+400, 200);
   delay(50);
+  while(fBar.get_position()<FBAR_MID+350) delay(1);
   intakeOn();
   tracking.waitForComplete();
-  move_to_target_async(57.5, 120.5, M_PI/2,false,127,true);
-  tracking.waitForDistance(7);
-  fBar.move_absolute(FBAR_TOP,150);
-  tracking.waitForComplete();
+
+
+  move_to_target_sync(35.2, 97, -M_PI,false,127,true);
   intakeL.move(127);
   intakeR.move(-127);
   while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
@@ -1442,6 +1439,26 @@ void skills2() {
   intakeR.move(8);
 
 
+  move_to_target_async(57, 119.5, M_PI/2,false,127,true);
+  tracking.waitForDistance(42);
+  fBar.move_absolute(FBAR_TOP,200);
+  tracking.waitForComplete();
+
+  intakeL.move(127);
+  intakeR.move(-127);
+  while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
+  intakeL.tare_position();
+  while(fabs(intakeL.get_position())<900) delay(1);
+  intakeL.move(-8);
+  intakeR.move(8);
+
+  move_to_target_async(47.5,132.5,M_PI/2,false,127,true);
+  tracking.waitForDistance(3);
+  fBar.move_absolute(1,200);
+  intakeOn();
+  tracking.waitForComplete();
+  while(fBar.get_position()>100) delay(1);
+  move_to_target_sync(82.5,132.5,M_PI/2,false,127);
 }
 
 void autonomous() {
