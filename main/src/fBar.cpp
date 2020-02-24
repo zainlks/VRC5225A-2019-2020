@@ -39,7 +39,7 @@ void fBarHandle() {
     case fBarStates::Idle:
       if(fBar.get_position()<20 && !gui_running) fBar.move(-20);
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck) {
-        fBar.move_absolute(FBAR_MID-50, 200);
+        fBar.move_absolute(FBAR_MID, 200);
         printf("hi\n");
         // angler.move_absolute(ANGLER_MID-2700, 150);
         setAnglerState(anglerStates::Mid);
@@ -88,7 +88,6 @@ void fBarHandle() {
       }
     break;
     case fBarStates::Top:
-      if(fabs(FBAR_TOP - fBar.get_position()) < 10) fBar.move(8);
       if(master.get_digital_new_press(TOWER_HEIGHT)){
         fBar.move_absolute(1, 200);
         angler.move_absolute(1, 200);
@@ -104,7 +103,6 @@ void fBarHandle() {
       }
       break;
     case fBarStates::Mid:
-      if(fabs(FBAR_MID - fBar.get_position()) < 10) fBar.move(8);
       if(master.get_digital_new_press(FBAR_DOWN)){
         angler.move_absolute(1, 200);
         fBar.move_absolute(1, 200);
@@ -113,7 +111,7 @@ void fBarHandle() {
         setAnglerState(anglerStates::Idle);
       }
       if(master.get_digital_new_press(TOWER_HEIGHT) && !doublePressCheck){
-        fBar.move_absolute(FBAR_TOP-50, 150);
+        fBar.move_absolute(FBAR_TOP, 150);
         setfBarState(fBarStates::Top);
       }
       if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {

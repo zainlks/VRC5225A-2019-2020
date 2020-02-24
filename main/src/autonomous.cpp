@@ -235,7 +235,7 @@ void blue9() {
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   fBar.move(5);
   while(angler.get_position()<ANGLER_TOP-1150) delay(1);
-  angler.move(90);
+  angler.move(110);
                   // while(angler.get_position()<ANGLER_TOP-800) delay(1);
                   // angler.move_absolute(ANGLER_TOP, 85);
                   // while(angler.get_position()<ANGLER_TOP-300) delay(1);
@@ -585,7 +585,7 @@ void red9() {
   while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
   fBar.move(5);
   while(angler.get_position()<ANGLER_TOP-1150) delay(1);
-  angler.move(90);
+  angler.move(110);
                   // while(angler.get_position()<ANGLER_TOP-800) delay(1);
                   // angler.move_absolute(ANGLER_TOP, 85);
                   // while(angler.get_position()<ANGLER_TOP-300) delay(1);
@@ -1434,7 +1434,7 @@ void skills2() {
   tracking.global_angle = -M_PI/2;
   updateStartTask(false);
   delay(75);
-  move_to_target_async(20.5, 108, -M_PI/2, false, 45);
+  move_to_target_async(21.5, 108, -M_PI/2, false, 45);
   tracking.waitForDistance(0.2);
   intakeL.move(127);
   intakeR.move(-127);
@@ -1468,11 +1468,12 @@ void skills2() {
 
   move_to_target_async(57, 124.5, -3*M_PI/2,false,127,true);
   tracking.waitForDistance(42);
+  intakeOn();
   fBar.move_absolute(FBAR_TOP,200);
   tracking.waitForComplete();
 
-  intakeL.move(127);
-  intakeR.move(-127);
+  intakeL.move(80);
+  intakeR.move(-80);
   while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
   intakeL.tare_position();
   while(fabs(intakeL.get_position())<900) delay(1);

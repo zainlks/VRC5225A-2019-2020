@@ -89,7 +89,7 @@ void anglerHandle() {
         setAnglerState(anglerStates::DriveAround);
       }
       if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
-        angler.move(127);
+        angler.move_absolute(ANGLER_TOP,200);
         fBar.move_absolute(650,100);
         intakeR.move(-35);
 				intakeL.move(35);
@@ -139,18 +139,22 @@ void anglerHandle() {
       {
         if((ANGLER_TOP-angler.get_position())<1300 && (ANGLER_TOP-angler.get_position())>600)
         {
+          fBar.move_absolute(750,200);
           intakeL.move(-30);
           intakeR.move(30);
         }
         if((ANGLER_TOP-angler.get_position())<599)
         {
+          fBar.move_absolute(750,200);
           intakeL.move(-40);
           intakeR.move(40);
         }
       }
+      if(fabs((ANGLER_TOP-angler.get_position()))<10) angler.move(0);
       // if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
         if((ANGLER_TOP-angler.get_position())<5 && stateCheck == 0 && anglerStateLast!=anglerStates::Idle)
         {
+          fBar.move_absolute(750,200);
           angler.move(0);
           printf("time is:%d", millis() - shitTimer);
             setDriveState(driveStates::Auto);
@@ -248,7 +252,7 @@ void anglerHandle() {
           //intakeL.move(5)
           shitTimer = pros::millis();
           printf("start angle, %d", millis());
-          angler.move_absolute(ANGLER_TOP, 140);
+          angler.move_absolute(ANGLER_TOP, 130);
           fBar.move(10);
           stateCheck = 0;
           while (angler.get_position() < ANGLER_MID -50)delay(1);
@@ -272,7 +276,7 @@ void anglerHandle() {
     case anglerStates::BetweenTop:
       if(angler.get_position()>ANGLER_TOP-1100)
       {
-        angler.move(90);
+        angler.move(110);
         setAnglerState(anglerStates::Top);
       }
     break;
