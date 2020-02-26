@@ -81,7 +81,7 @@ void clear_line(int line) {
 
 
 void update (void* param){
-   double distance_LR = 14.65138; double distance_B = 7.25;
+   double distance_LR = 14.575; double distance_B = 7.25;
    double radiusR = 0;
    double radiusB = 0;
    double h = 0;
