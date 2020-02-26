@@ -220,6 +220,11 @@ void blue9() {
   delay(70);
   intakeR.move(20);
   intakeL.move(-20);
+  intakeR.move(-6);
+  intakeL.move(6);
+  while(bottomLs.get_value()>2500 && !tracking.moveComplete) delay(1);
+  intakeR.move(20);
+  intakeL.move(-20);
   // tracking.waitForDistance(7);
   //angler.move_absolute(ANGLER_MID-1800, 110);
   outtakeTime = millis();
@@ -228,6 +233,10 @@ void blue9() {
   fBar.move(30);
   // angler.move_absolute(ANGLER_TOP-2000, 100);
   tracking.LSLineup(true, true, 1500);
+  // double curY = tracking.ycoord;
+  // move_drive(0,-35,0);
+  // while(tracking.ycoord-curY < 0.75) delay(1);
+  // move_drive(0,0,0);
   angler.move_absolute(ANGLER_TOP, 130);
   intakeL.move(45);
   intakeR.move(-45);
@@ -248,7 +257,7 @@ void blue9() {
                   // while(fBar.get_position()<300)delay(1);
   while(angler.get_position()<ANGLER_TOP-10) delay(1);
   angler.move(0);
-  delay(100);
+  delay(300);
   fBar.move_absolute(600,200);
   while(fBar.get_position()<300)delay(1);
   updateStopTask();
@@ -317,6 +326,7 @@ void blueLeft(){
   //delay(50);
   while(fBar.get_position()> 50) {delay(1);}
   fBar.move(-25);
+  delay(250);
   master.print(1,0,"%d",millis()-autotimer);
   move_to_target_async(0, 16, 0, false, 50);
   intakeOn();
@@ -570,6 +580,11 @@ void red9() {
   delay(100);
   intakeR.move(20);
   intakeL.move(-20);
+  intakeR.move(-6);
+  intakeL.move(6);
+  while(bottomLs.get_value()>2500 && !tracking.moveComplete) delay(1);
+  intakeR.move(20);
+  intakeL.move(-20);
   // tracking.waitForDistance(7);
   //angler.move_absolute(ANGLER_MID-1800, 110);
   outtakeTime = millis();
@@ -598,7 +613,7 @@ void red9() {
                   // while(fBar.get_position()<300)delay(1);
   while(angler.get_position()<ANGLER_TOP-10) delay(1);
   angler.move(0);
-  delay(100);
+  delay(300);
   fBar.move_absolute(600,200);
   while(fBar.get_position()<300)delay(1);
   updateStopTask();
@@ -626,8 +641,9 @@ void redProtect(){
   //delay(50);
   while(fBar.get_position()> 50) {delay(1);}
   fBar.move(-25);
+  delay(250);
   master.print(1,0,"%d",millis()-autotimer);
-  move_to_target_async(0, 16, 0, false, 50,false,true);
+  move_to_target_async(0, 16, 0, false, 50);
   intakeOn();
   tracking.waitForDistance(12);
 
