@@ -91,8 +91,8 @@ void anglerHandle() {
       if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
         angler.move_absolute(ANGLER_TOP,200);
         fBar.move_absolute(650,100);
-        intakeR.move(-35);
-				intakeL.move(35);
+        intakeR.move(-25);
+				intakeL.move(25);
         setfBarState(fBarStates::Top);
         setAnglerState(anglerStates::Top);
       }
@@ -123,8 +123,8 @@ void anglerHandle() {
       if(fBar.get_position()>750) fBar.move(0);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID+200, 100);
-        intakeR.move(-35);
-        intakeL.move(35);
+        intakeR.move(-19);
+        intakeL.move(19);
         delay(60);
         setAnglerState(anglerStates::Mid);
       }
@@ -149,6 +149,10 @@ void anglerHandle() {
           intakeL.move(-40);
           intakeR.move(40);
         }
+      }
+      if(angler.get_position()>ANGLER_TOP-750 && angler.get_position() < ANGLER_TOP - 300)
+      {
+        angler.move(65);
       }
       if(fabs((ANGLER_TOP-angler.get_position()))<10) angler.move(0);
       // if(fabs(ANGLER_TOP-angler.get_position())<600) angler.move_absolute(ANGLER_TOP,75);
@@ -209,8 +213,8 @@ void anglerHandle() {
         {
           if(master.get_digital(TOWER_HEIGHT))
           {
-            intakeL.move_velocity(20);
-            intakeR.move_velocity(-20);
+            intakeL.move_velocity(17);
+            intakeR.move_velocity(-17);
             intakeL.tare_position();
             timer = 0;
             setAnglerState(anglerStates::CubeOutLast);
@@ -218,8 +222,8 @@ void anglerHandle() {
           else
           {
             intakeL.tare_position();
-            intakeL.move(30);
-            intakeR.move(-30);
+            intakeL.move(17);
+            intakeR.move(-17);
             doublePressCheck = false;
             timer = 0;
             setAnglerState(anglerStates::CubeOutFirst);
@@ -274,7 +278,7 @@ void anglerHandle() {
         }
     break;
     case anglerStates::BetweenTop:
-      if(angler.get_position()>ANGLER_TOP-1100)
+      if(angler.get_position()>ANGLER_TOP-1700)
       {
         angler.move(110);
         setAnglerState(anglerStates::Top);

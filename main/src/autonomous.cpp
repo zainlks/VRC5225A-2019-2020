@@ -1425,7 +1425,7 @@ void skills2() {
   move_drive(0,0,0);
   angler.move_absolute(1, 200);
   fBar.move_absolute(200, 200);
-  move_to_target_sync(49, 133, -M_PI,false,127,true);
+  move_to_target_sync(49, 131.5, -M_PI,false,127,true);
   tracking.LSLineup(true,false,1400,-60);
   updateStopTask();
   tracking.xcoord = tracking.xcoord;
@@ -1565,7 +1565,7 @@ void skills2() {
   tracking.waitForComplete();
   move_to_target_sync(100.5, 110.5,M_PI, false, 60);
   fBar.move_absolute(towerHeights[1]- 700, 100);
-  move_to_target_async(100.5, 112.5,M_PI, false);
+  move_to_target_async(100.5, 113.5,M_PI, false);
   while(fBar.get_position()>towerHeights[1]-550)delay(1);
   fBar.move_absolute(towerHeights[0]- 500, 100);
   move_to_target_async(100.5, 112.5,M_PI,false);
