@@ -1515,8 +1515,12 @@ void skills2() {
 
   move_to_target_async(75.5,134.5,-3*M_PI/2,false,127);
   tracking.waitForDistance(0.6);
-  move_to_target_sync(96, 128, -5*M_PI/4,false,127);
+  fBar.move_absolute(1300,200);
+  move_to_target_sync(97.8, 132, -3*M_PI/2,false,127);
+  move_to_target_sync(97.8, 137.5, -M_PI,false,127);
   tracking.waitForComplete();
+  fBar.move_absolute(1, 200);
+  while(fBar.get_position()>100) delay(1);
   move_to_target_sync(109.5, 123.5, -3*M_PI/2,false,127);
   move_to_target_sync(118.5, 123.5, -3*M_PI/2,false,127);
   move_to_target_async(120, 137, -3*M_PI/2,false,127);

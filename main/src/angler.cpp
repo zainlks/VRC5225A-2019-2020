@@ -82,12 +82,12 @@ void anglerHandle() {
         printf("end| %d", millis());
         setAnglerState(anglerStates::Push);
       }
-      if(topLs.get_value() < 500 && bottomLs.get_value() < 2500) {
-        intakeR.move(15);
-				intakeL.move(-15);
-				angler.move_absolute(3500, 200);
-        setAnglerState(anglerStates::DriveAround);
-      }
+      // if(topLs.get_value() < 500 && bottomLs.get_value() < 2500) {
+      //   intakeR.move(15);
+			// 	intakeL.move(-15);
+			// 	angler.move_absolute(3500, 200);
+      //   setAnglerState(anglerStates::DriveAround);
+      // }
       if(master.get_digital_new_press(DOWN_CUBE_HEIGHT)) {
         angler.move_absolute(ANGLER_TOP,200);
         fBar.move_absolute(650,100);
@@ -123,8 +123,8 @@ void anglerHandle() {
       if(fBar.get_position()>750) fBar.move(0);
       if(master.get_digital_new_press(DROPOFF_BUTTON)){
         angler.move_absolute(ANGLER_MID+200, 100);
-        intakeR.move(-19);
-        intakeL.move(19);
+        intakeR.move(-23);
+        intakeL.move(23);
         delay(60);
         setAnglerState(anglerStates::Mid);
       }
