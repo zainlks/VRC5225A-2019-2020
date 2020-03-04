@@ -4,7 +4,7 @@ ADIEncoder rightencoder (5, 6, false);
 ADIEncoder backencoder (3, 4, true);
 ADIAnalogIn topLs(7);
 ADIAnalogIn bottomLs(8);
-Vision vision(5);
+Vision vision(16);
 Motor intakeR(15,false), intakeL(12,false);
 Motor fBar(5, true);
 Motor angler(13,false);

@@ -1,6 +1,7 @@
 #include "main.h"
 #include "tracking.hpp"
 
+#include "vision.hpp"
 #include "fBar.hpp"
 #include "angler.hpp"
 #include "drive.hpp"
@@ -370,8 +371,9 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 gui_handle();
+			 // green.update();
 			 // log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
-			 printf("%d | %d \n", topLs.get_value(), bottomLs.get_value());
+			 // printf("%d | %d \n", topLs.get_value(), bottomLs.get_value());
 
 			 // printf("left%d right %d\n", leftLs.get_value(), rightLs.get_value());
 			//  for(int x = 0; x < 50; x++){
