@@ -1457,8 +1457,8 @@ void skills2() {
   while(tracking.xcoord<21.25) delay(1);
   brake();
   delay(50);
-  move_to_target_async(21.5, 108, -M_PI/2, false, 45);
-  tracking.waitForDistance(0.2);
+  // move_to_target_async(21.5, 108, -M_PI/2, false, 45);
+  // tracking.waitForDistance(0.2);
   intakeL.move(80);
   intakeR.move(-80);
   while(bottomLs.get_value()>2700 && fabs(master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y)<10)) delay(1);
@@ -1470,7 +1470,6 @@ void skills2() {
   delay(50);
   while(fBar.get_position()<FBAR_MID+350) delay(1);
   intakeOn();
-  tracking.waitForComplete();
 
 
   move_to_target_async(37.5, 94, -M_PI,false,127,true);
@@ -1515,16 +1514,55 @@ void skills2() {
   // move_to_target_async(44.5,132.5,-3*M_PI/2,false,127,true);
 
 
-  move_to_target_async(48, 108, -M_PI,false,127,true);
+  move_to_target_async(51, 108, -M_PI,false,127,true);
 
   tracking.waitForDistance(10);
   fBar.move_absolute(1,200);
   intakeOn();
   tracking.waitForComplete();
   while(fBar.get_position()>100) delay(1);
-  move_to_target_sync(49, 35, -M_PI,false,127);
-  move_to_target_sync(30,11.5,-3*M_PI/2,false,127);
+  move_to_target_sync(56, 70, -M_PI,false,127);
+  move_to_target_sync(56, 35, -M_PI,false,127);
+  angler.move_absolute(1000,200);
+  move_to_target_async(70,43,-7*M_PI/4,false,127);
+  tracking.waitForDistance(0.7);
+  move_to_target_async(75,50,-2*M_PI,false,127);
+  tracking.waitForDistance(0.7);
+  move_to_target_async(94,32,-5*M_PI/4,false,127,true);
+  tracking.waitForDistance(0.7);
+  move_to_target_async(107, 32, -3*M_PI/2,false,127);
+  tracking.waitForDistance(0.7);
+  move_to_target_async(120, 32, -3*M_PI/2,false,127);
+  angler.move_absolute(ANGLER_MID, 160);
+  fBar.move_absolute(750,200);
+  move_drive(70,25,0);
+  delay(100);
+  bool tResetDone = false;
+  int count = 0;
+  while(tResetDone == false) {
+    if(tracking.velocityB == 0.0) count++;
+    else count = 0;
+    if(count>60) tResetDone = true;
+    delay(1);
+  }
+  move_drive(25,60,0);
+  delay(100);
+  tResetDone = false;
+  count = 0;
+  while(tResetDone == false) {
+    if(tracking.velocityL == 0.0) count++;
+    else count = 0;
+    if(count>60) tResetDone = true;
+    delay(1);
+  }
+  updateStopTask();
+  tracking.ycoord = 9.5;
+  tracking.xcoord = 123.5;
+  tracking.global_angle = -3*M_PI/2;
+  updateStartTask(false);
 
+  /* reset and sweep around tower
+  move_to_target_sync(30,11.5,-3*M_PI/2,false,127,true);
   move_drive(60,0,0);
   delay(100);
   bool tResetDone = false;
@@ -1545,7 +1583,7 @@ void skills2() {
   move_to_target_async(75.5,10.5,-3*M_PI/2,false,127);
   tracking.waitForDistance(0.6);
   move_to_target_sync(96, 16, -7*M_PI/4,false,127);
-
+  */
 
 
 
@@ -1690,15 +1728,11 @@ void autonomous() {
   // delay(200);
   // move_to_target_sync(3,-35,0,false,65);
   // skills2();
-  delay(1000);
-  printf("x:%f y:%f a:%f",tracking.xcoord,tracking.ycoord,tracking.global_angle);
+  delay(50);
+  log("autotime is %d\n", autotimer-pros::millis());
   master.clear();
   delay(50);
-  master.print(2,0,"%f %f %f",tracking.xcoord,tracking.ycoord,tracking.global_angle);
-  log("autotime is %d\n", autotimer-pros::millis());
-  // master.clear();
-  // delay(50);
-  // master.print(2,0,"%d",millis()-autotimer);
+  master.print(2,0,"%d",millis()-autotimer);
 
 }
 
