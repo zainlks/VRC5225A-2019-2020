@@ -312,6 +312,115 @@ void blueSweep() {
   move_to_target_sync(-26,14, deg_to_rad(-135));
 }
 
+void blue10() {
+  gotoPointers[0] = &&dropOff;
+  uint32_t nineCubeTime = 0;
+  bool nineCubeSafety = false;
+  bool outtakeState = false;
+  uint32_t outtakeTime = 0;
+  int lsFilter = 0;
+
+  fBar.move_absolute(400, 200);
+  while(fBar.get_position() < 395 ){delay(1);}
+  delay(100);
+  master.print(1,0,"%d",millis()-autotimer);
+  intakeL.move(-10);
+  intakeR.move(10);
+  fBar.move_absolute(1,200);
+  move_to_target_async(0,20,0,false,90);
+  tracking.waitForDistance(17);
+  intakeOn();
+  tracking.waitForDistance(1.2);
+  move_to_target_sync(0,24,0,false,80);
+  brake();
+  delay(50);
+  move_drive(0,0,0);
+  fBar.move_absolute(towerHeights[0]+ 50, 200);
+
+  move_to_target_sync(0,18.5,0,false,127);
+  while(fBar.get_position()<towerHeights[0]) delay(1);
+  brake();
+
+  move_to_target_async(0, 22, 0, false, 127);
+  tracking.waitForDistance(1);
+
+  fBar.move(-127);
+  tracking.waitForComplete();
+  brake();
+  delay(50);
+  move_drive(0,0,0);
+  while(fBar.get_position() > 1000) delay(1);
+  move_to_target_async(0, 31, 0, false);
+  while(fBar.get_position() > 300) delay(1);
+  fBar.move(-13);
+  tracking.waitForComplete();
+
+  move_to_target_async(0, -10, 0, false, 127,true);
+  tracking.waitForDistance(23);
+  move_to_target_sync(-25.5, 2, 0, false,127);
+  move_drive(0, 80, 0); //80
+  while(tracking.ycoord<9)delay(1);
+  move_to_target_async(-25.5, 40, 0, false, 100); //60
+  tracking.waitForDistance(15);
+  move_to_target_async(-25.5, 39, 0, false, 60);
+  tracking.waitForDistance(0.7);
+  if(!tracking.moveComplete) moveStopTask();
+  if(moveTask != nullptr) moveTask = nullptr;
+  if(tracking.safety) goto dropOff;
+  // move_to_target_async(-15.5, 37, deg_to_rad(15),false,127);
+  // tracking.waitForDistance(1.2);
+  move_drive(0,0,80);
+  while(tracking.global_angle < deg_to_rad(15)) delay(1);
+  move_drive(0,80,0);
+  while(tracking.ycoord<41) delay(1);
+  dropOff:
+  move_to_target_async(-30,11.5, deg_to_rad(-135),false,127,true);
+  uint32_t LSTimer = millis();
+  angler.move_absolute(ANGLER_MID, 130);
+  fBar.move_absolute(650,200);
+  while((topLs.get_value() > 500 || bottomLs.get_value() > 2500) && millis()-LSTimer<800) delay(1);
+  delay(70);
+  intakeR.move(20);
+  intakeL.move(-20);
+  intakeR.move(-6);
+  intakeL.move(6);
+  while(bottomLs.get_value()>2500 && !tracking.moveComplete) delay(1);
+  intakeR.move(20);
+  intakeL.move(-20);
+
+  outtakeTime = millis();
+  // while(tracking.global_angle > deg_to_rad(-132) && !tracking.moveComplete) delay(1);
+  // if(!tracking.moveComplete) moveStopTask();
+  // if(moveTask != nullptr) moveTask = nullptr;
+  tracking.waitForComplete();
+  angler.move(45);
+  move_drive(0,0,0);
+  fBar.move_absolute(750,200);
+  tracking.LSLineup(true, true, 1500);
+  delay(150);
+  if(bottomLs.get_value()>2500) angler.move_absolute(ANGLER_TOP, 130);
+  else angler.move_absolute(ANGLER_TOP, 150);
+  intakeL.move(45);
+  intakeR.move(-45);
+  delay(100);
+  while((fabs(intakeL.get_actual_velocity())>1 || fabs(intakeR.get_actual_velocity())>1) && angler.get_position()<ANGLER_TOP-250) delay(1);
+  fBar.move(5);
+  while(angler.get_position()<ANGLER_TOP-1150) delay(1);
+  angler.move(110);
+
+  while(angler.get_position()<ANGLER_TOP-10) delay(1);
+  angler.move(0);
+  delay(300);
+  updateStopTask();
+  tracking.reset();
+  updateStartTask();
+  move_drive(0,-75,0);
+  while(fabs(tracking.ycoord)<10) delay (1);
+  move_drive(0,0,0);
+  end:
+  delay(1);
+}
+
 void blueLeft(){
   gotoPointers[0] = &&dropOff;
   bool outtakeState = false;
@@ -1689,45 +1798,41 @@ void autonomous() {
   // intakeL.move(127);
   autotimer = pros::millis();
   log("global angle:%f",tracking.global_angle);
-  switch(side) {
-    case sides::blue:
-      switch(cur_auto) {
-        case auto1:
-          blueLeft();
-        break;
-        case auto2:
-          blue9();
-        break;
-        case auto3:
-          blueFourFirst();
-        break;
-        case auto4:
-          skills2();
-        break;
-      }
-    break;
-    case sides::red:
-      switch(cur_auto) {
-        case auto1:
-          redProtect();
-        break;
-        case auto2:
-          red9();
-        break;
-        case auto3:
-          redFourFirst();
-        break;
-        case auto4:
-          skills2();
-        break;
-      }
-    break;
-  }
-  // fBar.move_absolute(FBAR_MID, 200);
-  // while(fBar.get_position()<FBAR_MID-50) delay(1);
-  // delay(200);
-  // move_to_target_sync(3,-35,0,false,65);
-  // skills2();
+  // switch(side) {
+  //   case sides::blue:
+  //     switch(cur_auto) {
+  //       case auto1:
+  //         blueLeft();
+  //       break;
+  //       case auto2:
+  //         blue9();
+  //       break;
+  //       case auto3:
+  //         blueFourFirst();
+  //       break;
+  //       case auto4:
+  //         skills2();
+  //       break;
+  //     }
+  //   break;
+  //   case sides::red:
+  //     switch(cur_auto) {
+  //       case auto1:
+  //         redProtect();
+  //       break;
+  //       case auto2:
+  //         red9();
+  //       break;
+  //       case auto3:
+  //         redFourFirst();
+  //       break;
+  //       case auto4:
+  //         skills2();
+  //       break;
+  //     }
+  //   break;
+  // }
+  blue10();
   delay(50);
   log("autotime is %d\n", autotimer-pros::millis());
   master.clear();

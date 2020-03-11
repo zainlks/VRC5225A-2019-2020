@@ -546,7 +546,7 @@ void Tracking::turn_to_angle(double target_a, bool debug, bool brakeOn){
     if(fabs(error_a)>deg_to_rad(0.5)){
       tracking.power_a = map_set(fabs(error_a),deg_to_rad(0.5), M_PI,12.0*sgn(error_a),127.0*sgn(error_a),
                         deg_to_rad(5), sgn(error_a)*30.0,
-                        deg_to_rad(20),sgn(error_a)*50.0,
+                        deg_to_rad(20),sgn(error_a)*80.0,
                         deg_to_rad(45),sgn(error_a)*85.0,
                         deg_to_rad(60), sgn(error_a)*110.0,
                         deg_to_rad(90),sgn(error_a)*120.0,
@@ -635,8 +635,8 @@ void Tracking::LSLineup(bool hold, bool intake_deposit, int timeoutTime, int spe
     if(rightCount>=60) right = true;
   }
   if(intake_deposit) {
-  intakeL.move(20);
-  intakeR.move(-20);
+  intakeL.move(35);
+  intakeR.move(-35);
   }
   if(left) {
     if(speed>0)move_drive_side(25, 40);
