@@ -19,7 +19,8 @@ void initialize() {
 	// pros::lcd::set_text(1, "Hello PROS User!");
 	// Task controllerUpdate(printTemp);
 	fBarCal();
-	anglerCal();
+	// fBarCal();
+	// anglerCal();
 	log_init();
 	gui_init();
 	menu_init();

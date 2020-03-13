@@ -37,8 +37,6 @@ void opcontrol() {
 		// Task driveUpdate(driveHandle);
 		master.clear();
 
-
-
 		if(pros::competition::is_connected() && !pros::competition::is_disabled() && false == true) {
 			updateStopTask();
 			tracking.ycoord = 9.5;
@@ -371,7 +369,7 @@ void opcontrol() {
 			 anglerHandle();
 			 fBarHandle();
 			 gui_handle();
-			 // green.update();
+			 green.update();
 			 // log_graph(front_L.get_actual_velocity());		 // printf("%d | %d\n",green.obj.height, green.obj.width);
 			 // printf("%d | %d \n", topLs.get_value(), bottomLs.get_value());
 
@@ -469,8 +467,8 @@ void opcontrol() {
 				intakeReverse = false;
 			}
 			 // tracking.move_to_target(0, 10, 0);
-			 // green.update();
-			 // printf("center: %d\n",green.obj.x_middle_coord);
+			 green.update();
+			 //printf("center: %d\n",green.obj.x_middle_coord);
 			 // printf("global angle: %f\n", tracking.global_angle);
 	     // green.lineMiddle(1.2);
 			  //printf("L:%d R:%d G:%d\n",leftencoder.get_value(),rightencoder.get_value(),backencoder.get_value());
